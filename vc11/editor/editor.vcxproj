@@ -82,6 +82,9 @@
     <PostBuildEvent>
       <Command>$(SolutionDir)script\postbuild.cmd $(TargetPath) $(SolutionDir)..\stage\$(TargetFileName)</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>$(SolutionDir)script\prebuild.cmd $(SolutionDir)</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Test|Win32'">
     <ClCompile>
@@ -99,6 +102,9 @@
     <PostBuildEvent>
       <Command>$(SolutionDir)script\postbuild.cmd $(TargetPath) $(SolutionDir)..\stage\$(TargetFileName)</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>$(SolutionDir)script\prebuild.cmd $(SolutionDir)</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
