@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\_deps">
+      <UniqueIdentifier>{82be8774-e569-45cd-8e71-8635139f8b4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\be">
+      <UniqueIdentifier>{3906cfb3-1fa1-45fa-91ba-b26079807d6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\be\be::util">
+      <UniqueIdentifier>{554ac71d-7688-4d70-846d-a70e849b063b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\be\be::bed">
+      <UniqueIdentifier>{b03a70db-a687-40f5-93ec-8bca35a7e716}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\be\be::bed\be::bed::detail">
+      <UniqueIdentifier>{8a896d2c-afe7-4629-bede-31883f809ed0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\pbj">
+      <UniqueIdentifier>{3f8cefbc-39c6-4a39-832e-507e5cd5b6b4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\deps\pugixml.cpp">
+      <Filter>Source Files\_deps</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\editor\src\app_entry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\deps\sqlite3.c">
+      <Filter>Source Files\_deps</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\deps\stb_image.c">
+      <Filter>Source Files\_deps</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\be\asset_id.cpp">
+      <Filter>Source Files\be</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\be\id.cpp">
+      <Filter>Source Files\be</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\be\verbosity.cpp">
+      <Filter>Source Files\be</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\be\util\nconvert.cpp">
+      <Filter>Source Files\be\be::util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\be\bed\cached_stmt.cpp">
+      <Filter>Source Files\be\be::bed</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\be\bed\db.cpp">
+      <Filter>Source Files\be\be::bed</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\be\bed\stmt.cpp">
+      <Filter>Source Files\be\be::bed</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\be\bed\stmt_cache.cpp">
+      <Filter>Source Files\be\be::bed</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\be\bed\transaction.cpp">
+      <Filter>Source Files\be\be::bed</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\be\bed\detail\db_error.cpp">
+      <Filter>Source Files\be\be::bed\be::bed::detail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\be\bed\detail\stmt_cache_entry.cpp">
+      <Filter>Source Files\be\be::bed\be::bed::detail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\engine.cpp">
+      <Filter>Source Files\pbj</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

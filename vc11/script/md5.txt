@@ -1,0 +1,3 @@
+70df60b9d9b0fdc1631a0e445ba870ec *assimpd.pdb
+da15aaad500a9427d878e433604379d4 *assimps.lib
+d805f49e74d5e9dfb32221b5f84fe44a *assimpsd.lib
