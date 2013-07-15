@@ -19,12 +19,12 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   app_entry.cpp
+/// \file   server_app_entry.cpp
 /// \author Benjamin Crist
 ///
 /// \brief  Application entry point.
 /// \details Parses command line parameters, initializes game engine, loads
-///         configuration data, and starts editor.
+///         configuration data, and starts server.
 
 // Auto-link with libraries
 #ifdef _WIN32
