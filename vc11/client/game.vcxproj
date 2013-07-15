@@ -15,8 +15,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{997FE7D3-3817-4260-98D2-0DE99D045DBB}</ProjectGuid>
-    <RootNamespace>editor</RootNamespace>
+    <ProjectGuid>{70E1910F-6D4D-4AAF-9815-0803F5996B6E}</ProjectGuid>
+    <RootNamespace>game</RootNamespace>
+    <ProjectName>client</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -73,7 +74,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)..\deps;$(SolutionDir)..\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <PreprocessorDefinitions>DEBUG;_DEBUG;PBJ_EDITOR;GLEW_NO_GLU;GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>DEBUG;_DEBUG;GLEW_NO_GLU;GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -82,9 +83,6 @@
     <PostBuildEvent>
       <Command>$(SolutionDir)script\postbuild.cmd "$(TargetPath)" "$(SolutionDir)..\stage\$(TargetFileName)"</Command>
     </PostBuildEvent>
-    <PreBuildEvent>
-      <Command>$(SolutionDir)script\prebuild.cmd "$(SolutionDir)script\md5sum.exe" "$(SolutionDir)script\md5.txt" "$(SolutionDir)script\wget.exe" "$(SolutionDir)lib"</Command>
-    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Test|Win32'">
     <ClCompile>
@@ -93,7 +91,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)..\deps;$(SolutionDir)..\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <PreprocessorDefinitions>PBJ_TEST;PBJ_EDITOR;GLEW_NO_GLU;GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>PBJ_TEST;GLEW_NO_GLU;GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -102,9 +100,6 @@
     <PostBuildEvent>
       <Command>$(SolutionDir)script\postbuild.cmd "$(TargetPath)" "$(SolutionDir)..\stage\$(TargetFileName)"</Command>
     </PostBuildEvent>
-    <PreBuildEvent>
-      <Command>$(SolutionDir)script\prebuild.cmd "$(SolutionDir)script\md5sum.exe" "$(SolutionDir)script\md5.txt" "$(SolutionDir)script\wget.exe" "$(SolutionDir)lib"</Command>
-    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -115,7 +110,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)..\deps;$(SolutionDir)..\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <PreprocessorDefinitions>NDEBUG;PBJ_EDITOR;GLEW_NO_GLU;GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;GLEW_NO_GLU;GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -126,14 +121,11 @@
     <PostBuildEvent>
       <Command>$(SolutionDir)script\postbuild.cmd "$(TargetPath)" "$(SolutionDir)..\stage\$(TargetFileName)"</Command>
     </PostBuildEvent>
-    <PreBuildEvent>
-      <Command>$(SolutionDir)script\prebuild.cmd "$(SolutionDir)script\md5sum.exe" "$(SolutionDir)script\md5.txt" "$(SolutionDir)script\wget.exe" "$(SolutionDir)lib"</Command>
-    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\deps\pugixml.cpp" />
     <ClCompile Include="..\..\deps\sqlite3.c" />
     <ClCompile Include="..\..\deps\stb_image.c" />
+    <ClCompile Include="..\..\src\app_entry.cpp" />
     <ClCompile Include="..\..\src\be\asset_id.cpp" />
     <ClCompile Include="..\..\src\be\bed\cached_stmt.cpp" />
     <ClCompile Include="..\..\src\be\bed\db.cpp" />
@@ -145,8 +137,41 @@
     <ClCompile Include="..\..\src\be\id.cpp" />
     <ClCompile Include="..\..\src\be\util\nconvert.cpp" />
     <ClCompile Include="..\..\src\be\verbosity.cpp" />
-    <ClCompile Include="..\..\src\editor_app_entry.cpp" />
     <ClCompile Include="..\..\src\pbj\engine.cpp" />
+    <ClCompile Include="..\..\tests\test_id.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\be\asset_id.h" />
+    <ClInclude Include="..\..\include\be\bed\cached_stmt.h" />
+    <ClInclude Include="..\..\include\be\bed\db.h" />
+    <ClInclude Include="..\..\include\be\bed\detail\db_error.h" />
+    <ClInclude Include="..\..\include\be\bed\detail\stmt_cache_entry.h" />
+    <ClInclude Include="..\..\include\be\bed\stmt.h" />
+    <ClInclude Include="..\..\include\be\bed\stmt_cache.h" />
+    <ClInclude Include="..\..\include\be\bed\transaction.h" />
+    <ClInclude Include="..\..\include\be\const_handle.h" />
+    <ClInclude Include="..\..\include\be\detail\handle_entry.h" />
+    <ClInclude Include="..\..\include\be\detail\handle_manager.h" />
+    <ClInclude Include="..\..\include\be\handle.h" />
+    <ClInclude Include="..\..\include\be\id.h" />
+    <ClInclude Include="..\..\include\be\source_handle.h" />
+    <ClInclude Include="..\..\include\be\util\nconvert.h" />
+    <ClInclude Include="..\..\include\be\_al.h" />
+    <ClInclude Include="..\..\include\be\_be.h" />
+    <ClInclude Include="..\..\include\be\_gl.h" />
+    <ClInclude Include="..\..\include\be\_math.h" />
+    <ClInclude Include="..\..\include\pbj\engine.h" />
+    <ClInclude Include="..\..\include\pbj\_math.h" />
+    <ClInclude Include="..\..\include\pbj\_pbj.h" />
+    <ClInclude Include="..\..\include\_doxygen.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\include\be\asset_id.inl" />
+    <None Include="..\..\include\be\const_handle.inl" />
+    <None Include="..\..\include\be\detail\handle_manager.inl" />
+    <None Include="..\..\include\be\handle.inl" />
+    <None Include="..\..\include\be\id.inl" />
+    <None Include="..\..\include\be\source_handle.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
