@@ -162,10 +162,10 @@
     <ClInclude Include="..\..\include\be\_math.h" />
     <ClInclude Include="..\..\include\pbj\engine.h" />
     <ClInclude Include="..\..\include\pbj\ui_element.h" />
+    <ClInclude Include="..\..\include\pbj\ui_label.h" />
     <ClInclude Include="..\..\include\pbj\_math.h" />
     <ClInclude Include="..\..\include\pbj\_pbj.h" />
     <ClInclude Include="..\..\include\_doxygen.h" />
-    <ClInclude Include="ui_label.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\include\be\asset_id.inl" />

@@ -24,16 +24,15 @@
 ///
 /// \brief  pbj::UIElement class header.
 
-#ifndef PBJ_UI_ELEMENT_H_
-#define PBJ_UI_ELEMENT_H_
+#ifndef PBJ_UI_LABEL_H_
+#define PBJ_UI_LABEL_H_
 
-#include "pbj/_pbj.h"
-#include "pbj/_math.h"
+#include "pbj/ui_element.h"
 
 namespace pbj {
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief  Abstract base class for UI elements.
+/// \brief  Text Abstract base class for UI elements.
 ///
 /// \details UI origin is in top left corner of screen.
 class UIElement
@@ -68,15 +67,15 @@ public:
     virtual void onMouseMove(const ivec2& position);    ///< Called when the mouse moves while over the element
     virtual void onMouseOut(const ivec2& position);     ///< Called when the mouse leaves the element
 
-    virtual void onMouseDown(F32 button);               ///< Called when a mouse button is pressed while the mouse is over the element
-    virtual void onMouseUp(F32 button);                 ///< Called when a mouse button is released while the mouse is over the element
-    virtual void onMouseClick(F32 button);              ///< Called when a mouse button is pressed and released, both while the mouse is over the element
-    virtual void onMouseDblClick(F32 button);           ///< Called when a mouse button is pressed and released twice, all while the mouse is over the element
+    virtual void onMouseDown(int button);               ///< Called when a mouse button is pressed while the mouse is over the element
+    virtual void onMouseUp(int button);                 ///< Called when a mouse button is released while the mouse is over the element
+    virtual void onMouseClick(int button);              ///< Called when a mouse button is pressed and released, both while the mouse is over the element
+    virtual void onMouseDblClick(int button);           ///< Called when a mouse button is pressed and released twice, all while the mouse is over the element
 
-    virtual void onKeyDown(F32 keycode);                ///< Called when a key is pressed while this element is focused
-    virtual void onKeyUp(F32 keycode);                  ///< Called when a key is released while this element is focused
-    virtual void onKeyPressed(F32 keycode);             ///< Called when a key is pressed and released, both while this element is focused
-    virtual void onCharacter(F32 codepoint);            ///< Called when a character is input.  Not necessarily a 1:1 relationship with calls to onKeyPressed and provides a unicode codepoint rather than GLFW keycode.
+    virtual void onKeyDown(int keycode);                ///< Called when a key is pressed while this element is focused
+    virtual void onKeyUp(int keycode);                  ///< Called when a key is released while this element is focused
+    virtual void onKeyPressed(int keycode);             ///< Called when a key is pressed and released, both while this element is focused
+    virtual void onCharacter(int codepoint);            ///< Called when a character is input.  Not necessarily a 1:1 relationship with calls to onKeyPressed and provides a unicode codepoint rather than GLFW keycode.
 
 private:
     ivec2 position_;

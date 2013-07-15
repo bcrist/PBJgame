@@ -185,7 +185,7 @@
     <ClInclude Include="..\..\include\pbj\ui_element.h">
       <Filter>Header Files\pbj\%28ui%29</Filter>
     </ClInclude>
-    <ClInclude Include="ui_label.h">
+    <ClInclude Include="..\..\include\pbj\ui_label.h">
       <Filter>Header Files\pbj\%28ui%29</Filter>
     </ClInclude>
   </ItemGroup>
