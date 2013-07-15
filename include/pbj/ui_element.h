@@ -78,6 +78,8 @@ public:
     virtual void onKeyPressed(F32 keycode);             ///< Called when a key is pressed and released, both while this element is focused
     virtual void onCharacter(F32 codepoint);            ///< Called when a character is input.  Not necessarily a 1:1 relationship with calls to onKeyPressed and provides a unicode codepoint rather than GLFW keycode.
 
+    virtual void draw() = 0;
+
 private:
     ivec2 position_;
     ivec2 dimensions_;
