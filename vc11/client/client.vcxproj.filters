@@ -55,6 +55,12 @@
     <Filter Include="Header Files\be\be::detail">
       <UniqueIdentifier>{bd28ad98-767a-4456-a4e7-63a389ff9df6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\pbj\%28ui%29">
+      <UniqueIdentifier>{b044d24d-b3e9-454d-aa3e-0dfbfb035def}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\pbj\%28ui%29">
+      <UniqueIdentifier>{8e1affc0-0c03-4dcc-bb4a-5139a1e8d27a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\deps\sqlite3.c">
@@ -175,6 +181,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\pbj\_math.h">
       <Filter>Header Files\pbj</Filter>
+    </ClInclude>
+    <ClInclude Include="ui_element.h">
+      <Filter>Header Files\pbj\%28ui%29</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
