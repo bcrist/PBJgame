@@ -19,68 +19,87 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   pbj/ui_label.h
+/// \file   pbj/scene/shader.h
 /// \author Benjamin Crist
 ///
-/// \brief  pbj::UILabel class header.
+/// \brief  pbj::scene::Shader class header.
 
-#ifndef PBJ_UI_LABEL_H_
-#define PBJ_UI_LABEL_H_
+#ifndef PBJ_SCENE_SHADER_H_
+#define PBJ_SCENE_SHADER_H_
 
-#include "pbj/ui_element.h"
-#include "pbj/scene/texture_font.h"
-#include "be/const_handle.h"
+#include "pbj/_pbj.h"
+#include "be/_gl.h"
+#include "be/source_handle.h"
+#include "be/id.h"
 
 namespace pbj {
+namespace scene {
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief  Text Label UI element.
-class UILabel : public UIElement
+/// \brief  Represents a compiled Vertex/Fragment Shader
+///
+/// \sa     ShaderProgram
+class Shader
 {
 public:
-    enum Align
+    enum Type
     {
-        AlignLeft,
-        AlignCenter,
-        AlignRight,
+        TVertex,
+        TFragment
     };
 
-    UILabel();
-    virtual ~UILabel();
+    Shader(const Id& id, Type type, const std::string& source);
+    ~Shader();
 
-    void setText(const std::string& text);
-    const std::string& getText() const;
+    be::Handle<Shader> getHandle();
+    const be::ConstHandle<Shader> getHandle() const;
 
-    void setScale(const vec2& scale);
-    const vec2& getScale() const;
+    const Id& getId() const;
 
-    void setBackgroundColor(const color4& color);
-    const color4& getBackgroundColor() const;
+    Type getType() const;
 
-    void setTextColor(const color4& color);
-    const color4& getTextColor() const;
+    GLuint getGlId() const;
 
-    void setFont(const be::ConstHandle<TextureFont>& font);
-    const be::ConstHandle<TextureFont>& getFont() const;
+#ifdef PBJ_EDITOR
+    Shader();   // construct without compiling
 
-    void setAlign(Align align);
-    Align getAlign() const;
+    void setName(const std::string& name);
+    const std::string& getName() const;
 
-    virtual void draw(const mat4& view_projection);
+    void setSource(const std::string& source);
+    const std::string& getSource() const;
+
+    void setType(Type type);
+
+    bool isValid() const;
+    const std::string& getInfoLog() const;
+
+    void compile();
+    void invalidate();
+#endif
 
 private:
-    std::string text_;
-    color4 background_color_;
-    color4 text_color_;
-    vec2 scale_;
-    be::ConstHandle<TextureFont> font_;
-    TextureFontText tf_text_;
-    Align align_;
+    void compile_(const std::string& source);
+    void invalidate_();
 
-    UILabel(const UILabel&);
-    void operator=(const UILabel&);
+    be::SourceHandle<Shader> handle_;
+
+    Id id_;
+
+    GLuint gl_id_;
+    Type type_;
+
+#ifdef PBJ_EDITOR
+    std::string name_;
+    std::string source_;
+    std::string info_log_;
+#endif
+
+    Shader(const Shader&);
+    void operator=(const Shader&);
 };
 
+} // namespace pbj::scene
 } // namespace pbj
 
 #endif

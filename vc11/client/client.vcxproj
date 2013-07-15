@@ -138,6 +138,7 @@
     <ClCompile Include="..\..\src\be\util\nconvert.cpp" />
     <ClCompile Include="..\..\src\be\verbosity.cpp" />
     <ClCompile Include="..\..\src\pbj\engine.cpp" />
+    <ClCompile Include="..\..\src\pbj\scene\shader.cpp" />
     <ClCompile Include="..\..\tests\test_id.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -161,6 +162,18 @@
     <ClInclude Include="..\..\include\be\_gl.h" />
     <ClInclude Include="..\..\include\be\_math.h" />
     <ClInclude Include="..\..\include\pbj\engine.h" />
+    <ClInclude Include="..\..\include\pbj\scene\mesh.h" />
+    <ClInclude Include="..\..\include\pbj\scene\mesh_instance.h" />
+    <ClInclude Include="..\..\include\pbj\scene\shader_program.h" />
+    <ClInclude Include="..\..\include\pbj\scene\skeleton.h" />
+    <ClInclude Include="..\..\include\pbj\scene\skeleton_pose.h" />
+    <ClInclude Include="..\..\include\pbj\scene\shader.h" />
+    <ClInclude Include="..\..\include\pbj\scene\skeletal_mesh.h" />
+    <ClInclude Include="..\..\include\pbj\scene\skeletal_mesh_instance.h" />
+    <ClInclude Include="..\..\include\pbj\scene\texture.h" />
+    <ClInclude Include="..\..\include\pbj\scene\texture_font.h" />
+    <ClInclude Include="..\..\include\pbj\scene\texture_font_text.h" />
+    <ClInclude Include="..\..\include\pbj\scene\transform.h" />
     <ClInclude Include="..\..\include\pbj\ui_element.h" />
     <ClInclude Include="..\..\include\pbj\ui_label.h" />
     <ClInclude Include="..\..\include\pbj\_math.h" />

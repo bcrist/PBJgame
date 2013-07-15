@@ -132,9 +132,6 @@ typedef double F64;     ///< 64 bit floating point type.
 // alias \ref be classes
 typedef be::Id Id;
 typedef be::AssetId AssetId;
-typedef be::Handle Handle;
-typedef be::ConstHandle ConstHandle;
-typedef be::SourceHandle SourceHandle;
 
 } // namespace pbj
 

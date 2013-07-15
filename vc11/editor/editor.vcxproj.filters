@@ -31,6 +31,12 @@
     <Filter Include="Source Files\pbj">
       <UniqueIdentifier>{3f8cefbc-39c6-4a39-832e-507e5cd5b6b4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\pbj\pbj::scene">
+      <UniqueIdentifier>{7b903c17-7145-40d3-b08a-e457564c15c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\pbj\pbj::scene\%28gl%29">
+      <UniqueIdentifier>{dc12f29d-0214-4b74-8e86-ba708337ac6d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\deps\pugixml.cpp">
@@ -80,6 +86,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\editor_app_entry.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\scene\shader.cpp">
+      <Filter>Source Files\pbj\pbj::scene\%28gl%29</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -61,6 +61,18 @@
     <Filter Include="Header Files\pbj\%28ui%29">
       <UniqueIdentifier>{8e1affc0-0c03-4dcc-bb4a-5139a1e8d27a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\pbj\pbj::scene">
+      <UniqueIdentifier>{68654fef-28a0-47a9-abd7-9549916fdd06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\pbj\pbj::scene">
+      <UniqueIdentifier>{26d84408-f2be-43e9-9061-5bc12770a09a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\pbj\pbj::scene\%28gl%29">
+      <UniqueIdentifier>{1b1a5d26-7cc8-46fb-bbe1-1119d14f9f2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\pbj\pbj::scene\%28gl%29">
+      <UniqueIdentifier>{d1937a1d-4d1e-462f-975d-fb8571d90b85}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\deps\sqlite3.c">
@@ -110,6 +122,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\app_entry.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\scene\shader.cpp">
+      <Filter>Source Files\pbj\pbj::scene\%28gl%29</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -187,6 +202,42 @@
     </ClInclude>
     <ClInclude Include="..\..\include\pbj\ui_label.h">
       <Filter>Header Files\pbj\%28ui%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\scene\transform.h">
+      <Filter>Header Files\pbj\pbj::scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\scene\mesh.h">
+      <Filter>Header Files\pbj\pbj::scene\%28gl%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\scene\mesh_instance.h">
+      <Filter>Header Files\pbj\pbj::scene\%28gl%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\scene\shader_program.h">
+      <Filter>Header Files\pbj\pbj::scene\%28gl%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\scene\skeleton.h">
+      <Filter>Header Files\pbj\pbj::scene\%28gl%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\scene\skeleton_pose.h">
+      <Filter>Header Files\pbj\pbj::scene\%28gl%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\scene\shader.h">
+      <Filter>Header Files\pbj\pbj::scene\%28gl%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\scene\skeletal_mesh.h">
+      <Filter>Header Files\pbj\pbj::scene\%28gl%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\scene\skeletal_mesh_instance.h">
+      <Filter>Header Files\pbj\pbj::scene\%28gl%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\scene\texture.h">
+      <Filter>Header Files\pbj\pbj::scene\%28gl%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\scene\texture_font.h">
+      <Filter>Header Files\pbj\pbj::scene\%28gl%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\scene\texture_font_text.h">
+      <Filter>Header Files\pbj\pbj::scene\%28gl%29</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
