@@ -1,4 +1,4 @@
-// Copyright (c) 2013 PBJ Productions
+// Copyright (c) 2013 PBJ^2 Productions
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -28,79 +28,134 @@
 
 namespace pbj {
 
-    UIElement::UIElement()
-    {
-        visible_ = false;
-        enabled_ = false;
-        focused_ = false;
-        next_focus_ = NULL;
+UIElement::UIElement()
+{
+    visible_ = false;
+    enabled_ = false;
+    focused_ = false;
+    next_focus_ = NULL;
 
-    }
+}
 
-    UIElement::UIElement(const ivec2& position, const ivec2& dimensions)
-    {
-        position_ = position;
-        dimensions_ = dimensions;
-    }
+UIElement::UIElement(const ivec2& position, const ivec2& dimensions)
+{
+    position_ = position;
+    dimensions_ = dimensions;
+}
 
-    void UIElement::setVisible(bool visible)
-    {
-        visible_ = visible;
-    }
+void UIElement::setVisible(bool visible)
+{
+    visible_ = visible;
+}
     
-    bool UIElement::isVisible() const
-    {
-        return visible_;
-    }
+bool UIElement::isVisible() const
+{
+    return visible_;
+}
 
-    void UIElement::setEnabled(bool enabled)
-    {
-        enabled_ = enabled;
-    }
+void UIElement::setEnabled(bool enabled)
+{
+    enabled_ = enabled;
+}
     
-    bool UIElement::isEnabled() const
-    {
-        return enabled_;
-    }
+bool UIElement::isEnabled() const
+{
+    return enabled_;
+}
 
-    void UIElement::setFocused(bool focused)
-    {
-        focused_ = focused;
-    }
+void UIElement::setFocused(bool focused)
+{
+    focused_ = focused;
+}
 
-    bool UIElement::isFocused() const
-    {
-        return focused_;
-    }
+bool UIElement::isFocused() const
+{
+    return focused_;
+}
 
-    void UIElement::setPosition(const ivec2& position)
-    {
-        position_ = position;
-    }
+void UIElement::setPosition(const ivec2& position)
+{
+    position_ = position;
+}
 
-    const ivec2& UIElement::getPosition() const
-    {
-        return position_;
-    }
+const ivec2& UIElement::getPosition() const
+{
+    return position_;
+}
 
-    void UIElement::setDimensions(const ivec2& dimensions)
-    {
-        dimensions_ = dimensions;
-    }
+void UIElement::setDimensions(const ivec2& dimensions)
+{
+    dimensions_ = dimensions;
+}
 
-    const ivec2& UIElement::getDimensions() const
-    {
-        return dimensions_;
-    }
+const ivec2& UIElement::getDimensions() const
+{
+    return dimensions_;
+}
 
-    void UIElement::setNextFocusableElement(UIElement* element)
-    {
-       next_focus_ = element;
-    }
+void UIElement::setNextFocusableElement(UIElement* element)
+{
+    next_focus_ = element;
+}
 
-    UIElement* UIElement::getNextFocusableElement()
-    {
-        return next_focus_;
-    }
+UIElement* UIElement::getNextFocusableElement()
+{
+    return next_focus_;
+}
+
+void UIElement::onMouseIn(const ivec2& position)
+{
+
+}
+	
+void UIElement::onMouseMove(const ivec2& position)
+{
+
+}
+	
+void UIElement::onMouseOut(const ivec2& position)
+{
+
+}
+	
+void UIElement::onMouseDown(F32 button)
+{
+
+}
+	
+void UIElement::onMouseUp(F32 button)
+{
+
+}
+	
+void UIElement::onMouseClick(F32 button)
+{
+
+}
+	
+void UIElement::onMouseDblClick(F32 button)
+{
+
+}
+
+void UIElement::onKeyDown(F32 keycode)
+{
+
+}
+	
+void UIElement::onKeyUp(F32 keycode)
+{
+
+}
+	
+void UIElement::onKeyPressed(F32 keycode)
+{
+
+}
+	
+void UIElement::onCharacter(F32 codepoint)
+{
+
+}
 
 } // namespace pbj
