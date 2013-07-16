@@ -32,9 +32,9 @@
 namespace pbj {
 namespace scene {
 
-Shader::Shader(const Id& id, Type type, const std::string& source)
+Shader::Shader(const AssetId& id, Type type, const std::string& source)
     : type_(type),
-      id_(id),
+      asset_id_(id),
       gl_id_(0)
 {
     handle_.associate(this);
@@ -57,6 +57,11 @@ const be::ConstHandle<Shader> Shader::getHandle() const
     return handle_;
 }
 
+const AssetId& Shader::getAssetId() const
+{
+    return asset_id_;
+}
+
 Shader::Type Shader::getType() const
 {
     return type_;
@@ -77,25 +82,58 @@ Shader::Shader()
 
 void Shader::setName(const std::string& name)
 {
-    name_ = name;
-    id_ = Id(name);
+    metadata_["__name__"] = name;
+    asset_id_.asset = Id(name);
 }
 
 const std::string& Shader::getName() const
 {
-    return name_;
+    return getMetadata("__name__");
+}
+
+void Shader::setBed(const Id& id)
+{
+    asset_id_.bed = id;
+}
+
+void Shader::setMetadata(const std::string& key, const std::string& value)
+{
+    if (key[0] == '_' && key[1] == '_')
+    {
+        PBJ_LOG(VNotice) << "Attempted to set invalid metadata property!" << PBJ_LOG_NL
+                         << "        Bed ID: " << asset_id_.bed << PBJ_LOG_NL
+                         << "     Shader ID: " << asset_id_.asset << PBJ_LOG_NL
+                         << "  Metadata Key: " << key << PBJ_LOG_NL
+                         << "Metadata Value: " << value << PBJ_LOG_END;
+
+        throw std::invalid_argument("Metadata properties may not begin with '__'!");
+    }
+
+    if (value.length() == 0)
+        metadata_.erase(key);
+    else
+        metadata_[key] = value;
+}
+
+const std::string& Shader::getMetadata(const std::string& key) const
+{
+    auto i = metadata_.find(key);
+    if (i != metadata_.end())
+        return i->second;
+
+    return nullString_();
 }
 
 void Shader::setSource(const std::string& source)
 {
-    source_ = source;
-    info_log_.clear();
+    metadata_["__source__"] = source;
+    metadata_["__infolog__"].clear();
     invalidate_();
 }
 
 const std::string& Shader::getSource() const
 {
-    return source_;
+    return getMetadata("__source__");
 }
 
 void Shader::setType(Type type)
@@ -114,12 +152,18 @@ bool Shader::isValid() const
 
 const std::string& Shader::getInfoLog() const
 {
-    return info_log_;
+    return getMetadata("__infolog__");
 }
 
 void Shader::compile()
 {
-    compile_(source_);
+    compile_(getSource());
+}
+
+std::string& Shader::nullString_() const
+{
+    static std::string null_str;
+    return null_str;
 }
 
 #endif
@@ -160,7 +204,8 @@ void Shader::compile_(const std::string& source)
         glGetShaderInfoLog(gl_id_, infolog_len, NULL, infolog);
 
         PBJ_LOG(VError) << "Error compiling shader!" << PBJ_LOG_NL
-                        << "        Shader ID: " << id_ << PBJ_LOG_NL
+                        << "           Bed ID: " << asset_id_.bed << PBJ_LOG_NL
+                        << "        Shader ID: " << asset_id_.asset << PBJ_LOG_NL
                         << "      Shader Type: " << (type_ == TVertex ? "Vertex" : (type_ == TFragment ? "Fragment" : "Unknown")) << PBJ_LOG_NL
                         << "   GL Shader Type: " << gl_type << PBJ_LOG_NL
                         << "GL Compile Status: " << result << PBJ_LOG_NL
@@ -168,7 +213,7 @@ void Shader::compile_(const std::string& source)
                         << "    Shader Source: " << source << PBJ_LOG_END;
 
 #ifdef PBJ_EDITOR
-        info_log_ = std::string(infolog);
+        metadata_["__infolog__"] = infolog;
 #endif
         delete[] infolog;
 
@@ -182,7 +227,8 @@ void Shader::compile_(const std::string& source)
         glGetShaderiv(gl_id_, GL_INFO_LOG_LENGTH, &infolog_len);
         char *infolog = new char[std::max(1, infolog_len)];
         glGetShaderInfoLog(gl_id_, infolog_len, NULL, infolog);
-        info_log_ = std::string(infolog);
+
+        metadata_["__infolog__"] = infolog;
         delete[] infolog;
     }
 #endif

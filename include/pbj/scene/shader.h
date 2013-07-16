@@ -27,10 +27,12 @@
 #ifndef PBJ_SCENE_SHADER_H_
 #define PBJ_SCENE_SHADER_H_
 
+#include <map>
+
 #include "pbj/_pbj.h"
 #include "be/_gl.h"
 #include "be/source_handle.h"
-#include "be/id.h"
+#include "be/asset_id.h"
 
 namespace pbj {
 namespace scene {
@@ -48,13 +50,13 @@ public:
         TFragment
     };
 
-    Shader(const Id& id, Type type, const std::string& source);
+    Shader(const AssetId& id, Type type, const std::string& source);
     ~Shader();
 
     be::Handle<Shader> getHandle();
     const be::ConstHandle<Shader> getHandle() const;
 
-    const Id& getId() const;
+    const AssetId& getAssetId() const;
 
     Type getType() const;
 
@@ -66,6 +68,11 @@ public:
     void setName(const std::string& name);
     const std::string& getName() const;
 
+    void setBed(const Id& id);
+
+    void setMetadata(const std::string& key, const std::string& value);
+    const std::string& getMetadata(const std::string& key) const;
+
     void setSource(const std::string& source);
     const std::string& getSource() const;
 
@@ -75,7 +82,6 @@ public:
     const std::string& getInfoLog() const;
 
     void compile();
-    void invalidate();
 #endif
 
 private:
@@ -84,15 +90,15 @@ private:
 
     be::SourceHandle<Shader> handle_;
 
-    Id id_;
+    AssetId asset_id_;
 
     GLuint gl_id_;
     Type type_;
 
 #ifdef PBJ_EDITOR
-    std::string name_;
-    std::string source_;
-    std::string info_log_;
+    std::string& nullString_() const;
+
+    std::map<std::string, std::string> metadata_;
 #endif
 
     Shader(const Shader&);
