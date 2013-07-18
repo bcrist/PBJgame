@@ -34,6 +34,7 @@
 #ifndef INPUT_CONTROLLER_H_
 #define INPUT_CONTROLLER_H_
 
+#include <functional>
 //I think I'm doing the include wrong here.  At this point using it to get off
 //intellisense's radar.
 #include "../vc11/include/GL/glfw3.h"
@@ -41,6 +42,11 @@
 
 namespace pbj
 {
+
+typedef std::function<void(I32, I32, I32)> keyListener;
+typedef std::function<void(F64, F64, I32)> dragListener;
+typedef std::function<void(I32)> buttonListener;
+
 class InputController
 {
 public:
@@ -78,6 +84,8 @@ public:
 	static void raiseMouseMiddleDownEvent(I32);
 	static void raiseMouseMiddleUpEvent(I32);
 	
+
+	static void destroy();
 private:
 	static bool _initialized;
 	static GLFWwindow* _window;
@@ -90,6 +98,21 @@ private:
 	static I32 _rightMods;
 	static I32 _middleMods;
 
+	static I32 _maxKeyListeners;
+	static I32 _curKeyListener;
+	static keyListener* _keyListeners;
+
+	static I32 _maxKeyDownListeners;
+	static I32 _curKeyDownListener;
+	static keyListener* _keyDownListeners;
+
+	static I32 _maxKeyHeldListeners;
+	static I32 _curKeyHeldListener;
+	static keyListener* _keyHeldListeners;
+
+	static I32 _maxKeyUpListeners;
+	static I32 _curKeyUpListener;
+	static keyListener* _keyUpListeners;
 };
 
 bool InputController::_initialized = false;

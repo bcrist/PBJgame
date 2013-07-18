@@ -35,6 +35,22 @@ I32 InputController::_leftMods = 0;
 I32 InputController::_rightMods = 0;
 I32 InputController::_middleMods = 0;
 
+I32 InputController::_maxKeyListeners = 0;
+I32 InputController::_curKeyListener = 0;
+keyListener* InputController::_keyListeners = 0;
+
+I32 InputController::_maxKeyDownListeners = 0;
+I32 InputController::_curKeyDownListener = 0;
+keyListener* InputController::_keyDownListeners = 0;
+
+I32 InputController::_maxKeyHeldListeners = 0;
+I32 InputController::_curKeyHeldListener = 0;
+keyListener* InputController::_keyHeldListeners = 0;
+
+I32 InputController::_maxKeyUpListeners = 0;
+I32 InputController::_curKeyUpListener = 0;
+keyListener* InputController::_keyUpListeners = 0;
+
 void InputController::init(GLFWwindow* win)
 {
 	if(!_initialized)
@@ -141,4 +157,18 @@ void InputController::raiseKeyboardEvent(GLFWwindow*, I32 key, I32 scancode, I32
 
 void InputController::raiseCharInputEvent(GLFWwindow* win, U32 character)
 {
+}
+
+//not the way I want this to end.  I want to implement resets for each listener
+//container
+void InputController::destroy()
+{
+	if(_window != 0)
+		delete _window;
+	if(_keyDownListeners != 0)
+		delete[] _keyDownListeners;
+	if(_keyHeldListeners != 0)
+		delete[] _keyHeldListeners;
+	if(_keyUpListeners != 0)
+		delete[] _keyUpListeners;
 }
