@@ -27,6 +27,7 @@
 #ifndef BE_AL_H_
 #define BE_AL_H_
 
-
+#include <al.h>
+#include <alut.h>
 
 #endif

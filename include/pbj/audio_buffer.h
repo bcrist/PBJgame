@@ -22,4 +22,29 @@
 /// \file   pbj/audio_element.h
 /// \author Josh Douglas
 ///
-/// \brief  pbj::AudioElement class source.
+/// \brief  pbj::AudioBuffer class header.
+
+#ifndef AUDIO_BUFFER_H_
+#define AUDIO_BUFFER_H_
+#include "be/_al.h"
+
+namespace pbj{
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Audio element.
+class AudioBuffer
+{
+public:
+	AudioBuffer(const ALubyte* data, size_t size);
+	~AudioBuffer();
+	void setBufferID(ALuint bufferID);
+	void getBufferID();
+
+private:
+	ALuint bufferID;
+
+};
+
+} // namespace pbj
+
+#endif

@@ -137,11 +137,11 @@
     </ClCompile>
     <ClCompile Include="..\..\src\pbj\scene\texture.cpp">
       <Filter>Source Files\pbj\pbj::scene\%28gl%29</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\..\src\pbj\ui_image.cpp">
       <Filter>Source Files\pbj\%28ui%29</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\include\pbj\audio_element.cpp">
+    <ClCompile Include="..\..\include\pbj\audio_buffer.cpp">
       <Filter>Source Files\pbj\%28audio%29</Filter>
     </ClCompile>
   </ItemGroup>
@@ -260,7 +260,7 @@
     <ClInclude Include="..\..\include\pbj\ui_image.h">
       <Filter>Header Files\pbj\%28ui%29</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\pbj\audio_element.h">
+    <ClInclude Include="..\..\include\pbj\audio_buffer.h">
       <Filter>Header Files\pbj\%28audio%29</Filter>
     </ClInclude>
   </ItemGroup>

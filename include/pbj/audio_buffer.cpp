@@ -19,27 +19,13 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   pbj/audio_element.h
+/// \file   pbj/audio_element.cpp
 /// \author Josh Douglas
 ///
-/// \brief  pbj::AudioElement class header.
+/// \brief  pbj::AudioBuffer class source.
 
-#ifndef AUDIO_ELEMENT_H_
-#define AUDIO_ELEMENT_H_
-#include "be/_al.h"
+#include "audio_buffer.h"
 
-namespace pbj{
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief  Audio element.
-class AudioElement
-{
-public:
-
-private:
-	
-};
+namespace pbj {
 
 } // namespace pbj
-
-#endif

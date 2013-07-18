@@ -22,4 +22,4 @@
 /// \file   pbj/audio_element.cpp
 /// \author Josh Douglas
 ///
-/// \brief  pbj::AudioElement class source.
+/// \brief  pbj::AudioBuffer class source.
