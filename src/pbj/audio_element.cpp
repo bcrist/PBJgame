@@ -22,24 +22,4 @@
 /// \file   pbj/audio_element.h
 /// \author Josh Douglas
 ///
-/// \brief  pbj::AudioElement class header.
-
-#ifndef AUDIO_ELEMENT_H_
-#define AUDIO_ELEMENT_H_
-#include "be/_al.h"
-
-namespace pbj{
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief  Audio element.
-class AudioElement
-{
-public:
-
-private:
-	
-};
-
-} // namespace pbj
-
-#endif
+/// \brief  pbj::AudioElement class source.

@@ -27,7 +27,8 @@
 #ifndef PBJ_UI_IMAGE_H_
 #define PBJ_UI_IMAGE_H_
 
-#include "ui_element.h"
+#include "pbj/ui_element.h"
+#include "pbj/scene/texture.h"
 #include "be/const_handle.h"
 
 namespace pbj {
@@ -39,11 +40,11 @@ class UIImage : public UIElement
 public:
 	UIImage();
 	virtual ~UIImage();
-	void setTexture(const be::ConstHandle<Texture> &texture);
-    const be::ConstHandle<Texture> &getTexture() const;
+	void setTexture(const be::ConstHandle<scene::Texture> &texture);
+    const be::ConstHandle<scene::Texture> &getTexture() const;
 
 private:
-	be::ConstHandle<Texture> texture_;
+	be::ConstHandle<scene::Texture> texture_;
 };
 
 }// namespace pbj 
