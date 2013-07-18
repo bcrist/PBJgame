@@ -139,6 +139,7 @@
     <ClCompile Include="..\..\src\be\verbosity.cpp" />
     <ClCompile Include="..\..\src\pbj\engine.cpp" />
     <ClCompile Include="..\..\src\pbj\scene\shader.cpp" />
+    <ClCompile Include="..\..\src\pbj\scene\transform.cpp" />
     <ClCompile Include="..\..\src\pbj\ui_element.cpp" />
     <ClCompile Include="..\..\tests\test_id.cpp" />
   </ItemGroup>
