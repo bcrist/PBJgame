@@ -73,6 +73,12 @@
     <Filter Include="Source Files\pbj\pbj::scene\%28gl%29">
       <UniqueIdentifier>{d1937a1d-4d1e-462f-975d-fb8571d90b85}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\pbj\%28audio%29">
+      <UniqueIdentifier>{eee2a317-9fe4-4df4-8fe9-ca610e0a6a5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\pbj\%28audio%29">
+      <UniqueIdentifier>{e7e862f8-f1c4-415b-bc02-ba2c217e2238}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\deps\sqlite3.c">
@@ -131,6 +137,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\pbj\scene\texture.cpp">
       <Filter>Source Files\pbj\pbj::scene\%28gl%29</Filter>
+	</ClCompile>
+    <ClCompile Include="..\..\src\pbj\ui_image.cpp">
+      <Filter>Source Files\pbj\%28ui%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\pbj\audio_element.cpp">
+      <Filter>Source Files\pbj\%28audio%29</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -244,6 +256,12 @@
     </ClInclude>
     <ClInclude Include="..\..\include\pbj\scene\texture_font_text.h">
       <Filter>Header Files\pbj\pbj::scene\%28gl%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\ui_image.h">
+      <Filter>Header Files\pbj\%28ui%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\audio_element.h">
+      <Filter>Header Files\pbj\%28audio%29</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

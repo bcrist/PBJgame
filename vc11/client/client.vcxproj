@@ -125,6 +125,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\deps\sqlite3.c" />
     <ClCompile Include="..\..\deps\stb_image.c" />
+    <ClCompile Include="..\..\include\pbj\audio_element.cpp" />
     <ClCompile Include="..\..\src\app_entry.cpp" />
     <ClCompile Include="..\..\src\be\asset_id.cpp" />
     <ClCompile Include="..\..\src\be\bed\cached_stmt.cpp" />
@@ -141,6 +142,7 @@
     <ClCompile Include="..\..\src\pbj\scene\shader.cpp" />
     <ClCompile Include="..\..\src\pbj\scene\texture.cpp" />
     <ClCompile Include="..\..\src\pbj\ui_element.cpp" />
+    <ClCompile Include="..\..\src\pbj\ui_image.cpp" />
     <ClCompile Include="..\..\tests\test_id.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -163,6 +165,7 @@
     <ClInclude Include="..\..\include\be\_be.h" />
     <ClInclude Include="..\..\include\be\_gl.h" />
     <ClInclude Include="..\..\include\be\_math.h" />
+    <ClInclude Include="..\..\include\pbj\audio_element.h" />
     <ClInclude Include="..\..\include\pbj\engine.h" />
     <ClInclude Include="..\..\include\pbj\scene\mesh.h" />
     <ClInclude Include="..\..\include\pbj\scene\mesh_instance.h" />
@@ -177,6 +180,7 @@
     <ClInclude Include="..\..\include\pbj\scene\texture_font_text.h" />
     <ClInclude Include="..\..\include\pbj\scene\transform.h" />
     <ClInclude Include="..\..\include\pbj\ui_element.h" />
+    <ClInclude Include="..\..\include\pbj\ui_image.h" />
     <ClInclude Include="..\..\include\pbj\ui_label.h" />
     <ClInclude Include="..\..\include\pbj\_math.h" />
     <ClInclude Include="..\..\include\pbj\_pbj.h" />
