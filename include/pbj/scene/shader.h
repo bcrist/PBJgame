@@ -72,6 +72,7 @@ public:
 
     void setMetadata(const std::string& key, const std::string& value);
     const std::string& getMetadata(const std::string& key) const;
+    const std::map<std::string, std::string>& getMetadata() const;
 
     void setSource(const std::string& source);
     const std::string& getSource() const;
@@ -99,6 +100,10 @@ private:
     std::string& nullString_() const;
 
     std::map<std::string, std::string> metadata_;
+    // special metadata keys:
+    // __name__ => the name of the asset
+    // __source__ => the shader's source code
+    // __infolog__ => the result of the last attempt to compile the shader.
 #endif
 
     Shader(const Shader&);

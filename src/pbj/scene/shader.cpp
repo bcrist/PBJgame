@@ -39,6 +39,10 @@ Shader::Shader(const AssetId& id, Type type, const std::string& source)
 {
     handle_.associate(this);
 
+#ifdef PBJ_EDITOR
+    setSource(source);
+#endif
+
     compile_(source);
 }
 
@@ -122,6 +126,11 @@ const std::string& Shader::getMetadata(const std::string& key) const
         return i->second;
 
     return nullString_();
+}
+
+const std::map<std::string, std::string>& Shader::getMetadata() const
+{
+    return metadata_;
 }
 
 void Shader::setSource(const std::string& source)

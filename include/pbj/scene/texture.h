@@ -44,7 +44,21 @@ namespace scene {
 class Texture
 {
 public:
-    Texture();
+    enum InternalFormat
+    {
+        IF_RGBA = 0,
+        IF_RGB = 1,
+        IF_RG = 2,
+        IF_R = 3,
+    };
+
+    enum FilterMode
+    {
+        FM_Linear = 0,
+        FM_Nearest = 1
+    };
+
+    Texture(const AssetId& id, const GLubyte* data, size_t size, InternalFormat format, bool srgb_color, FilterMode mag_mode, FilterMode min_mode);
     ~Texture();
 
     be::Handle<Texture> getHandle();
@@ -54,20 +68,42 @@ public:
 
     GLuint getGlId() const;
 
+    const ivec2& getDimensions() const;
+
 #ifdef PBJ_EDITOR
     Texture();   // construct without uploading to GL
 
     void setName(const std::string& name);
     const std::string& getName() const;
 
+    void setBed(const Id& id);
+
+    void setMetadata(const std::string& key, const std::string& value);
+    const std::string& getMetadata(const std::string& key) const;
+    const std::map<std::string, std::string>& getMetadata() const;
+
+    void setData(const GLubyte* data, size_t size);
+    size_t getData(const GLubyte*& data) const;
+
+    void setInternalFormat(InternalFormat format);
+    InternalFormat getInternalFormat() const;
+
+    void setSrgbColorspace(bool srgb_color);
+    bool isSrgbColorspace() const;
+
+    void setMagFilterMode(FilterMode mode);
+    FilterMode getMagFilterMode() const;
+
+    void setMinFilterMode(FilterMode mode);
+    FilterMode getMinFilterMode() const;
+
     bool isValid() const;
-    
 
     void upload();
 #endif
 
 private:
-    void upload_(const GLubyte data);
+    void upload_(const GLubyte* data, size_t size, InternalFormat format, bool srgb_color, FilterMode mag_mode, FilterMode min_mode);
     void invalidate_();
 
     be::SourceHandle<Texture> handle_;
@@ -81,9 +117,14 @@ private:
 #ifdef PBJ_EDITOR
     std::string& nullString_() const;
 
-    std::string name_;
-    std::vector<U8> data_;
+    std::vector<GLubyte> data_;
     std::map<std::string, std::string> metadata_;
+    // special metadata keys:
+    // __name__ => asset name
+    // __internalformat__ => type of internal representation to use
+    // __srgb__ => texture is in SRGB color space, not linear
+    // __magfilter__ => filter for magnification
+    // __minfilter__ => filter for minification
 #endif
 
     Texture(const Texture&);
