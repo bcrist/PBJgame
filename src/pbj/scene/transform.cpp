@@ -51,7 +51,7 @@ Transform::~Transform()
 /// \brief Rotate the Transform along a certain axis.
 /// \param angle The angle to rotate, in degrees.
 /// \param axis The axis along which the rotation occurs.
-void Transform::rotate(float angle, const vec3& axis)
+void Transform::rotate(F32 angle, const vec3& axis)
 {
 	_rotation = glm::rotate(_rotation, angle, axis);
 }
@@ -61,7 +61,7 @@ void Transform::rotate(float angle, const vec3& axis)
 /// \param dx The distance to move along the x-axis.
 /// \param dy The distance to move along the y-axis.
 /// \param dz The distance to move along the z-axis.
-void Transform::move(float dx, float dy, float dz)
+void Transform::move(F32 dx, F32 dy, F32 dz)
 {
 	vec3 v = _position.xyz;
 	mat4 m = glm::translate(mat4(), v);
@@ -89,7 +89,7 @@ glm::vec3 Transform::getPosition() const
 /// \param x The x position
 /// \param y The y position
 /// \param z The z position
-void Transform::setPosition(float x, float y, float z)
+void Transform::setPosition(F32 x, F32 y, F32 z)
 {
 	_position = vec4(x, y, z, 1.0f);
 }
@@ -112,7 +112,7 @@ void Transform::setPosition(const vec3& pos)
 ///          necessary to get those angle values.
 glm::vec4 Transform::getAngleAxis() const
 {
-	float angle = glm::angle(_rotation);
+	F32 angle = glm::angle(_rotation);
 	vec3 axis = glm::axis(_rotation);
 	return vec4(angle, axis.x, axis.y, axis.z);
 }
@@ -123,7 +123,7 @@ glm::vec4 Transform::getAngleAxis() const
 /// \param x The x value of the axis of rotation.
 /// \param y The y value of the axis of rotation.
 /// \param z The z value of the axis of rotation.
-void Transform::setAngleAxis(float angle, float x, float y, float z)
+void Transform::setAngleAxis(F32 angle, F32 x, F32 y, F32 z)
 {
 	_rotation = glm::angleAxis(angle, x, y, z);
 }
@@ -132,7 +132,7 @@ void Transform::setAngleAxis(float angle, float x, float y, float z)
 /// \brief Set the rotation of the Transform.
 /// \param angle The angle of rotation.
 /// \param axis The axis of rotation.
-void Transform::setAngleAxis(float angle, const glm::vec3& axis)
+void Transform::setAngleAxis(F32 angle, const glm::vec3& axis)
 {
 	_rotation = glm::angleAxis(angle, glm::normalize(axis));
 }
@@ -160,7 +160,7 @@ glm::vec3 Transform::getScale() const
 /// \param x The scale along the x-axis.
 /// \param y The scale along the y-axis.
 /// \param z The scale along the z-axis.
-void Transform::setScale(float x, float y, float z)
+void Transform::setScale(F32 x, F32 y, F32 z)
 {
 	_scale = glm::vec3(x, y, z);
 }

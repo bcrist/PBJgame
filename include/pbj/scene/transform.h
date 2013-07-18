@@ -34,6 +34,7 @@
 	#define GLM_SWIZZLE
 #endif
 
+#include "pbj/_pbj.h"
 #include "pbj/_math.h"
 
 namespace pbj
@@ -47,23 +48,23 @@ public:
 	Transform();
 	~Transform();
 
-	void rotate(float, const vec3&);
+	void rotate(F32, const vec3&);
 
-	void move(float, float, float);
+	void move(F32, F32, F32);
 	void move(const vec3&);
 
 	vec3 getPosition() const;
-	void setPosition(float, float, float);
+	void setPosition(F32, F32, F32);
 	void setPosition(const vec3&);
 
 	vec4 getAngleAxis() const;
-	void setAngleAxis(float, float, float, float);
-	void setAngleAxis(float, const vec3&);
+	void setAngleAxis(F32, F32, F32, F32);
+	void setAngleAxis(F32, const vec3&);
 
 	quat getRotation() const;
 
 	vec3 getScale() const;
-	void setScale(float, float, float);
+	void setScale(F32, F32, F32);
 	void setScale(const vec3&);
 
 	mat4 getMatrix() const;

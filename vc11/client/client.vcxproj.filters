@@ -130,7 +130,10 @@
       <Filter>Source Files\pbj\%28ui%29</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\pbj\scene\transform.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\pbj\pbj::scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\input_controller.cpp">
+      <Filter>Source Files\pbj</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -244,6 +247,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\pbj\scene\texture_font_text.h">
       <Filter>Header Files\pbj\pbj::scene\%28gl%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\input_controller.h">
+      <Filter>Header Files\pbj\pbj::scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

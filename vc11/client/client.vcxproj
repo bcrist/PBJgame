@@ -138,6 +138,7 @@
     <ClCompile Include="..\..\src\be\util\nconvert.cpp" />
     <ClCompile Include="..\..\src\be\verbosity.cpp" />
     <ClCompile Include="..\..\src\pbj\engine.cpp" />
+    <ClCompile Include="..\..\src\pbj\input_controller.cpp" />
     <ClCompile Include="..\..\src\pbj\scene\shader.cpp" />
     <ClCompile Include="..\..\src\pbj\scene\transform.cpp" />
     <ClCompile Include="..\..\src\pbj\ui_element.cpp" />
@@ -164,6 +165,7 @@
     <ClInclude Include="..\..\include\be\_gl.h" />
     <ClInclude Include="..\..\include\be\_math.h" />
     <ClInclude Include="..\..\include\pbj\engine.h" />
+    <ClInclude Include="..\..\include\pbj\input_controller.h" />
     <ClInclude Include="..\..\include\pbj\scene\mesh.h" />
     <ClInclude Include="..\..\include\pbj\scene\mesh_instance.h" />
     <ClInclude Include="..\..\include\pbj\scene\shader_program.h" />
