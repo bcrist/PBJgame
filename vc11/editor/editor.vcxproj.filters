@@ -90,5 +90,8 @@
     <ClCompile Include="..\..\src\pbj\scene\shader.cpp">
       <Filter>Source Files\pbj\pbj::scene\%28gl%29</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\pbj\scene\texture.cpp">
+      <Filter>Source Files\pbj\pbj::scene\%28gl%29</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
