@@ -35,14 +35,15 @@ namespace pbj{
 class AudioBuffer
 {
 public:
+	AudioBuffer();
 	AudioBuffer(const ALubyte* data, size_t size);
 	~AudioBuffer();
-	void setBufferID(ALuint bufferID);
-	void getBufferID();
+	
+	ALuint getBufferID();
 
 private:
-	ALuint bufferID;
-
+	ALuint buffer_id_;
+	void setBufferID(ALuint bufferID);
 };
 
 } // namespace pbj

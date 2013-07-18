@@ -28,4 +28,29 @@
 
 namespace pbj {
 
+AudioBuffer::AudioBuffer()
+{
+	buffer_id_ = alutCreateBufferFromFileImage();
+}
+
+AudioBuffer::~AudioBuffer()
+{
+	
+}
+
+AudioBuffer::AudioBuffer(const ALubyte* data, size_t size)
+{
+
+}
+
+void AudioBuffer::setBufferID(ALuint bufferID)
+{
+
+}
+
+ALuint AudioBuffer::getBufferID()
+{
+	return buffer_id_;
+}
+
 } // namespace pbj
