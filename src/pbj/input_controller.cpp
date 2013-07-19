@@ -35,22 +35,32 @@ I32 InputController::_leftMods = 0;
 I32 InputController::_rightMods = 0;
 I32 InputController::_middleMods = 0;
 
-I32 InputController::_maxKeyListeners = 0;
-I32 InputController::_curKeyListener = 0;
-keyListener* InputController::_keyListeners = 0;
+InputController::keyAllListeners InputController::_keyAllListeners = keyAllListeners();
+InputController::keyListeners InputController::_keyDownListeners = keyListeners();
+InputController::keyListeners InputController::_keyHeldListeners = keyListeners();
+InputController::keyListeners InputController::_keyUpListeners = keyListeners();
 
-I32 InputController::_maxKeyDownListeners = 0;
-I32 InputController::_curKeyDownListener = 0;
-keyListener* InputController::_keyDownListeners = 0;
+InputController::scrollListeners InputController::_scrollListeners = scrollListeners();
 
-I32 InputController::_maxKeyHeldListeners = 0;
-I32 InputController::_curKeyHeldListener = 0;
-keyListener* InputController::_keyHeldListeners = 0;
+InputController::mouseMotionListeners InputController::_mouseMotionListeners = mouseMotionListeners();
+InputController::dragListeners InputController::_leftDragListeners = dragListeners();
+InputController::dragListeners InputController::_rightDragListeners = dragListeners();
+InputController::dragListeners InputController::_middleDragListeners = dragListeners();
 
-I32 InputController::_maxKeyUpListeners = 0;
-I32 InputController::_curKeyUpListener = 0;
-keyListener* InputController::_keyUpListeners = 0;
+InputController::mouseButtonAnyListeners InputController::_mouseButtonAnyListeners = mouseButtonAnyListeners();
+InputController::mouseButtonListeners InputController::_leftButtonClickListeners = mouseButtonListeners();
+InputController::mouseButtonListeners InputController::_leftButtonDoubleClickListeners = mouseButtonListeners();
+InputController::mouseButtonListeners InputController::_leftButtonDownListeners = mouseButtonListeners();
+InputController::mouseButtonListeners InputController::_leftButtonUpListeners = mouseButtonListeners();
 
+InputController::mouseButtonListeners InputController::_rightButtonClickListeners = mouseButtonListeners();
+InputController::mouseButtonListeners InputController::_rightButtonDownListeners = mouseButtonListeners();
+InputController::mouseButtonListeners InputController::_rightButtonUpListeners = mouseButtonListeners();
+
+InputController::mouseButtonListeners InputController::_middleButtonClickListeners = mouseButtonListeners();
+InputController::mouseButtonListeners InputController::_middleButtonDownListeners = mouseButtonListeners();
+InputController::mouseButtonListeners InputController::_middleButtonUpListeners = mouseButtonListeners();
+///////////////////////////////////////////////////////////////////////////////
 void InputController::init(GLFWwindow* win)
 {
 	if(!_initialized)
@@ -65,38 +75,20 @@ void InputController::init(GLFWwindow* win)
 	}
 }
 
-//I think I want to nest the action check inside the switch instead.  Just
-//trying to get something down for right now.
+////////////////////////////////////////////////////////////////////////////////
 void InputController::raiseMouseButtonEvent(GLFWwindow* win, I32 button, I32 action, I32 mods)
 {
-	if(action == GLFW_PRESS)
+	switch(button)
 	{
-		switch(button)
+	case GLFW_MOUSE_BUTTON_LEFT:
+		if(action == GLFW_PRESS)
 		{
-		case GLFW_MOUSE_BUTTON_LEFT:
 			_leftDown = true;
 			_leftMods = mods;
 			raiseMouseLeftDownEvent(mods);
-			break;
-		case GLFW_MOUSE_BUTTON_RIGHT:
-			_rightDown = true;
-			_rightMods = mods;
-			raiseMouseRightDownEvent(mods);
-			break;
-		case GLFW_MOUSE_BUTTON_MIDDLE:
-			_middleDown = true;
-			_middleMods = mods;
-			raiseMouseMiddleDownEvent(mods);
-			break;
-		default:
-			break;
 		}
-	}
-	else //action==GLFW_RELEASE
-	{
-		switch(button)
+		else //GLFW_RELEASE
 		{
-		case GLFW_MOUSE_BUTTON_LEFT:
 			if(_leftClicked)
 			{
 				raiseMouseLeftDoubleClickEvent(mods);
@@ -109,34 +101,69 @@ void InputController::raiseMouseButtonEvent(GLFWwindow* win, I32 button, I32 act
 			_leftMods = mods;
 			raiseMouseLeftClickEvent(mods);
 			raiseMouseLeftUpEvent(mods);
-			break;
-		case GLFW_MOUSE_BUTTON_RIGHT:
+		}
+		break;
+	case GLFW_MOUSE_BUTTON_RIGHT:
+		if(action == GLFW_PRESS)
+		{
+			_rightDown = true;
+			_rightMods = mods;
+			raiseMouseRightDownEvent(mods);
+		}
+		else //GLFW_RELEASE
+		{
 			_rightMods = mods;
 			raiseMouseRightClickEvent(mods);
 			raiseMouseRightUpEvent(mods);
-			break;
-		case GLFW_MOUSE_BUTTON_MIDDLE:
+		}
+		break;
+	case GLFW_MOUSE_BUTTON_MIDDLE:
+		if(action == GLFW_PRESS)
+		{
+			_middleDown = true;
+			_middleMods = mods;
+			raiseMouseMiddleDownEvent(mods);
+		}
+		else //GLFW_RELEASE
+		{
 			_middleMods = mods;
 			raiseMouseMiddleClickEvent(mods);
 			raiseMouseMiddleUpEvent(mods);
-			break;
-		default:
-			break;
 		}
+		break;
+	default:
+		break;
 	}
+	
+	for(mouseButtonAnyListeners::iterator it=_mouseButtonAnyListeners.begin();
+		it!=_mouseButtonAnyListeners.end();
+		it++)
+		(*it)(button, action, mods);
 }
 
+///////////////////////////////////////////////////////////////////////////////
 void InputController::raiseMouseMotionEvent(GLFWwindow* win, F64 x, F64 y)
 {
 	if(_leftDown) { raiseMouseMotionLeftHeldEvent(x, y, _leftMods); }
 	else if(_rightDown) { raiseMouseMotionRightHeldEvent(x, y, _rightMods); }
 	else if(_middleDown) { raiseMouseMotionMiddleHeldEvent(x, y, _middleMods); }
+	
+	for(mouseMotionListeners::iterator it=_mouseMotionListeners.begin();
+		it!=_mouseMotionListeners.end();
+		it++)
+		(*it)(x, y);
 }
 
+///////////////////////////////////////////////////////////////////////////////
 void InputController::raiseScrollEvent(GLFWwindow* win, F64 xOffset, F64 yOffset)
 {
+	for(scrollListeners::iterator it=_scrollListeners.begin();
+		it!=_scrollListeners.end();
+		it++)
+		(*it)(xOffset, yOffset);
 }
 
+///////////////////////////////////////////////////////////////////////////////
 void InputController::raiseKeyboardEvent(GLFWwindow*, I32 key, I32 scancode, I32 action, I32 mods)
 {
 	switch(action)
@@ -153,22 +180,284 @@ void InputController::raiseKeyboardEvent(GLFWwindow*, I32 key, I32 scancode, I32
 	default:
 		break;
 	}
+	for(keyAllListeners::iterator it=_keyAllListeners.begin();
+		it!=_keyAllListeners.end();
+		it++)
+		(*it)(key, scancode, action, mods);
 }
 
+///////////////////////////////////////////////////////////////////////////////
 void InputController::raiseCharInputEvent(GLFWwindow* win, U32 character)
 {
 }
 
-//not the way I want this to end.  I want to implement resets for each listener
-//container
+///////////////////////////////////////////////////////////////////////////////
+void InputController::raiseKeyDownEvent(I32 key, I32 scancode, I32 mods)
+{
+	for(keyListeners::iterator it=_keyDownListeners.begin();
+		it!=_keyDownListeners.end();
+		it++)
+		(*it)(key, scancode, mods);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void InputController::raiseKeyHeldEvent(I32 key, I32 scancode, I32 mods)
+{
+	for(keyListeners::iterator it=_keyHeldListeners.begin();
+		it!=_keyHeldListeners.end();
+		it++)
+		(*it)(key, scancode, mods);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void InputController::raiseKeyUpEvent(I32 key, I32 scancode, I32 mods)
+{
+	for(keyListeners::iterator it=_keyUpListeners.begin();
+		it!=_keyUpListeners.end();
+		it++)
+		(*it)(key, scancode, mods);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void InputController::raiseMouseMotionLeftHeldEvent(F64 x, F64 y, I32 mods)
+{
+	for(dragListeners::iterator it=_leftDragListeners.begin();
+		it!=_leftDragListeners.end();
+		it++)
+		(*it)(x, y, mods);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void InputController::raiseMouseMotionRightHeldEvent(F64 x, F64 y, I32 mods)
+{
+	for(dragListeners::iterator it=_rightDragListeners.begin();
+		it!=_rightDragListeners.end();
+		it++)
+		(*it)(x, y, mods);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void InputController::raiseMouseMotionMiddleHeldEvent(F64 x, F64 y, I32 mods)
+{
+	for(dragListeners::iterator it=_middleDragListeners.begin();
+		it!=_middleDragListeners.end();
+		it++)
+		(*it)(x, y, mods);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::raiseMouseLeftClickEvent(I32 mods)
+{
+	for(mouseButtonListeners::iterator it=_leftButtonClickListeners.begin();
+		it!=_leftButtonClickListeners.end();
+		it++)
+		(*it)(mods);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::raiseMouseLeftDoubleClickEvent(I32 mods)
+{
+	for(mouseButtonListeners::iterator it=_leftButtonDoubleClickListeners.begin();
+		it!=_leftButtonDoubleClickListeners.end();
+		it++)
+		(*it)(mods);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::raiseMouseLeftDownEvent(I32 mods)
+{
+	for(mouseButtonListeners::iterator it=_leftButtonDownListeners.begin();
+		it!=_leftButtonDownListeners.end();
+		it++)
+		(*it)(mods);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::raiseMouseLeftUpEvent(I32 mods)
+{
+	for(mouseButtonListeners::iterator it=_leftButtonUpListeners.begin();
+		it!=_leftButtonUpListeners.end();
+		it++)
+		(*it)(mods);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::raiseMouseRightClickEvent(I32 mods)
+{
+	for(mouseButtonListeners::iterator it=_rightButtonClickListeners.begin();
+		it!=_rightButtonClickListeners.end();
+		it++)
+		(*it)(mods);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::raiseMouseRightDownEvent(I32 mods)
+{
+	for(mouseButtonListeners::iterator it=_rightButtonDownListeners.begin();
+		it!=_rightButtonDownListeners.end();
+		it++)
+		(*it)(mods);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::raiseMouseRightUpEvent(I32 mods)
+{
+	for(mouseButtonListeners::iterator it=_rightButtonUpListeners.begin();
+		it!=_rightButtonUpListeners.end();
+		it++)
+		(*it)(mods);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::raiseMouseMiddleClickEvent(I32 mods)
+{
+	for(mouseButtonListeners::iterator it=_middleButtonClickListeners.begin();
+		it!=_middleButtonClickListeners.end();
+		it++)
+		(*it)(mods);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::raiseMouseMiddleDownEvent(I32 mods)
+{
+	for(mouseButtonListeners::iterator it=_middleButtonDownListeners.begin();
+		it!=_middleButtonDownListeners.end();
+		it++)
+		(*it)(mods);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::raiseMouseMiddleUpEvent(I32 mods)
+{
+	for(mouseButtonListeners::iterator it=_middleButtonUpListeners.begin();
+		it!=_middleButtonUpListeners.end();
+		it++)
+		(*it)(mods);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::registerKeyAllListener(keyAllListener l)
+{
+	_keyAllListeners.push_back(l);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::registerKeyDownListener(keyListener l)
+{
+	_keyDownListeners.push_back(l);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::registerKeyHeldListener(keyListener l)
+{
+	_keyHeldListeners.push_back(l);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::registerKeyUpListener(keyListener l)
+{
+	_keyUpListeners.push_back(l);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::registerMouseButtonAnyListener(mouseButtonAnyListener l)
+{
+	_mouseButtonAnyListeners.push_back(l);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::registerMouseLeftClickListener(mouseButtonListener l)
+{
+	_leftButtonClickListeners.push_back(l);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::registerMouseLeftDoubleClickListener(mouseButtonListener l)
+{
+	_leftButtonDoubleClickListeners.push_back(l);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::registerMouseLeftDownListener(mouseButtonListener l)
+{
+	_leftButtonDownListeners.push_back(l);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::registerMouseLeftUpListener(mouseButtonListener l)
+{
+	_leftButtonUpListeners.push_back(l);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::registerMouseRightClickListener(mouseButtonListener l)
+{
+	_rightButtonClickListeners.push_back(l);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::registerMouseRightDownListener(mouseButtonListener l)
+{
+	_rightButtonDownListeners.push_back(l);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::registerMouseRightUpListener(mouseButtonListener l)
+{
+	_rightButtonUpListeners.push_back(l);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::registerMouseMiddleClickListener(mouseButtonListener l)
+{
+	_middleButtonClickListeners.push_back(l);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::registerMouseMiddleDownListener(mouseButtonListener l)
+{
+	_middleButtonDownListeners.push_back(l);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::registerMouseMiddleUpListener(mouseButtonListener l)
+{
+	_middleButtonUpListeners.push_back(l);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::registerMouseMotionListener(mouseMotionListener l)
+{
+	_mouseMotionListeners.push_back(l);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::registerMouseMotionLeftHeldListener(dragListener l)
+{
+	_leftDragListeners.push_back(l);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::registerMouseMotionRightHeldListener(dragListener l)
+{
+	_rightDragListeners.push_back(l);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::registerMouseMotionMiddleHeldListener(dragListener l)
+{
+	_middleDragListeners.push_back(l);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::registerScrollListener(scrollListener l)
+{
+	_scrollListeners.push_back(l);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void InputController::destroy()
 {
 	if(_window != 0)
-		delete _window;
-	if(_keyDownListeners != 0)
-		delete[] _keyDownListeners;
-	if(_keyHeldListeners != 0)
-		delete[] _keyHeldListeners;
-	if(_keyUpListeners != 0)
-		delete[] _keyUpListeners;
+		delete _window;	
 }

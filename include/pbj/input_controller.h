@@ -30,11 +30,13 @@
 ///          moment and therefore do not register to hear them.  This is setup
 ///          for use in only one window.  I do not anticipate that being an
 ///          issue.  The double-click detection will work poorly without having
-///          a timer implemented.  C'est la vie.
+///          a timer implemented.  C'est la vie.  Furthermore, I think the way
+///          listeners are implemented can be improved.
 #ifndef INPUT_CONTROLLER_H_
 #define INPUT_CONTROLLER_H_
 
 #include <functional>
+#include <deque>
 //I think I'm doing the include wrong here.  At this point using it to get off
 //intellisense's radar.
 #include "../vc11/include/GL/glfw3.h"
@@ -43,13 +45,17 @@
 namespace pbj
 {
 
-typedef std::function<void(I32, I32, I32)> keyListener;
-typedef std::function<void(F64, F64, I32)> dragListener;
-typedef std::function<void(I32)> buttonListener;
-
 class InputController
 {
 public:
+	typedef std::function<void(I32, I32, I32, I32)> keyAllListener;
+	typedef std::function<void(I32, I32, I32)> keyListener;
+	typedef std::function<void(I32, I32, I32)> mouseButtonAnyListener;
+	typedef std::function<void(I32)> mouseButtonListener;
+	typedef std::function<void(F64, F64)> scrollListener;
+	typedef std::function<void(F64, F64)> mouseMotionListener;
+	typedef std::function<void(F64, F64, I32)> dragListener;
+
 	static void init(GLFWwindow* win);
 
 	static void raiseMouseButtonEvent(GLFWwindow*, I32, I32, I32); ///< Callback registered with GLFW
@@ -57,16 +63,6 @@ public:
 	static void raiseScrollEvent(GLFWwindow*, F64, F64); ///< Callback registered with GLFW
 	static void raiseKeyboardEvent(GLFWwindow*, I32, I32, I32, I32); ///< Callback registered with GLFW
 	static void raiseCharInputEvent(GLFWwindow*, U32); ///< Callback registered with GLFW
-
-	//Specific key events
-	static void raiseKeyDownEvent(I32, I32, I32); ///< Event for key down
-	static void raiseKeyHeldEvent(I32, I32, I32); ///< Event for key held
-	static void raiseKeyUpEvent(I32, I32, I32); ///< Event for key being released
-
-	//Specific mouse drag events
-	static void raiseMouseMotionLeftHeldEvent(F64, F64, I32);
-	static void raiseMouseMotionRightHeldEvent(F64, F64, I32);
-	static void raiseMouseMotionMiddleHeldEvent(F64, F64, I32);
 	
 	//Specific left mouse click events
 	static void raiseMouseLeftClickEvent(I32);
@@ -79,14 +75,61 @@ public:
 	static void raiseMouseRightDownEvent(I32);
 	static void raiseMouseRightUpEvent(I32);
 	
-	//Sepcific middle mouse click events
+	//Specific middle mouse click events
 	static void raiseMouseMiddleClickEvent(I32);
 	static void raiseMouseMiddleDownEvent(I32);
 	static void raiseMouseMiddleUpEvent(I32);
 	
+	//Specific mouse drag events
+	static void raiseMouseMotionLeftHeldEvent(F64, F64, I32);
+	static void raiseMouseMotionRightHeldEvent(F64, F64, I32);
+	static void raiseMouseMotionMiddleHeldEvent(F64, F64, I32);
+
+	//Specific key events
+	static void raiseKeyDownEvent(I32, I32, I32); ///< Event for key down
+	static void raiseKeyHeldEvent(I32, I32, I32); ///< Event for key held
+	static void raiseKeyUpEvent(I32, I32, I32); ///< Event for key being released
+
+	static void registerKeyAllListener(keyAllListener);
+	static void registerKeyDownListener(keyListener);
+	static void registerKeyHeldListener(keyListener);
+	static void registerKeyUpListener(keyListener);
+
+	static void registerMouseButtonAnyListener(mouseButtonAnyListener);
+	static void registerMouseLeftClickListener(mouseButtonListener);
+	static void registerMouseLeftDoubleClickListener(mouseButtonListener);
+	static void registerMouseLeftDownListener(mouseButtonListener);
+	static void registerMouseLeftUpListener(mouseButtonListener);
+
+	static void registerMouseRightClickListener(mouseButtonListener);
+	static void registerMouseRightDownListener(mouseButtonListener);
+	static void registerMouseRightUpListener(mouseButtonListener);
+
+	static void registerMouseMiddleClickListener(mouseButtonListener);
+	static void registerMouseMiddleDownListener(mouseButtonListener);
+	static void registerMouseMiddleUpListener(mouseButtonListener);
+
+	static void registerMouseMotionListener(mouseMotionListener);
+	static void registerMouseMotionLeftHeldListener(dragListener);
+	static void registerMouseMotionRightHeldListener(dragListener);
+	static void registerMouseMotionMiddleHeldListener(dragListener);
+
+	static void registerScrollListener(scrollListener);
 
 	static void destroy();
 private:
+	//placing the typedefs here to keep them out of the way
+	typedef std::deque<mouseButtonAnyListener> mouseButtonAnyListeners;
+	typedef std::deque<mouseButtonListener> mouseButtonListeners;
+	
+	typedef std::deque<mouseMotionListener> mouseMotionListeners;
+	typedef std::deque<dragListener> dragListeners;
+	
+	typedef std::deque<scrollListener> scrollListeners;
+
+	typedef std::deque<keyListener> keyListeners;
+	typedef std::deque<keyAllListener> keyAllListeners;
+
 	static bool _initialized;
 	static GLFWwindow* _window;
 
@@ -98,23 +141,32 @@ private:
 	static I32 _rightMods;
 	static I32 _middleMods;
 
-	static I32 _maxKeyListeners;
-	static I32 _curKeyListener;
-	static keyListener* _keyListeners;
+	static keyAllListeners _keyAllListeners;
+	static keyListeners _keyDownListeners;
+	static keyListeners _keyHeldListeners;
+	static keyListeners _keyUpListeners;
 
-	static I32 _maxKeyDownListeners;
-	static I32 _curKeyDownListener;
-	static keyListener* _keyDownListeners;
+	static scrollListeners _scrollListeners;
 
-	static I32 _maxKeyHeldListeners;
-	static I32 _curKeyHeldListener;
-	static keyListener* _keyHeldListeners;
+	static mouseMotionListeners _mouseMotionListeners;
+	static dragListeners _leftDragListeners;
+	static dragListeners _rightDragListeners;
+	static dragListeners _middleDragListeners;
 
-	static I32 _maxKeyUpListeners;
-	static I32 _curKeyUpListener;
-	static keyListener* _keyUpListeners;
+	static mouseButtonAnyListeners _mouseButtonAnyListeners;
+	static mouseButtonListeners _leftButtonClickListeners;
+	static mouseButtonListeners _leftButtonDoubleClickListeners;
+	static mouseButtonListeners _leftButtonDownListeners;
+	static mouseButtonListeners _leftButtonUpListeners;
+
+	static mouseButtonListeners _rightButtonClickListeners;
+	static mouseButtonListeners _rightButtonDownListeners;
+	static mouseButtonListeners _rightButtonUpListeners;
+
+	static mouseButtonListeners _middleButtonClickListeners;
+	static mouseButtonListeners _middleButtonDownListeners;
+	static mouseButtonListeners _middleButtonUpListeners;
+
 };
-
-bool InputController::_initialized = false;
 } //namespace pbj
 #endif

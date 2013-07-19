@@ -141,11 +141,8 @@
     <ClCompile Include="..\..\src\pbj\engine.cpp" />
     <ClCompile Include="..\..\src\pbj\input_controller.cpp" />
     <ClCompile Include="..\..\src\pbj\scene\shader.cpp" />
-<<<<<<< HEAD
     <ClCompile Include="..\..\src\pbj\scene\transform.cpp" />
-=======
     <ClCompile Include="..\..\src\pbj\scene\texture.cpp" />
->>>>>>> master
     <ClCompile Include="..\..\src\pbj\ui_element.cpp" />
     <ClCompile Include="..\..\src\pbj\ui_image.cpp" />
     <ClCompile Include="..\..\tests\test_id.cpp" />
