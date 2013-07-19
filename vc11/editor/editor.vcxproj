@@ -134,7 +134,6 @@
     <ClCompile Include="..\..\deps\pugixml.cpp" />
     <ClCompile Include="..\..\deps\sqlite3.c" />
     <ClCompile Include="..\..\deps\stb_image.c" />
-    <ClCompile Include="..\..\src\be\asset_id.cpp" />
     <ClCompile Include="..\..\src\be\bed\cached_stmt.cpp" />
     <ClCompile Include="..\..\src\be\bed\db.cpp" />
     <ClCompile Include="..\..\src\be\bed\detail\db_error.cpp" />
@@ -149,6 +148,72 @@
     <ClCompile Include="..\..\src\pbj\engine.cpp" />
     <ClCompile Include="..\..\src\pbj\scene\shader.cpp" />
     <ClCompile Include="..\..\src\pbj\scene\texture.cpp" />
+    <ClCompile Include="..\..\src\pbj\sw\resource_id.cpp" />
+    <ClCompile Include="..\..\src\pbj\sw\sandwich.cpp" />
+    <ClCompile Include="..\..\src\pbj\sw\sandwich_open.cpp" />
+    <ClCompile Include="..\..\src\pbj\window.cpp" />
+    <ClCompile Include="..\..\src\pbj\window_settings.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\be\bed\cached_stmt.h" />
+    <ClInclude Include="..\..\include\be\bed\db.h" />
+    <ClInclude Include="..\..\include\be\bed\detail\db_error.h" />
+    <ClInclude Include="..\..\include\be\bed\detail\stmt_cache_entry.h" />
+    <ClInclude Include="..\..\include\be\bed\stmt.h" />
+    <ClInclude Include="..\..\include\be\bed\stmt_cache.h" />
+    <ClInclude Include="..\..\include\be\bed\transaction.h" />
+    <ClInclude Include="..\..\include\be\const_handle.h" />
+    <ClInclude Include="..\..\include\be\detail\handle_entry.h" />
+    <ClInclude Include="..\..\include\be\detail\handle_manager.h" />
+    <ClInclude Include="..\..\include\be\handle.h" />
+    <ClInclude Include="..\..\include\be\id.h" />
+    <ClInclude Include="..\..\include\be\source_handle.h" />
+    <ClInclude Include="..\..\include\be\util\nconvert.h" />
+    <ClInclude Include="..\..\include\be\_be.h" />
+    <ClInclude Include="..\..\include\pbj\audio_element.h" />
+    <ClInclude Include="..\..\include\pbj\engine.h" />
+    <ClInclude Include="..\..\include\pbj\scene\mesh.h" />
+    <ClInclude Include="..\..\include\pbj\scene\mesh_instance.h" />
+    <ClInclude Include="..\..\include\pbj\scene\shader.h" />
+    <ClInclude Include="..\..\include\pbj\scene\shader_program.h" />
+    <ClInclude Include="..\..\include\pbj\scene\skeletal_mesh.h" />
+    <ClInclude Include="..\..\include\pbj\scene\skeletal_mesh_instance.h" />
+    <ClInclude Include="..\..\include\pbj\scene\skeleton.h" />
+    <ClInclude Include="..\..\include\pbj\scene\skeleton_pose.h" />
+    <ClInclude Include="..\..\include\pbj\scene\texture.h" />
+    <ClInclude Include="..\..\include\pbj\scene\texture_font.h" />
+    <ClInclude Include="..\..\include\pbj\scene\texture_font_text.h" />
+    <ClInclude Include="..\..\include\pbj\scene\transform.h" />
+    <ClInclude Include="..\..\include\pbj\sw\resource_id.h" />
+    <ClInclude Include="..\..\include\pbj\sw\sandwich.h" />
+    <ClInclude Include="..\..\include\pbj\sw\sandwich_open.h" />
+    <ClInclude Include="..\..\include\pbj\ui_element.h" />
+    <ClInclude Include="..\..\include\pbj\ui_image.h" />
+    <ClInclude Include="..\..\include\pbj\ui_label.h" />
+    <ClInclude Include="..\..\include\pbj\window.h" />
+    <ClInclude Include="..\..\include\pbj\window_settings.h" />
+    <ClInclude Include="..\..\include\pbj\_al.h" />
+    <ClInclude Include="..\..\include\pbj\_gl.h" />
+    <ClInclude Include="..\..\include\pbj\_math.h" />
+    <ClInclude Include="..\..\include\pbj\_pbj.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\include\be\const_handle.inl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\..\include\be\detail\handle_manager.inl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\..\include\be\handle.inl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\..\include\be\id.inl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\..\include\be\source_handle.inl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\..\include\pbj\sw\resource_id.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

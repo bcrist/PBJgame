@@ -1,4 +1,4 @@
-// Copyright (c) 2013 Benjamin Crist
+// Copyright (c) 2013 PBJ^2 Productions
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -19,38 +19,36 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   be/bed/bed_open.h
+/// \file   pbj/sw/resource_id.inl
 /// \author Benjamin Crist
 ///
-/// \brief  be::bed::Bed non-member functions.
-/// \details These are separated from bed.h to reduce compile time since many
-/// utilize \c boost::filesystem headers and they are not needed for most usage
-/// of beds (after they are opened).
+/// \brief  Implementations of pbj::sw::ResourceId template functions.
 
-#ifndef BE_BED_BED_OPEN_H_
-#define BE_BED_BED_OPEN_H_
+#if !defined(PBJ_SW_RESOURCE_ID_H_) && !defined(DOXYGEN)
+#include "pbj/sw/resource_id.h"
+#elif !defined(PBJ_SW_RESOURCE_ID_INL_)
+#define PBJ_SW_RESOURCE_ID_INL_
 
-#include "be/bed/bed.h"
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  \c std::hash specialization for utilizing ResourceId objects in
+///         \c std::unordered_set and \c std::unordered_map containers.
+template<>
+struct std::hash<pbj::sw::ResourceId>
+{
+public:
 
-#include <boost/filesystem.hpp>
+    ////////////////////////////////////////////////////////////////////////////
+    /// \brief  Calculates the hashcode of the provided ResourceId.
+    /// \details Just XORs the \c std::hash values of the two Ids that make up
+    ///         the ResourceId.
+    /// \param  id The ResourceId to hash.
+    /// \return A hashcode suitable for use in hashtable-based data structures.
+    size_t operator()(const pbj::sw::ResourceId& id) const
+    {
+        std::hash<be::Id> hash_id;
 
-#include <unordered_map>
-
-namespace be {
-namespace bed {
-
-bool specify(const Id& bed_id, const boost::filesystem::path& path);
-Id specify(const boost::filesystem::path& path);
-void directory(const boost::filesystem::path& path);
-
-const boost::filesystem::path& getPath(const Id& bed_id);
-
-std::unordered_map<Id, boost::filesystem::path> getPaths();
-
-std::shared_ptr<Bed> open(const Id& bed_id);
-std::shared_ptr<Bed> openWritable(const Id& bed_id);
-
-} // namespace bed
-} // namespace be
+        return hash_id(id.sandwich) ^ hash_id(id.resource);
+    }
+};
 
 #endif

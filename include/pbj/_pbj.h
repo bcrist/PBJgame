@@ -78,10 +78,6 @@
 namespace be {
 
 class Id;
-class AssetId;
-class Handle;
-class ConstHandle;
-class SourceHandle;
 
 } // namespace be
 
@@ -131,7 +127,6 @@ typedef double F64;     ///< 64 bit floating point type.
 
 // alias \ref be classes
 typedef be::Id Id;
-typedef be::AssetId AssetId;
 
 } // namespace pbj
 

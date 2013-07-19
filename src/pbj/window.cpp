@@ -1,4 +1,4 @@
-// Copyright (c) 2013 Benjamin Crist
+// Copyright (c) 2013 PBJ^2 Productions
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -19,51 +19,15 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   be/wnd/window.cpp
+/// \file   pbj/window.cpp
 /// \author Benjamin Crist
 ///
-/// \brief  Implementations of be::wnd::Window functions.
+/// \brief  Implementations of pbj::Window functions.
 
-#include "be/wnd/window.h"
+#include "pbj/window.h"
 
-#include "be/wnd/window_event.h"
-#include "be/wnd/window_settings.h"
-#include "be/bsc/scene.h"
 
-#include <vector>
-
-namespace be {
-namespace wnd {
-namespace detail {
-
-GLEWContext* current_glew_context = nullptr;
-ContextState* current_context_state = nullptr;
-
-} // namespace be::wnd::detail
-namespace {
-
-std::vector<Window*> current_context_stack;
-Window* current_context = nullptr;
-
-} // namespace be::wnd::(anon)
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief  Retrieves a handle to this window.
-///
-/// \return A Handle<Window> to this window.
-const Handle<Window>& Window::getHandle()
-{
-   return handle_;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief  Retrieves a handle to this window.
-///
-/// \return A ConstHandle<Window> to this window.
-const ConstHandle<Window>& Window::getHandle() const
-{
-   return handle_;
-}
+namespace pbj {
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief  Retrieves the GLFW window structure for this window.
@@ -88,181 +52,6 @@ const WindowSettings& Window::getWindowSettings() const
    return window_settings_;
 }
 
-///////////////////////////////////////////////////////////////////////////////
-/// \brief  Renders a frame to the window.
-///
-/// \details Each root entity attached to the window which has a Scene
-///         component will have that scene's Scene::render() function called.
-///         The scenes are sorted according to the indices returned by
-///         Scene::getRenderOrderIndex().  Scenes with a higher index are
-///         rendered after (on top of) those with lower indices.  The ordering
-///         of scenes with equal indices is undefined.  Scenes with negative
-///         indices will not be rendered at all.
-void Window::render()
-{
-   makeContextCurrent();
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
-   for (auto i(begin()), end(end()); i != end; ++i)
-   {
-      bsc::Scene* scene = i->getComponent<bsc::Scene>();
-
-      if (scene && scene->getRenderOrderIndex() >= 0)
-         scenes_.push_back(scene);
-   }
-
-   std::sort(scenes_.begin(), scenes_.end(), [](bsc::Scene* a, bsc::Scene* b){ return a->getRenderOrderIndex() < b->getRenderOrderIndex(); });
-   for (auto scene : scenes_)
-      scene->render();
-
-   glfwSwapBuffers(glfw_window_);
-   popCurrentContext();
-
-   scenes_.clear();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief  Updates any simulations running on the window's scenes.
-///
-/// \details Each root entity attached to the window which has a Scene
-///         component will have that scene's
-///         Scene::update(const std::chrono::duration<double>&) function
-///         called.
-///
-/// \param  elapsed The amount of time that has passed since the last update.
-void Window::update(const std::chrono::duration<double>& elapsed)
-{
-   for (auto i(begin()), end(end()); i != end; ++i)
-   {
-      bsc::Scene* scene = i->getComponent<bsc::Scene>();
-
-      if (scene)
-         scene->update(elapsed);
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief  Adds a new root entity to the window.
-///
-/// \details This window takes ownership of the entity (and indirectly all of
-///         its children and components).
-///
-/// \param  entity The entity to add.
-///
-/// \sa     Entity::addChild(std::unique_ptr<Entity>&&)
-void Window::addEntity(std::unique_ptr<Entity>&& entity)
-{
-   if (entity.get() != nullptr)
-   {
-      Entity& ent = *entity;
-
-      // if the user has a unique_ptr to it, it better not have a parent
-      // or else something has gone horribly wrong somewhere...
-      assert(!ent.getParent());
-
-      entities_.push_back(std::move(entity));
-
-      ent.registerListener(entity_listener_, ComponentEntityEvent::component_added);
-
-      auto range = ent.getComponents<bsc::Scene>();
-      for (auto i = range.first; i != range.second; ++i)
-         i->setWindow(getHandle());
-   }
-   else
-      BE_LOG(VNotice) << "Attempted to add non-existent root entity to window!" << BE_LOG_END;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief  Removes and returns a root entity attached to the window.
-///
-/// \param  it An iterator pointing at the entity to remove.
-/// \return A \c unique_ptr owning the released child.
-///
-/// \sa     Entity::releaseChild(const Entity::ChildIterator&)
-std::unique_ptr<Entity> Window::releaseEntity(const EntityIterator& it)
-{
-   Entity& entity = *it.it_->release();
-   entities_.erase(it.it_);
-
-   entity.unregisterListener(entity_listener_, ComponentEntityEvent::component_added);
-
-   Handle<Window> new_window_handle;
-   auto range = entity.getComponents<bsc::Scene>();
-   for (auto i = range.first; i != range.second; ++i)
-      i->setWindow(new_window_handle);
-
-   return std::unique_ptr<Entity>(&entity);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief  Removes and deletes a root entity attached to the window.
-///
-/// \param  it An iterator pointing at the entity to remove.
-///
-/// \sa     Entity::eraseChild(const Entity::ChildIterator&)
-void Window::eraseEntity(const EntityIterator& it)
-{
-   entities_.erase(it.it_);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief  Removes and deletes a range of root entities attached to the
-///         window.
-///
-/// \param  begin An iterator pointing at the first entity to remove.
-/// \param  end An iterator pointing just past the last entity to remove.
-///
-/// \sa     Entity::eraseChildren(const Entity::ChildIterator&, const Entity::ChildIterator&)
-void Window::eraseEntities(const EntityIterator& begin, const EntityIterator& end)
-{
-   entities_.erase(begin.it_, end.it_);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief  Retrieves an iterator over this window's attached root entities
-///         pointing to the first entity.
-///
-/// \return An EntityIterator pointing to the first entity, or end() if there
-///         are no attached entities.
-Window::EntityIterator Window::begin()
-{
-   return entities_.begin();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief  Retrieves an iterator over this window's attached root entities
-///         pointing just past the last entity.
-///
-/// \return An EntityIterator pointing just past the last entity.
-Window::EntityIterator Window::end()
-{
-   return entities_.end();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief  Retrieves an iterator over this window's attached root entities
-///         pointing to the first entity.
-///
-/// \details The iterator may not be used to modify entities.
-///
-/// \return A ConstEntityIterator pointing to the first entity, or end() if
-///         there are no attached entities.
-Window::ConstEntityIterator Window::begin() const
-{
-   return entities_.cbegin();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief  Retrieves an iterator over this window's attached root entities
-///         pointing just past the last entity.
-///
-/// \details The iterator may not be used to modify entities.
-///
-/// \return A ConstEntityIterator pointing just past the last entity.
-Window::ConstEntityIterator Window::end() const
-{
-   return entities_.cend();
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief  Changes the title of the window as seen by the operating system
@@ -627,171 +416,149 @@ int Window::unregisterListenerChecked(IWindowListener& listener, const Id& event
 }
 
 Window::Window(const WindowSettings& window_settings)
+    window_settings_(window_settings);
 {
-   handle_.associate(this);
-   entity_listener_.window = this;
+    int width, height;
+    int refresh_rate;
+    ivec3 color_bits;
 
-   window_settings_ = window_settings;
+    const bool fullscreen_exclusive = (window_settings.mode & 0x8) != 0;
+    const bool fullscreen_windowed = (window_settings.mode & 0x4) != 0;
+    const bool undecorated = (window_settings.mode & 0x2) != 0;
+    const bool fixed_size = (window_settings.mode & 0x1) != 0;
 
-   int width, height;
-   int refresh_rate;
-   ivec3 color_bits;
+    ivec2 position = window_settings.position;
 
-   const bool fullscreen_exclusive = (window_settings.mode & 0x8) != 0;
-   const bool fullscreen_windowed = (window_settings.mode & 0x4) != 0;
-   const bool undecorated = (window_settings.mode & 0x2) != 0;
-   const bool fixed_size = (window_settings.mode & 0x1) != 0;
+    width = window_settings.size.x;
+    height = window_settings.size.y;
 
-   ivec2 position = window_settings.position;
+    color_bits.r = window_settings.red_bits;
+    color_bits.g = window_settings.green_bits;
+    color_bits.b = window_settings.blue_bits;
 
-   width = window_settings.size.x;
-   height = window_settings.size.y;
+    refresh_rate = window_settings.refresh_rate;
 
-   color_bits.r = window_settings.red_bits;
-   color_bits.g = window_settings.green_bits;
-   color_bits.b = window_settings.blue_bits;
+    // Get monitor info
+    GLFWmonitor* monitor = nullptr;
+    if (fullscreen_exclusive || fullscreen_windowed)
+    {
+        // Fullscreen mode (exclusive or windowed) - use monitor_index
 
-   refresh_rate = window_settings.refresh_rate;
+        if (window_settings.monitor_index > 0)
+        {
+            int monitor_count;
+            GLFWmonitor** monitors = glfwGetMonitors(&monitor_count);
+            if (window_settings.monitor_index < monitor_count)
+                monitor = monitors[monitor_count];
+        }
+    }
+    else
+    {
+        // Windowed mode - find monitor that our window will be on
 
-   // Get monitor info
-   GLFWmonitor* monitor = nullptr;
-   if (fullscreen_exclusive || fullscreen_windowed)
-   {
-      // Fullscreen mode (exclusive or windowed) - use monitor_index
+        ivec2 center = window_settings.position + window_settings.size / 2;
 
-      if (window_settings.monitor_index > 0)
-      {
-         int monitor_count;
-         GLFWmonitor** monitors = glfwGetMonitors(&monitor_count);
-         if (window_settings.monitor_index < monitor_count)
-            monitor = monitors[monitor_count];
-      }
-   }
-   else
-   {
-      // Windowed mode - find monitor that our window will be on
-
-      ivec2 center = window_settings.position + window_settings.size / 2;
-
-      int monitor_count;
-      GLFWmonitor** monitors = glfwGetMonitors(&monitor_count);
+        int monitor_count;
+        GLFWmonitor** monitors = glfwGetMonitors(&monitor_count);
       
-      for (int i = 0; i < monitor_count; ++i)
-      {
-         GLFWmonitor* mon = monitors[i];
-         ivec2 offset;
-         glfwGetMonitorPos(mon, &offset.x, &offset.y);
-         const GLFWvidmode* mode = glfwGetVideoMode(mon);
+        for (int i = 0; i < monitor_count; ++i)
+        {
+            GLFWmonitor* mon = monitors[i];
+            ivec2 offset;
+            glfwGetMonitorPos(mon, &offset.x, &offset.y);
+            const GLFWvidmode* mode = glfwGetVideoMode(mon);
 
-         if (center.x >= offset.x && center.x < offset.x + mode->width &&
-             center.y >= offset.y && center.y < offset.y + mode->height)
-         {
-            monitor = mon;
-            break;
-         }
-      }
-   }
+            if (center.x >= offset.x && center.x < offset.x + mode->width &&
+                center.y >= offset.y && center.y < offset.y + mode->height)
+            {
+                monitor = mon;
+                break;
+            }
+        }
+    }
 
-   if (!monitor)
-      monitor = glfwGetPrimaryMonitor();
+    if (!monitor)
+        monitor = glfwGetPrimaryMonitor();
 
-   const GLFWvidmode* monitor_mode = glfwGetVideoMode(monitor);
-   ivec2 monitor_physical_size;
-   glfwGetMonitorPhysicalSize(monitor, &monitor_physical_size.x, &monitor_physical_size.y);
-   monitor_dpi_ = (monitor_mode->width / float(monitor_physical_size.x) +
-                   monitor_mode->height / float(monitor_physical_size.y)) * 12.7f;
+    const GLFWvidmode* monitor_mode = glfwGetVideoMode(monitor);
 
-   if (fullscreen_windowed)
-   {
-      width = monitor_mode->width;
-      height = monitor_mode->height;
+    
+    if (!fullscreen_exclusive)
+    {
+        if (fullscreen_windowed)
+        {
+            width = monitor_mode->width;
+            height = monitor_mode->height;
 
-      glfwGetMonitorPos(monitor, &position.x, &position.y);
+            glfwGetMonitorPos(monitor, &position.x, &position.y);
 
-      color_bits.r = monitor_mode->redBits;
-      color_bits.g = monitor_mode->greenBits;
-      color_bits.b = monitor_mode->blueBits;
-   }
+            color_bits.r = monitor_mode->redBits;
+            color_bits.g = monitor_mode->greenBits;
+            color_bits.b = monitor_mode->blueBits;
+        }
 
-   // if not fullscreen exclusive, we don't provide monitor
-   if (!fullscreen_exclusive)
-   {
-      monitor = nullptr;
-      refresh_rate = 0;
-   }
+        // if not fullscreen exclusive, we don't provide monitor
+        monitor = nullptr;
+        refresh_rate = 0;
+    }
 
 
-   glfwDefaultWindowHints();
-   glfwWindowHint(GLFW_VISIBLE, 0);
+    glfwDefaultWindowHints();
+    glfwWindowHint(GLFW_VISIBLE, 0);
 
-   glfwWindowHint(GLFW_DECORATED, undecorated ? 0 : 1);
-   glfwWindowHint(GLFW_RESIZABLE, fixed_size ? 0 : 1);
+    glfwWindowHint(GLFW_DECORATED, undecorated ? 0 : 1);
+    glfwWindowHint(GLFW_RESIZABLE, fixed_size ? 0 : 1);
 
-   glfwWindowHint(GLFW_REFRESH_RATE, refresh_rate);
-   glfwWindowHint(GLFW_SRGB_CAPABLE, window_settings.srgb_capable ? 1 : 0);
-   glfwWindowHint(GLFW_RED_BITS, color_bits.r);
-   glfwWindowHint(GLFW_GREEN_BITS, color_bits.g);
-   glfwWindowHint(GLFW_BLUE_BITS, color_bits.b);
-   glfwWindowHint(GLFW_ALPHA_BITS, window_settings.alpha_bits);
-   glfwWindowHint(GLFW_DEPTH_BITS, window_settings.depth_bits);
-   glfwWindowHint(GLFW_STENCIL_BITS, window_settings.stencil_bits);
-   glfwWindowHint(GLFW_SAMPLES, window_settings.msaa_level);
+    glfwWindowHint(GLFW_REFRESH_RATE, refresh_rate);
+    glfwWindowHint(GLFW_SRGB_CAPABLE, window_settings.srgb_capable ? 1 : 0);
+    glfwWindowHint(GLFW_RED_BITS, color_bits.r);
+    glfwWindowHint(GLFW_GREEN_BITS, color_bits.g);
+    glfwWindowHint(GLFW_BLUE_BITS, color_bits.b);
+    glfwWindowHint(GLFW_ALPHA_BITS, window_settings.alpha_bits);
+    glfwWindowHint(GLFW_DEPTH_BITS, window_settings.depth_bits);
+    glfwWindowHint(GLFW_STENCIL_BITS, window_settings.stencil_bits);
+    glfwWindowHint(GLFW_SAMPLES, window_settings.msaa_level);
 
-   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, window_settings.context_version_major);
-   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, window_settings.context_version_minor);
-   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, window_settings.forward_compatible_context ? 1 : 0);
-   glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, window_settings.debug_context ? 1 : 0);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+   
 
-   switch (window_settings.context_profile_type)
-   {
-      case WindowSettings::CPTCoreProfile:
-         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-         break;
+    glfw_window_ = glfwCreateWindow(width, height, "bengine", monitor, nullptr);
 
-      case WindowSettings::CPTCompatProfile:
-         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
-         break;
+    if (fullscreen_exclusive)
+    {
+        if (window_settings.use_custom_gamma)
+            glfwSetGamma(monitor, window_settings.custom_gamma);
+    }
+    else if (fullscreen_windowed || !window_settings.system_positioned)
+    {
+        glfwSetWindowPos(glfw_window_, position.x, position.y);
+    }
 
-      default:
-         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
-         break;
-   }
+    int vsync = window_settings.v_sync;
+    if (vsync < 0)
+    {
+        if (!(glfwExtensionSupported("WGL_EXT_swap_control_tear") ||
+                glfwExtensionSupported("GLX_EXT_swap_control_tear")))
+        {
+            vsync = abs(vsync);
+        }
+    }
 
-   glfw_window_ = glfwCreateWindow(width, height, "bengine", monitor, nullptr);
+    glfwSwapInterval(vsync);
 
-   if (fullscreen_exclusive)
-   {
-      if (window_settings.use_custom_gamma)
-         glfwSetGamma(monitor, window_settings.custom_gamma);
-   }
-   else if (fullscreen_windowed || !window_settings.system_positioned)
-   {
-      glfwSetWindowPos(glfw_window_, position.x, position.y);
-   }
+    glfwSetWindowUserPointer(glfw_window_, this);
 
-   int vsync = window_settings.v_sync;
-   if (vsync < 0)
-   {
-      if (!(glfwExtensionSupported("WGL_EXT_swap_control_tear") ||
-            glfwExtensionSupported("GLX_EXT_swap_control_tear")))
-      {
-         vsync = abs(vsync);
-      }
-   }
+    glfwSetWindowPosCallback(glfw_window_, glfwMoved_);
+    glfwSetWindowSizeCallback(glfw_window_, glfwResized_);
+    glfwSetFramebufferSizeCallback(glfw_window_, glfwContextResized_);
+    glfwSetWindowCloseCallback(glfw_window_, glfwCloseRequested_);
+    glfwSetWindowRefreshCallback(glfw_window_, glfwRepaintRequested_);
+    glfwSetWindowFocusCallback(glfw_window_, glfwFocusChanged_);
+    glfwSetWindowIconifyCallback(glfw_window_, glfwIconStateChanged_);
 
-   glfwSwapInterval(vsync);
-
-   glfwSetWindowUserPointer(glfw_window_, this);
-
-   glfwSetWindowPosCallback(glfw_window_, glfwMoved_);
-   glfwSetWindowSizeCallback(glfw_window_, glfwResized_);
-   glfwSetFramebufferSizeCallback(glfw_window_, glfwContextResized_);
-   glfwSetWindowCloseCallback(glfw_window_, glfwCloseRequested_);
-   glfwSetWindowRefreshCallback(glfw_window_, glfwRepaintRequested_);
-   glfwSetWindowFocusCallback(glfw_window_, glfwFocusChanged_);
-   glfwSetWindowIconifyCallback(glfw_window_, glfwIconStateChanged_);
-
-   glewContextInit(&glew_context_);
+    glewInit();
 }
 
 Window::~Window()

@@ -1,4 +1,4 @@
-// Copyright (c) 2013 Benjamin Crist
+// Copyright (c) 2013 PBJ^2 Productions
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -19,50 +19,51 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   be/asset_id.h
+/// \file   pbj/sw/sandwich.h
 /// \author Benjamin Crist
 ///
-/// \brief  be::AssetId class header.
+/// \brief  pbj::sw::Sandwich class header.
 
-#ifndef BE_ASSET_ID_H_
-#define BE_ASSET_ID_H_
+#ifndef PBJ_SW_SANDWICH_H_
+#define PBJ_SW_SANDWICH_H_
 
+#include "be/bed/db.h"
+#include "be/bed/stmt.h"
+#include "be/bed/stmt_cache.h"
 #include "be/id.h"
+#include "be/source_handle.h"
+#include "pbj/_pbj.h"
 
-namespace be {
+#include <memory>
+
+namespace pbj {
+namespace sw {
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \struct AssetId   be/asset_id.h "be/asset_id.h"
+/// \class  Sandwich   pbj/sw/sandwich.h "pbj/sw/sandwich.h"
 ///
-/// \brief  Combines the ID of the \ref bed an asset is located in and the ID
-///         of the asset itself.
-/// \details An AssetId represents a unique asset among all assets of that
-///         type.  Assets in different beds may have the same asset portion
-///         of their AssetId.  The AssetId contains no information about what
-///         type of asset it is referring to.
-/// \ingroup ids
-struct AssetId
+/// \brief  Represents a database file which can be used to access persistent
+///         game data.
+class Sandwich : public std::enable_shared_from_this<Sandwich>
 {
-   AssetId();
-   AssetId(const Id& bed, const Id& asset);
+public:
+   Sandwich(const std::string& path, bool read_only);
 
-   std::string to_string() const;
+   const Id& getId() const;
 
-   bool operator==(const AssetId& other) const;
-   bool operator!=(const AssetId& other) const;
-   bool operator<(const AssetId& other) const;
-   bool operator>(const AssetId& other) const;
-   bool operator<=(const AssetId& other) const;
-   bool operator>=(const AssetId& other) const;
+   db::Db& getDb();
+   db::StmtCache& getStmtCache();
 
-   Id bed;     ///< Identifies the \ref bed this asset can be found in
-   Id asset;   ///< Differentiates this asset from others of its type in its bed.
+private:
+   Id id_;
+   db::Db db_;
+   db::StmtCache stmt_cache_;
+
+   Sandwich(const Sandwich&);
+   void operator=(const Sandwich&);
 };
 
-std::ostream& operator<<(std::ostream& os, const AssetId& asset_id);
-
+} // namespace be::bed
 } // namespace be
-
-#include "be/asset_id.inl"
 
 #endif

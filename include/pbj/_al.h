@@ -1,4 +1,4 @@
-// Copyright (c) 2013 Benjamin Crist
+// Copyright (c) 2013 PBJ^2 Productions
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -19,37 +19,12 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   be/_math.h
+/// \file   pbj/_al.h
 /// \author Benjamin Crist
 ///
-/// \brief  Includes GLM headers & defines typedefs.
+/// \brief  Includes OpenAL/ALC/ALext headers
 
-#ifndef BE_MATH_H_
-#define BE_MATH_H_
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_inverse.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtc/quaternion.hpp>
-#include <glm/gtc/constants.hpp>
-#include <glm/gtc/epsilon.hpp>
-
-namespace be {
-
-typedef glm::ivec2 ivec2;  ///< 2-component integer-valued vector type.
-typedef glm::ivec3 ivec3;  ///< 3-component integer-valued vector type.
-
-typedef glm::vec2 vec2;    ///< 2-component float-valued vector type.
-typedef glm::vec3 vec3;    ///< 3-component float-valued vector type.
-typedef glm::vec4 vec4;    ///< 4-component float-valued vector type.
-typedef glm::vec4 color;   ///< 4-component float-valued vector type.  Used to represent an RGBA color.
-
-typedef glm::quat quat;    ///< Quaternion type.  Used to represent an arbitrary 3D rotation.
-
-typedef glm::mat3 mat3;    ///< 3x3 float-valued column-major matrix type.
-typedef glm::mat4 mat4;    ///< 4x4 float-valued column-major matrix type.
-
-} // namespace be
+#ifndef PBJ_AL_H_
+#define PBJ_AL_H_
 
 #endif

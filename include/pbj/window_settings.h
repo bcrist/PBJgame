@@ -1,4 +1,4 @@
-// Copyright (c) 2013 Benjamin Crist
+// Copyright (c) 2013 PBJ^2 Productions
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -19,42 +19,40 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   be/wnd/window_settings.h
+/// \file   pbj/window_settings.h
 /// \author Benjamin Crist
 ///
-/// \brief  be::wnd::WindowSettings class header.
+/// \brief  pbj::WindowSettings class header.
 
-#ifndef BE_WND_WINDOW_SETTINGS_H_
-#define BE_WND_WINDOW_SETTINGS_H_
+#ifndef PBJ_WINDOW_SETTINGS_H_
+#define PBJ_WINDOW_SETTINGS_H_
 
-#include "be/asset_id.h"
-#include "be/_math.h"
+#include "pbj/sw/resource_id.h"
+#include "pbj/_math.h"
+#include "pbj/_pbj.h"
 
-namespace be {
-namespace bed {
+namespace pbj {
+namespace sw {
 
-class Bed;
+class Sandwich;
 
-} // namespace be::bed
-
-namespace wnd {
+} // namespace pbj::sw
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \struct WindowSettings   be/wnd/window_settings.h "be/wnd/window_settings.h"
+/// \struct WindowSettings   pbj/window_settings.h "pbj/window_settings.h"
 ///
 /// \brief  A collection of settings which must be known before constructing a
 ///         window.
-/// \details Settings can be loaded and saved from a bed, and are stored there
-///         in a stack-like structure, allowing previous settings to be
+/// \details Settings can be loaded and saved from a sandwich, and are stored
+///         there in a stack-like structure, allowing previous settings to be
 ///         reverted if, for instance, new settings don't work.
-/// \ingroup window
 struct WindowSettings
 {
    WindowSettings();
 
    
    /// \brief  Specifies where these settings are saved in persistent storage.
-   AssetId id;
+   sw::ResourceId id;
 
    
    /// \brief  Determines whether the window is fullscreen or not, and how much
@@ -166,46 +164,15 @@ struct WindowSettings
    ///         if use_custom_gamma is set.
    /// \details Ignored if not in fullscreen exclusive mode.
    float custom_gamma;
-
-   /// \brief  Specifies the the major OpenGL version number which the context
-   ///         should support.
-   unsigned int context_version_major;
-
-   /// \brief  Specifies the the minor OpenGL version number which the context
-   ///         should support.
-   unsigned int context_version_minor;
-
-   /// \brief  Specifies that the context should be forward compatible with
-   ///         newer OpenGL versions than requested, but not backward
-   ///         compatible.  Deprecated functionality should be removed.
-   /// \details Generally, this only has significant meaning when requesting
-   ///         a version 3.0 context.
-   bool forward_compatible_context;
-   
-   /// \brief  Used to request a context with additional debugging
-   ///         capabilities.
-   bool debug_context;
-
-   ////////////////////////////////////////////////////////////////////////////
-   /// \brief  Determines the type of OpenGL profile requested.
-   /// \details If requesting a context version prior to 3.2, CPTAnyProfile
-   ///         must be used.
-   enum ContextProfileType
-   {
-      CPTAnyProfile = 0,      ///< Don't request any particular profile.
-      CPTCoreProfile = 1,     ///< Request a core profile.
-      CPTCompatProfile = 2    ///< Request a compatibility profile.
-   } context_profile_type;    ///< Determines the type of OpenGL profile requested.
 };
 
-WindowSettings loadWindowSettings(bed::Bed& bed, const Id& id);
+WindowSettings loadWindowSettings(sw::Sandwich& sandwich, const Id& id);
 
 bool saveWindowSettings(const WindowSettings& window_settings);
 bool updateSavedPosition(const WindowSettings& window_settings);
-WindowSettings revertWindowSettings(const AssetId& id);
-void truncateWindowSettingsHistory(const AssetId& id, int max_history_entries);
+WindowSettings revertWindowSettings(const sw::ResourceId& id);
+void truncateWindowSettingsHistory(const sw::ResourceId& id, int max_history_entries);
 
-} // namespace be::wnd
-} // namespace be
+} // namespace pbj
 
 #endif

@@ -1,4 +1,4 @@
-// Copyright (c) 2013 Benjamin Crist
+// Copyright (c) 2013 PBJ^2 Productions
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -19,80 +19,42 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   be/wnd/window.h
+/// \file   pbj/window.h
 /// \author Benjamin Crist
 ///
-/// \brief  be::wnd::Window class header.
+/// \brief  pbj::Window class header.
 
-#ifndef BE_WND_WINDOW_H_
-#define BE_WND_WINDOW_H_
+#ifndef PBJ_WINDOW_H_
+#define PBJ_WINDOW_H_
 
-#include "be/wnd/detail/context_state.h"
-#include "be/wnd/detail/window_entity_listener.h"
-#include "be/wnd/window_settings.h"
-#include "be/wnd/i_window_listener.h"
-#include "be/entity.h"
+#include "pbj/window_settings.h"
 #include "be/id.h"
-#include "be/_math.h"
-#include "be/_gl.h"
+#include "pbj/_math.h"
+#include "pbj/_gl.h"
+#include "pbj/_pbj.h"
 
 #include <memory>
 #include <unordered_map>
 #include <vector>
 
-namespace be {
-namespace bsc {
-
-class Scene;
-
-} // namespace be::bsc
+namespace pbj {
 
 class Engine;
 
-namespace wnd {
-
 ///////////////////////////////////////////////////////////////////////////////
-/// \class  Window   be/wnd/window.h "be/wnd/window.h"
+/// \class  Window   pbj/window.h "pbj/window.h"
 ///
 /// \brief  Represents a window or fullscreen exclusive mode which can be used
 ///         to display OpenGL graphics.
-/// \ingroup window
 class Window
 {
-   friend Window* popCurrentContext();
    friend class Engine;
    friend struct std::default_delete<Window>;
 
-   typedef std::vector< std::unique_ptr<Entity> > EntityContainer;
-   typedef std::unordered_map<Id, std::vector<IWindowListener*> > ListenerContainer;
 public:
-   /// \brief  An iterator over the root entities attached to this window.
-   /// \details Compatible with \c std::iterator and standard library algorithms.
-   typedef be::detail::EntityChildIterator EntityIterator;
-   /// \brief  An iterator over the root entities attached to this window.
-   /// \details Compatible with \c std::iterator and standard library algorithms.
-   ///         May not be used to modify entities.
-   typedef be::detail::EntityConstChildIterator ConstEntityIterator;
-
-   const Handle<Window>& getHandle();
-   const ConstHandle<Window>& getHandle() const;
-
    GLFWwindow* getGlfwHandle();
 
    const WindowSettings& getWindowSettings() const;
-
-   void render();
-   void update(const std::chrono::duration<double>& elapsed);
-
-   void addEntity(std::unique_ptr<Entity>&& entity);
-   std::unique_ptr<Entity> releaseEntity(const EntityIterator& it);
-   void eraseEntity(const EntityIterator& it);
-   void eraseEntities(const EntityIterator& begin, const EntityIterator& end);
-
-   EntityIterator begin();
-   EntityIterator end();
-   ConstEntityIterator begin() const;
-   ConstEntityIterator end() const;
 
    void setTitle(const std::string& title);
    const std::string& getTitle() const;
@@ -131,16 +93,8 @@ public:
 
    bool isDebugContext() const;
 
-   bool isContextCurrent() const;
-   void makeContextCurrent();
-
-   void registerListener(IWindowListener& listener, const Id& event_type);
-   bool registerListenerChecked(IWindowListener& listener, const Id& event_type);
-   bool unregisterListener(IWindowListener& listener, const Id& event_type);
-   int unregisterListenerChecked(IWindowListener& listener, const Id& event_type);
-
-
 private:
+    // called from Engine:
    Window(const WindowSettings& window_settings);
    ~Window();
 
@@ -162,31 +116,15 @@ private:
    static void glfwFocusChanged_(GLFWwindow* window, int state);
    static void glfwIconStateChanged_(GLFWwindow* window, int state);
 
-   SourceHandle<Window> handle_;
-   detail::WindowEntityListener entity_listener_;
    WindowSettings window_settings_;
-   float monitor_dpi_;
 
    std::string title_;
 
    GLFWwindow* glfw_window_;
-   GLEWContext glew_context_;
-   detail::ContextState context_state_;
-
-   ListenerContainer listeners_;
-   EntityContainer entities_;
-
-   std::vector<bsc::Scene*> scenes_;
    
    Window(const Window&);
    void operator=(const Window&);
 };
-
-void pushCurrentContext(const Window& window);
-Window* popCurrentContext();
-
-Window* getCurrentContext();
-void clearContextStack();
 
 } // namespace be::wnd
 } // namespace be

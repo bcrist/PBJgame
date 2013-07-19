@@ -1,4 +1,4 @@
-// Copyright (c) 2013 Benjamin Crist
+// Copyright (c) 2013 PBJ^2 Productions
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -6,10 +6,10 @@
 // rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
 // sell copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-//
+// 
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-//
+// 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -19,34 +19,27 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   be/_gl.h
+/// \file   pbj/sw/sandwich_open.h
 /// \author Benjamin Crist
 ///
-/// \brief  Includes OpenGL/GLEW/GLFW headers
+/// \brief  pbj::sw::Sandwich non-member functions.
 
-#ifndef BE_GL_H_
-#define BE_GL_H_
+#ifndef PBJ_SW_SANDWICH_OPEN_H_
+#define PBJ_SW_SANDWICH_OPEN_H_
 
-#include <GL/glew.h>
-#include <GL/glfw3.h>
+#include "pbj/sw/sandwich.h"
 
-namespace be {
+#include <unordered_map>
 
-inline const char* getGlErrorString(GLenum error)
-{
-    switch (error)
-    {
-        case GL_INVALID_ENUM:                  return "GL_INVALID_ENUM";
-        case GL_INVALID_VALUE:                 return "GL_INVALID_VALUE";
-        case GL_INVALID_OPERATION:             return "GL_INVALID_OPERATION";
-        case GL_INVALID_FRAMEBUFFER_OPERATION: return "GL_INVALID_FRAMEBUFFER_OPERATION";
-        case GL_OUT_OF_MEMORY:                 return "GL_OUT_OF_MEMORY";
-        case GL_STACK_UNDERFLOW:               return "GL_STACK_UNDERFLOW";
-        case GL_STACK_OVERFLOW:                return "GL_STACK_OVERFLOW";
-        default:                               return "";
-    }
-}
+namespace pbj {
+namespace sw {
 
-} // namespace be
+void readDirectory(const std::string& path);
+
+std::shared_ptr<Sandwich> open(const Id& id);
+std::shared_ptr<Sandwich> openWritable(const Id& id);
+
+} // namespace pbj::sw
+} // namespace pbj
 
 #endif
