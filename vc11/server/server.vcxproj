@@ -121,23 +121,6 @@
       <Command>$(SolutionDir)script\postbuild.cmd $(TargetPath) $(SolutionDir)..\stage\$(TargetFileName)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\deps\sqlite3.c" />
-    <ClCompile Include="..\..\deps\stb_image.c" />
-    <ClCompile Include="..\..\src\be\asset_id.cpp" />
-    <ClCompile Include="..\..\src\be\bed\cached_stmt.cpp" />
-    <ClCompile Include="..\..\src\be\bed\db.cpp" />
-    <ClCompile Include="..\..\src\be\bed\detail\db_error.cpp" />
-    <ClCompile Include="..\..\src\be\bed\detail\stmt_cache_entry.cpp" />
-    <ClCompile Include="..\..\src\be\bed\stmt.cpp" />
-    <ClCompile Include="..\..\src\be\bed\stmt_cache.cpp" />
-    <ClCompile Include="..\..\src\be\bed\transaction.cpp" />
-    <ClCompile Include="..\..\src\be\id.cpp" />
-    <ClCompile Include="..\..\src\be\util\nconvert.cpp" />
-    <ClCompile Include="..\..\src\be\verbosity.cpp" />
-    <ClCompile Include="..\..\src\pbj\engine.cpp" />
-    <ClCompile Include="..\..\src\server_app_entry.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

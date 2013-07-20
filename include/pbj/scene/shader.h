@@ -30,9 +30,9 @@
 #include <map>
 
 #include "pbj/_pbj.h"
-#include "be/_gl.h"
+#include "pbj/_gl.h"
 #include "be/source_handle.h"
-#include "be/asset_id.h"
+#include "pbj/sw/resource_id.h"
 
 namespace pbj {
 namespace scene {
@@ -50,13 +50,13 @@ public:
         TFragment
     };
 
-    Shader(const AssetId& id, Type type, const std::string& source);
+    Shader(const sw::ResourceId& id, Type type, const std::string& source);
     ~Shader();
 
     be::Handle<Shader> getHandle();
     const be::ConstHandle<Shader> getHandle() const;
 
-    const AssetId& getAssetId() const;
+    const sw::ResourceId& getId() const;
 
     Type getType() const;
 
@@ -68,7 +68,7 @@ public:
     void setName(const std::string& name);
     const std::string& getName() const;
 
-    void setBed(const Id& id);
+    void setSandwich(const Id& id);
 
     void setMetadata(const std::string& key, const std::string& value);
     const std::string& getMetadata(const std::string& key) const;
@@ -91,7 +91,7 @@ private:
 
     be::SourceHandle<Shader> handle_;
 
-    AssetId asset_id_;
+    sw::ResourceId resource_id_;
 
     GLuint gl_id_;
     Type type_;

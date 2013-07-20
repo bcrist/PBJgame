@@ -28,12 +28,12 @@
 #define PBJ_WINDOW_H_
 
 #include "pbj/window_settings.h"
-#include "be/id.h"
 #include "pbj/_math.h"
 #include "pbj/_gl.h"
 #include "pbj/_pbj.h"
 
 #include <memory>
+#include <functional>
 #include <unordered_map>
 #include <vector>
 
@@ -49,64 +49,83 @@ class Engine;
 class Window
 {
    friend class Engine;
-   friend struct std::default_delete<Window>;
 
 public:
-   GLFWwindow* getGlfwHandle();
+    typedef std::function<void(I32, I32)> MoveListener;
+    typedef std::function<void(I32, I32)> ResizeListener;
+    typedef std::function<void(I32, I32)> ContextResizeListener;
+    typedef std::function<void()> CloseRequestListener;
+    typedef std::function<void()> RepaintRequestListener;
+    typedef std::function<void(bool)> FocusChangeListener;
+    typedef std::function<void(bool)> StateChangeListener;
 
-   const WindowSettings& getWindowSettings() const;
+    GLFWwindow* getGlfwHandle();
 
-   void setTitle(const std::string& title);
-   const std::string& getTitle() const;
+    const WindowSettings& getWindowSettings() const;
 
-   void setPosition(const ivec2& position);
-   void setPosition(int x, int y);
-   ivec2 getPosition() const;
+    void setTitle(const std::string& title);
+    const std::string& getTitle() const;
 
-   void setSize(const ivec2& size);
-   void setSize(int width, int height);
-   ivec2 getSize() const;
-   ivec2 getContextSize() const;
+    void setPosition(const ivec2& position);
+    void setPosition(int x, int y);
+    ivec2 getPosition() const;
 
-   void show();
-   void hide();
-   void setVisible(bool visible);
-   bool isVisible() const;
+    void setSize(const ivec2& size);
+    void setSize(int width, int height);
+    ivec2 getSize() const;
+    ivec2 getContextSize() const;
 
-   void iconify();
-   void restore();
-   void setIconified(bool iconified);
-   bool isIconified() const;
+    void show();
+    void hide();
+    void setVisible(bool visible);
+    bool isVisible() const;
 
-   bool isFocused() const;
+    void iconify();
+    void restore();
+    void setIconified(bool iconified);
+    bool isIconified() const;
 
-   void requestClose();
-   void cancelClose();
-   bool isClosePending() const;
+    bool isFocused() const;
 
-   bool isResizable() const;
-   bool isDecorated() const;
+    void requestClose();
+    void cancelClose();
+    bool isClosePending() const;
 
-   int getContextVersionMajor() const;
-   int getContextVersionMinor() const;
-   int getContextRevision() const;
+    bool isResizable() const;
+    bool isDecorated() const;
 
-   bool isDebugContext() const;
+    int getContextVersionMajor() const;
+    int getContextVersionMinor() const;
+    int getContextRevision() const;
+
+    size_t registerMoveListener(const MoveListener& listener);
+    size_t registerResizeListener(const ResizeListener& listener);
+    size_t registerContextResizeListener(const ContextResizeListener& listener);
+    size_t registerCloseRequestListener(const CloseRequestListener& listener);
+    size_t registerRepaintRequestListener(const RepaintRequestListener& listener);
+    size_t registerFocusChangeListener(const FocusChangeListener& listener);
+    size_t registerStateChangeListener(const StateChangeListener& listener);
+
+    void cancelMoveListener(size_t id);
+    void cancelResizeListener(size_t id);
+    void cancelContextResizeListener(size_t id);
+    void cancelCloseRequestListener(size_t id);
+    void cancelRepaintRequestListener(size_t id);
+    void cancelFocusChangeListener(size_t id);
+    void cancelStateChangeListener(size_t id);
 
 private:
     // called from Engine:
    Window(const WindowSettings& window_settings);
    ~Window();
 
-   void fireMoved_();
-   void fireResized_();
-   void fireContextResized_();
+   void fireMoved_(I32 x, I32 y);
+   void fireResized_(I32 width, I32 height);
+   void fireContextResized_(I32 width, I32 height);
    void fireCloseRequested_();
    void fireRepaintRequested_();
-   void fireFocusGained_();
-   void fireFocusLost_();
-   void fireIconified_();
-   void fireRestored_();
+   void fireFocusChanged_(bool focused);
+   void fireStateChanged_(bool iconified);
 
    static void glfwMoved_(GLFWwindow* window, int x, int y);
    static void glfwResized_(GLFWwindow* window, int width, int height);
@@ -116,17 +135,22 @@ private:
    static void glfwFocusChanged_(GLFWwindow* window, int state);
    static void glfwIconStateChanged_(GLFWwindow* window, int state);
 
+   std::vector<MoveListener> move_listeners_;
+   std::vector<ResizeListener> resize_listeners_;
+   std::vector<ContextResizeListener> context_resize_listeners_;
+   std::vector<CloseRequestListener> close_request_listeners_;
+   std::vector<RepaintRequestListener> repaint_request_listeners_;
+   std::vector<FocusChangeListener> focus_change_listeners_;
+   std::vector<StateChangeListener> state_change_listeners_;
+
    WindowSettings window_settings_;
-
    std::string title_;
-
    GLFWwindow* glfw_window_;
    
    Window(const Window&);
    void operator=(const Window&);
 };
 
-} // namespace be::wnd
-} // namespace be
+} // namespace pbj
 
 #endif

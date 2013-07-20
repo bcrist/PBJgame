@@ -34,8 +34,8 @@
 namespace pbj {
 namespace scene {
 
-Texture::Texture(const AssetId& id, const GLubyte* data, size_t size, InternalFormat format, bool srgb_color, FilterMode mag_mode, FilterMode min_mode)
-    : asset_id_(id),
+Texture::Texture(const sw::ResourceId& id, const GLubyte* data, size_t size, InternalFormat format, bool srgb_color, FilterMode mag_mode, FilterMode min_mode)
+    : resource_id_(id),
       gl_id_(0)
 {
     handle_.associate(this);
@@ -66,9 +66,9 @@ const be::ConstHandle<Texture> Texture::getHandle() const
     return handle_;
 }
 
-const AssetId& Texture::getId() const
+const sw::ResourceId& Texture::getId() const
 {
-    return asset_id_;
+    return resource_id_;
 }
 
 GLuint Texture::getGlId() const
@@ -84,7 +84,7 @@ Texture::Texture()
 void Texture::setName(const std::string& name)
 {
     metadata_["__name__"] = name;
-    asset_id_.asset = Id(name);
+    resource_id_.resource = Id(name);
 }
 
 const std::string& Texture::getName() const
@@ -92,9 +92,9 @@ const std::string& Texture::getName() const
     return getMetadata("__name__");
 }
 
-void Texture::setBed(const Id& id)
+void Texture::setSandwich(const Id& id)
 {
-    asset_id_.bed = id;
+    resource_id_.sandwich = id;
 }
 
 void Texture::setMetadata(const std::string& key, const std::string& value)
@@ -102,8 +102,8 @@ void Texture::setMetadata(const std::string& key, const std::string& value)
     if (key[0] == '_' && key[1] == '_')
     {
         PBJ_LOG(VNotice) << "Attempted to set invalid metadata property!" << PBJ_LOG_NL
-                         << "        Bed ID: " << asset_id_.bed << PBJ_LOG_NL
-                         << "    Texture ID: " << asset_id_.asset << PBJ_LOG_NL
+                         << "   Sandwich ID: " << resource_id_.sandwich << PBJ_LOG_NL
+                         << "    Texture ID: " << resource_id_.resource << PBJ_LOG_NL
                          << "  Metadata Key: " << key << PBJ_LOG_NL
                          << "Metadata Value: " << value << PBJ_LOG_END;
 
@@ -221,8 +221,8 @@ void Texture::upload_(const GLubyte* data, size_t size, InternalFormat format, b
     if (stbi_data == nullptr)
     {
         PBJ_LOG(VWarning) << "OpenGL error while parsing texture data!" << PBJ_LOG_NL
-                          << "        Bed ID: " << asset_id_.bed << PBJ_LOG_NL
-                          << "    Texture ID: " << asset_id_.asset << PBJ_LOG_NL
+                          << "   Sandwich ID: " << resource_id_.sandwich << PBJ_LOG_NL
+                          << "    Texture ID: " << resource_id_.resource << PBJ_LOG_NL
                           << "    STBI Error: " << stbi_failure_reason() << PBJ_LOG_END;
 
         throw std::runtime_error("Failed to upload texture data to GPU!");
@@ -291,10 +291,10 @@ void Texture::upload_(const GLubyte* data, size_t size, InternalFormat format, b
     if (error_status != GL_NO_ERROR)
     {
         PBJ_LOG(VWarning) << "OpenGL error while uploading texture data!" << PBJ_LOG_NL
-                          << "        Bed ID: " << asset_id_.bed << PBJ_LOG_NL
-                          << "    Texture ID: " << asset_id_.asset << PBJ_LOG_NL
+                          << "   Sandwich ID: " << resource_id_.sandwich << PBJ_LOG_NL
+                          << "    Texture ID: " << resource_id_.resource << PBJ_LOG_NL
                           << "    Error Code: " << error_status << PBJ_LOG_NL
-                          << "         Error: " << be::getGlErrorString(error_status) << PBJ_LOG_END;
+                          << "         Error: " << pbj::getGlErrorString(error_status) << PBJ_LOG_END;
 
         invalidate_();
 

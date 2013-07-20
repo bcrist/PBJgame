@@ -316,107 +316,204 @@ int Window::getContextVersionMinor() const
    return glfwGetWindowAttrib(glfw_window_, GLFW_CONTEXT_VERSION_MINOR);
 }
 
-bool Window::isContextCurrent() const
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Registers an event listener function (observer).
+///
+/// \details Any listeners that have not been canceled when the window is
+///         destroyed will be automatically removed.
+///
+/// \param  listener The event listener to register.
+/// \return An ID value which allows the listener to be removed/canceled before
+///         the window is destroyed.
+size_t Window::registerMoveListener(const MoveListener& listener)
 {
-   return glewGetContext() == &glew_context_;
+    move_listeners_.push_back(listener);
+    return move_listeners_.size() - 1;
 }
 
-void Window::makeContextCurrent()
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Registers an event listener function (observer).
+///
+/// \details Any listeners that have not been canceled when the window is
+///         destroyed will be automatically removed.
+///
+/// \param  listener The event listener to register.
+/// \return An ID value which allows the listener to be removed/canceled before
+///         the window is destroyed.
+size_t Window::registerResizeListener(const ResizeListener& listener)
 {
-   if (glewGetContext())
-   {
-      current_context_stack.push_back(current_context);
-   }
-
-   if (glewGetContext() != &glew_context_)
-   {
-      if (current_context != this)
-      {
-         glfwMakeContextCurrent(glfw_window_);
-         current_context = this;
-      }
-      detail::current_glew_context = &glew_context_;
-      detail::current_context_state = &context_state_;
-   }
+    resize_listeners_.push_back(listener);
+    return resize_listeners_.size() - 1;
 }
 
-
-
-void Window::registerListener(IWindowListener& listener, const Id& event_type)
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Registers an event listener function (observer).
+///
+/// \details Any listeners that have not been canceled when the window is
+///         destroyed will be automatically removed.
+///
+/// \param  listener The event listener to register.
+/// \return An ID value which allows the listener to be removed/canceled before
+///         the window is destroyed.
+size_t Window::registerContextResizeListener(const ContextResizeListener& listener)
 {
-   std::vector<IWindowListener*>& listeners = listeners_[event_type];
-   listeners.push_back(&listener);
+    context_resize_listeners_.push_back(listener);
+    return context_resize_listeners_.size() - 1;
 }
 
-bool Window::registerListenerChecked(IWindowListener& listener, const Id& event_type)
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Registers an event listener function (observer).
+///
+/// \details Any listeners that have not been canceled when the window is
+///         destroyed will be automatically removed.
+///
+/// \param  listener The event listener to register.
+/// \return An ID value which allows the listener to be removed/canceled before
+///         the window is destroyed.
+size_t Window::registerCloseRequestListener(const CloseRequestListener& listener)
 {
-   std::vector<IWindowListener*>& listeners = listeners_[event_type];
-   
-   for (auto i(listeners.begin()), end(listeners.end()); i != end; ++i)
-      if (*i == &listener)
-         return false;
-
-   listeners.push_back(&listener);
-   return true;
-
+    close_request_listeners_.push_back(listener);
+    return close_request_listeners_.size() - 1;
 }
 
-bool Window::unregisterListener(IWindowListener& listener, const Id& event_type)
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Registers an event listener function (observer).
+///
+/// \details Any listeners that have not been canceled when the window is
+///         destroyed will be automatically removed.
+///
+/// \param  listener The event listener to register.
+/// \return An ID value which allows the listener to be removed/canceled before
+///         the window is destroyed.
+size_t Window::registerRepaintRequestListener(const RepaintRequestListener& listener)
 {
-   auto i(listeners_.find(event_type));
-   if (i != listeners_.end())
-   {
-      std::vector<IWindowListener*>& listeners = i->second;
-
-      for (auto j(listeners.begin()), end(listeners.end()); j != end; ++j)
-      {
-         if (*j == &listener)
-         {
-            listeners.erase(j);
-            if (listeners.empty())
-            {
-               // the vector is now empty, so remove it from the map
-               listeners_.erase(i);
-            }
-
-            return true;
-         }
-      }
-   }
-   return false;
+    repaint_request_listeners_.push_back(listener);
+    return repaint_request_listeners_.size() - 1;
 }
 
-int Window::unregisterListenerChecked(IWindowListener& listener, const Id& event_type)
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Registers an event listener function (observer).
+///
+/// \details Any listeners that have not been canceled when the window is
+///         destroyed will be automatically removed.
+///
+/// \param  listener The event listener to register.
+/// \return An ID value which allows the listener to be removed/canceled before
+///         the window is destroyed.
+size_t Window::registerFocusChangeListener(const FocusChangeListener& listener)
 {
-   int removed_count(0);
+    focus_change_listeners_.push_back(listener);
+    return focus_change_listeners_.size() - 1;
+}
 
-   auto i(listeners_.find(event_type));
-   if (i != listeners_.end())
-   {
-      std::vector<IWindowListener*>& listeners = i->second;
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Registers an event listener function (observer).
+///
+/// \details Any listeners that have not been canceled when the window is
+///         destroyed will be automatically removed.
+///
+/// \param  listener The event listener to register.
+/// \return An ID value which allows the listener to be removed/canceled before
+///         the window is destroyed.
+size_t Window::registerStateChangeListener(const StateChangeListener& listener)
+{
+    state_change_listeners_.push_back(listener);
+    return state_change_listeners_.size() - 1;
+}
 
-      for (auto j(listeners.begin()), end(listeners.end()); j != end;)
-      {
-         if (*j == &listener)
-         {
-            j = listeners.erase(j);
-            ++removed_count;
-         }
-         else
-            ++j;
-      }
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Cancels (removes) an event listener function.
+///
+/// \details If the id is invalid (was never registered or has already been
+///         canceled) then nothing happens.
+///
+/// \param  id The ID value returned by the register function.
+void Window::cancelMoveListener(size_t id)
+{
+    if (id < move_listeners_.size())
+        move_listeners_[id] = nullptr;
+}
 
-      if (listeners.empty())
-      {
-         // the vector is now empty, so remove it from the map
-         listeners_.erase(i);
-      }
-   }
-   return removed_count;
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Cancels (removes) an event listener function.
+///
+/// \details If the id is invalid (was never registered or has already been
+///         canceled) then nothing happens.
+///
+/// \param  id The ID value returned by the register function.
+void Window::cancelResizeListener(size_t id)
+{
+    if (id < resize_listeners_.size())
+        resize_listeners_[id] = nullptr;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Cancels (removes) an event listener function.
+///
+/// \details If the id is invalid (was never registered or has already been
+///         canceled) then nothing happens.
+///
+/// \param  id The ID value returned by the register function.
+void Window::cancelContextResizeListener(size_t id)
+{
+    if (id < context_resize_listeners_.size())
+        context_resize_listeners_[id] = nullptr;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Cancels (removes) an event listener function.
+///
+/// \details If the id is invalid (was never registered or has already been
+///         canceled) then nothing happens.
+///
+/// \param  id The ID value returned by the register function.
+void Window::cancelCloseRequestListener(size_t id)
+{
+    if (id < close_request_listeners_.size())
+        close_request_listeners_[id] = nullptr;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Cancels (removes) an event listener function.
+///
+/// \details If the id is invalid (was never registered or has already been
+///         canceled) then nothing happens.
+///
+/// \param  id The ID value returned by the register function.
+void Window::cancelRepaintRequestListener(size_t id)
+{
+    if (id < repaint_request_listeners_.size())
+        repaint_request_listeners_[id] = nullptr;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Cancels (removes) an event listener function.
+///
+/// \details If the id is invalid (was never registered or has already been
+///         canceled) then nothing happens.
+///
+/// \param  id The ID value returned by the register function.
+void Window::cancelFocusChangeListener(size_t id)
+{
+    if (id < focus_change_listeners_.size())
+        focus_change_listeners_[id] = nullptr;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Cancels (removes) an event listener function.
+///
+/// \details If the id is invalid (was never registered or has already been
+///         canceled) then nothing happens.
+///
+/// \param  id The ID value returned by the register function.
+void Window::cancelStateChangeListener(size_t id)
+{
+    if (id < state_change_listeners_.size())
+        state_change_listeners_[id] = nullptr;
 }
 
 Window::Window(const WindowSettings& window_settings)
-    window_settings_(window_settings);
+    : window_settings_(window_settings)
 {
     int width, height;
     int refresh_rate;
@@ -563,230 +660,105 @@ Window::Window(const WindowSettings& window_settings)
 
 Window::~Window()
 {
-   if (window_settings_.save_position_on_close)
-   {
-      glfwGetWindowPos(glfw_window_, &window_settings_.position.x, &window_settings_.position.y);
-      glfwGetWindowSize(glfw_window_, &window_settings_.size.x, &window_settings_.size.y);
-      wnd::updateSavedPosition(window_settings_);
-   }
+    if (window_settings_.save_position_on_close)
+    {
+        glfwGetWindowPos(glfw_window_, &window_settings_.position.x, &window_settings_.position.y);
+        glfwGetWindowSize(glfw_window_, &window_settings_.size.x, &window_settings_.size.y);
+        updateSavedPosition(window_settings_);
+    }
 
-   // popCurrentContext() should already have been called if necessary;
-   // the context should not be active, nor exist anywhere on the context stack.
-
-   glfwDestroyWindow(glfw_window_);
+    glfwDestroyWindow(glfw_window_);
 }
 
-void Window::fireMoved_()
+void Window::fireMoved_(I32 x, I32 y)
 {
-   const Id& type = WindowEvent::moved;
-   auto i(listeners_.find(type));
-   if (i != listeners_.end())
-   {
-      WindowEvent evt(type, getHandle());
-      std::vector<IWindowListener*>& listeners(i->second);
-      for (auto i(listeners.begin()), end(listeners.end()); i != end; ++i)
-         (*i)->onWindowMoved(evt);
-   }
+    for (const MoveListener& listener : move_listeners_)
+        if (listener)
+            listener(x, y);
 }
 
-void Window::fireResized_()
+void Window::fireResized_(I32 width, I32 height)
 {
-   const Id& type = WindowEvent::resized;
-   auto i(listeners_.find(type));
-   if (i != listeners_.end())
-   {
-      WindowEvent evt(type, getHandle());
-      std::vector<IWindowListener*>& listeners(i->second);
-      for (auto i(listeners.begin()), end(listeners.end()); i != end; ++i)
-         (*i)->onWindowResized(evt);
-   }
+    for (const ResizeListener& listener : resize_listeners_)
+        if (listener)
+            listener(width, height);
 }
 
-void Window::fireContextResized_()
+void Window::fireContextResized_(I32 width, I32 height)
 {
-   const Id& type = WindowEvent::context_resized;
-   auto i(listeners_.find(type));
-   if (i != listeners_.end())
-   {
-      WindowEvent evt(type, getHandle());
-      std::vector<IWindowListener*>& listeners(i->second);
-      for (auto i(listeners.begin()), end(listeners.end()); i != end; ++i)
-         (*i)->onWindowContextResized(evt);
-   }
+    for (const ContextResizeListener& listener : context_resize_listeners_)
+        if (listener)
+            listener(width, height);
 }
 
 void Window::fireCloseRequested_()
 {
-   const Id& type = WindowEvent::close_requested;
-   auto i(listeners_.find(type));
-   if (i != listeners_.end())
-   {
-      WindowEvent evt(type, getHandle());
-      std::vector<IWindowListener*>& listeners(i->second);
-      for (auto i(listeners.begin()), end(listeners.end()); i != end; ++i)
-         (*i)->onWindowCloseRequested(evt);
-   }
+    for (const CloseRequestListener& listener : close_request_listeners_)
+        if (listener)
+            listener();
 }
-   
+
 void Window::fireRepaintRequested_()
 {
-   const Id& type = WindowEvent::repaint_requested;
-   auto i(listeners_.find(type));
-   if (i != listeners_.end())
-   {
-      WindowEvent evt(type, getHandle());
-      std::vector<IWindowListener*>& listeners(i->second);
-      for (auto i(listeners.begin()), end(listeners.end()); i != end; ++i)
-         (*i)->onWindowRepaintRequested(evt);
-   }
+    for (const RepaintRequestListener& listener : repaint_request_listeners_)
+        if (listener)
+            listener();
 }
 
-void Window::fireFocusGained_()
+void Window::fireFocusChanged_(bool focused)
 {
-   const Id& type = WindowEvent::focus_gained;
-   auto i(listeners_.find(type));
-   if (i != listeners_.end())
-   {
-      WindowEvent evt(type, getHandle());
-      std::vector<IWindowListener*>& listeners(i->second);
-      for (auto i(listeners.begin()), end(listeners.end()); i != end; ++i)
-         (*i)->onWindowFocusGained(evt);
-   }
+    for (const FocusChangeListener& listener : focus_change_listeners_)
+        if (listener)
+            listener(focused);
 }
 
-void Window::fireFocusLost_()
+void Window::fireStateChanged_(bool iconified)
 {
-   const Id& type = WindowEvent::focus_lost;
-   auto i(listeners_.find(type));
-   if (i != listeners_.end())
-   {
-      WindowEvent evt(type, getHandle());
-      std::vector<IWindowListener*>& listeners(i->second);
-      for (auto i(listeners.begin()), end(listeners.end()); i != end; ++i)
-         (*i)->onWindowFocusLost(evt);
-   }
-}
-
-void Window::fireIconified_()
-{
-   const Id& type = WindowEvent::iconified;
-   auto i(listeners_.find(type));
-   if (i != listeners_.end())
-   {
-      WindowEvent evt(type, getHandle());
-      std::vector<IWindowListener*>& listeners(i->second);
-      for (auto i(listeners.begin()), end(listeners.end()); i != end; ++i)
-         (*i)->onWindowIconified(evt);
-   }
-}
-
-void Window::fireRestored_()
-{
-   const Id& type = WindowEvent::restored;
-   auto i(listeners_.find(type));
-   if (i != listeners_.end())
-   {
-      WindowEvent evt(type, getHandle());
-      std::vector<IWindowListener*>& listeners(i->second);
-      for (auto i(listeners.begin()), end(listeners.end()); i != end; ++i)
-         (*i)->onWindowRestored(evt);
-   }
+     for (const StateChangeListener& listener : state_change_listeners_)
+         if (listener)
+             listener(iconified);
 }
 
 void Window::glfwMoved_(GLFWwindow* window, int x, int y)
 {
-   Window* wnd = static_cast<Window*>(glfwGetWindowUserPointer(window));
-   wnd->fireMoved_();
+    Window* wnd = static_cast<Window*>(glfwGetWindowUserPointer(window));
+    wnd->fireMoved_(x, y);
 }
  	
 void Window::glfwResized_(GLFWwindow* window, int width, int height)
 {
-   Window* wnd = static_cast<Window*>(glfwGetWindowUserPointer(window));
-   wnd->fireResized_();
+    Window* wnd = static_cast<Window*>(glfwGetWindowUserPointer(window));
+    wnd->fireResized_(width, height);
 }
 
 void Window::glfwContextResized_(GLFWwindow* window, int width, int height)
 {
-   Window* wnd = static_cast<Window*>(glfwGetWindowUserPointer(window));
-   wnd->fireContextResized_();
+    Window* wnd = static_cast<Window*>(glfwGetWindowUserPointer(window));
+    wnd->fireContextResized_(width, height);
 }
 
 void Window::glfwCloseRequested_(GLFWwindow* window)
 {
-   Window* wnd = static_cast<Window*>(glfwGetWindowUserPointer(window));
-   wnd->fireCloseRequested_();
+    Window* wnd = static_cast<Window*>(glfwGetWindowUserPointer(window));
+    wnd->fireCloseRequested_();
 }
 
 void Window::glfwRepaintRequested_(GLFWwindow* window)
 {
-   Window* wnd = static_cast<Window*>(glfwGetWindowUserPointer(window));
-   wnd->fireRepaintRequested_();
+    Window* wnd = static_cast<Window*>(glfwGetWindowUserPointer(window));
+    wnd->fireRepaintRequested_();
 }
 
 void Window::glfwFocusChanged_(GLFWwindow* window, int state)
 {
-   Window* wnd = static_cast<Window*>(glfwGetWindowUserPointer(window));
-   if (state)
-      wnd->fireFocusGained_();
-   else
-      wnd->fireFocusLost_();
+    Window* wnd = static_cast<Window*>(glfwGetWindowUserPointer(window));
+    wnd->fireFocusChanged_(state);
 }
 
 void Window::glfwIconStateChanged_(GLFWwindow* window, int state)
 {
-   Window* wnd = static_cast<Window*>(glfwGetWindowUserPointer(window));
-   if (state)
-      wnd->fireIconified_();
-   else
-      wnd->fireRestored_();
+    Window* wnd = static_cast<Window*>(glfwGetWindowUserPointer(window));
+    wnd->fireStateChanged_(state);
 }
 
-
-void pushCurrentContext(Window& window)
-{
-   window.makeContextCurrent();
-}
-
-Window* popCurrentContext()
-{
-   if (!current_context_stack.empty())
-   {
-      Window* new_context_window = current_context_stack.back();
-      current_context_stack.pop_back();
-
-      if (glewGetContext() != &new_context_window->glew_context_)
-      {
-         glfwMakeContextCurrent(new_context_window->glfw_window_);
-         detail::current_glew_context = &new_context_window->glew_context_;
-         detail::current_context_state = &new_context_window->context_state_;
-      }
-      
-      return new_context_window;
-   }
-   else
-   {
-      detail::current_glew_context = nullptr;
-      detail::current_context_state = nullptr;
-
-      return nullptr;
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-/// Retrieves a pointer to the window object whose OpenGL context is current,
-/// or nullptr if there is no current context.
-Window* getCurrentContext()
-{
-   return glewGetContext() ? current_context : nullptr;
-}
-
-void clearContextStack()
-{
-   current_context_stack.clear();
-
-   detail::current_glew_context = nullptr;
-   detail::current_context_state = nullptr;
-}
-
-} // namespace be::wnd
-} // namespace be
+} // namespace pbj

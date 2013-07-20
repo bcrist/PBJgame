@@ -32,9 +32,9 @@
 
 #include "pbj/_pbj.h"
 #include "pbj/_math.h"
-#include "be/_gl.h"
+#include "pbj/_gl.h"
 #include "be/source_handle.h"
-#include "be/asset_id.h"
+#include "pbj/sw/resource_id.h"
 
 namespace pbj {
 namespace scene {
@@ -58,13 +58,13 @@ public:
         FM_Nearest = 1
     };
 
-    Texture(const AssetId& id, const GLubyte* data, size_t size, InternalFormat format, bool srgb_color, FilterMode mag_mode, FilterMode min_mode);
+    Texture(const sw::ResourceId& id, const GLubyte* data, size_t size, InternalFormat format, bool srgb_color, FilterMode mag_mode, FilterMode min_mode);
     ~Texture();
 
     be::Handle<Texture> getHandle();
     const be::ConstHandle<Texture> getHandle() const;
 
-    const AssetId& getId() const;
+    const sw::ResourceId& getId() const;
 
     GLuint getGlId() const;
 
@@ -76,7 +76,7 @@ public:
     void setName(const std::string& name);
     const std::string& getName() const;
 
-    void setBed(const Id& id);
+    void setSandwich(const Id& id);
 
     void setMetadata(const std::string& key, const std::string& value);
     const std::string& getMetadata(const std::string& key) const;
@@ -107,9 +107,7 @@ private:
     void invalidate_();
 
     be::SourceHandle<Texture> handle_;
-    AssetId asset_id_;
-
-
+    sw::ResourceId resource_id_;
 
     ivec2 dimensions_;
     GLuint gl_id_;
