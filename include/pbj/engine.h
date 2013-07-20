@@ -29,6 +29,9 @@
 
 #include "be/id.h"
 #include "pbj/_pbj.h"
+#include "pbj/window.h"
+
+#include <memory>
 
 namespace pbj {
 
@@ -43,6 +46,8 @@ public:
    ~Engine();
 
 private:
+    std::unique_ptr<Window> window_;
+
    Engine(const Engine&);
    void operator=(const Engine&);
 };

@@ -32,9 +32,9 @@
 namespace pbj {
 namespace scene {
 
-Shader::Shader(const AssetId& id, Type type, const std::string& source)
+Shader::Shader(const sw::ResourceId& id, Type type, const std::string& source)
     : type_(type),
-      asset_id_(id),
+      resource_id_(id),
       gl_id_(0)
 {
     handle_.associate(this);
@@ -61,9 +61,9 @@ const be::ConstHandle<Shader> Shader::getHandle() const
     return handle_;
 }
 
-const AssetId& Shader::getAssetId() const
+const sw::ResourceId& Shader::getId() const
 {
-    return asset_id_;
+    return resource_id_;
 }
 
 Shader::Type Shader::getType() const
@@ -87,7 +87,7 @@ Shader::Shader()
 void Shader::setName(const std::string& name)
 {
     metadata_["__name__"] = name;
-    asset_id_.asset = Id(name);
+    resource_id_.resource = Id(name);
 }
 
 const std::string& Shader::getName() const
@@ -95,9 +95,9 @@ const std::string& Shader::getName() const
     return getMetadata("__name__");
 }
 
-void Shader::setBed(const Id& id)
+void Shader::setSandwich(const Id& id)
 {
-    asset_id_.bed = id;
+    resource_id_.sandwich = id;
 }
 
 void Shader::setMetadata(const std::string& key, const std::string& value)
@@ -105,8 +105,8 @@ void Shader::setMetadata(const std::string& key, const std::string& value)
     if (key[0] == '_' && key[1] == '_')
     {
         PBJ_LOG(VNotice) << "Attempted to set invalid metadata property!" << PBJ_LOG_NL
-                         << "        Bed ID: " << asset_id_.bed << PBJ_LOG_NL
-                         << "     Shader ID: " << asset_id_.asset << PBJ_LOG_NL
+                         << "   Sandwich ID: " << resource_id_.sandwich << PBJ_LOG_NL
+                         << "     Shader ID: " << resource_id_.resource << PBJ_LOG_NL
                          << "  Metadata Key: " << key << PBJ_LOG_NL
                          << "Metadata Value: " << value << PBJ_LOG_END;
 
@@ -213,8 +213,8 @@ void Shader::compile_(const std::string& source)
         glGetShaderInfoLog(gl_id_, infolog_len, NULL, infolog);
 
         PBJ_LOG(VError) << "Error compiling shader!" << PBJ_LOG_NL
-                        << "           Bed ID: " << asset_id_.bed << PBJ_LOG_NL
-                        << "        Shader ID: " << asset_id_.asset << PBJ_LOG_NL
+                        << "      Sandwich ID: " << resource_id_.sandwich << PBJ_LOG_NL
+                        << "        Shader ID: " << resource_id_.resource << PBJ_LOG_NL
                         << "      Shader Type: " << (type_ == TVertex ? "Vertex" : (type_ == TFragment ? "Fragment" : "Unknown")) << PBJ_LOG_NL
                         << "   GL Shader Type: " << gl_type << PBJ_LOG_NL
                         << "GL Compile Status: " << result << PBJ_LOG_NL

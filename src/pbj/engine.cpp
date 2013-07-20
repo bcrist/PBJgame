@@ -25,7 +25,8 @@
 /// \brief  Implementations of pbj::Engine functions.
 
 #include "pbj/engine.h"
-#include "be/_gl.h"
+#include "pbj/_gl.h"
+#include "pbj/sw/sandwich_open.h"
 
 #include <cassert>
 #include <iostream>
@@ -61,6 +62,15 @@ Engine::Engine()
 
    if (!glfwInit())
       PBJ_LOG(VError) << "GLFW could not be initialized!" << PBJ_LOG_END;
+
+   sw::readDirectory("./");
+
+   WindowSettings settings;
+   std::shared_ptr<sw::Sandwich> sandwich(sw::open(Id("__pbjconfig__")));
+   settings = loadWindowSettings(*sandwich, Id("__editor__"));
+
+   Window* wnd = new Window(settings);
+   window_.reset(wnd);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

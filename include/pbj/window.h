@@ -49,6 +49,7 @@ class Engine;
 class Window
 {
    friend class Engine;
+   friend class std::default_delete<Window>;
 
 public:
     typedef std::function<void(I32, I32)> MoveListener;
