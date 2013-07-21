@@ -100,13 +100,29 @@ int main(int argc, char* argv[])
       PBJ_LOG(pbj::VNotice) << "Redirecting log to " << cerr_log << PBJ_LOG_END;
       cerr_log_file.open(cerr_log, std::ofstream::trunc);
       PBJ_LOG_STREAM.rdbuf(cerr_log_file.rdbuf());
+
+      PBJ_LOG(pbj::VInfo) << "Starting Editor..." << PBJ_LOG_NL
+                          << " PBJgame Version: " << PBJ_VERSION_MAJOR << '.' << PBJ_VERSION_MINOR << PBJ_LOG_NL
+                          << " Build Date: " <<  __DATE__ " " __TIME__ << PBJ_LOG_END;
    }
 #endif
 
    // Initialize game engine
    pbj::Engine engine;
 
-   // TODO: start editor
+   while (true)
+    {
+        glfwPollEvents();
+
+        pbj::Window* wnd = engine.getWindow();
+
+        if (!wnd || wnd->isClosePending())
+            break;
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glfwSwapBuffers(wnd->getGlfwHandle());
+    }
 };
 
 #endif

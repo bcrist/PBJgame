@@ -45,6 +45,8 @@ public:
    Engine();
    ~Engine();
 
+   Window* getWindow() const;
+
 private:
     std::unique_ptr<Window> window_;
 

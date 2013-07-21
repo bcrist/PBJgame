@@ -35,7 +35,7 @@ namespace pbj {
 /// \return The GLFWwindow* structure.
 GLFWwindow* Window::getGlfwHandle()
 {
-   return glfw_window_;
+    return glfw_window_;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -49,7 +49,7 @@ GLFWwindow* Window::getGlfwHandle()
 /// \return The WindowSettings object associated with this window.
 const WindowSettings& Window::getWindowSettings() const
 {
-   return window_settings_;
+    return window_settings_;
 }
 
 
@@ -60,11 +60,11 @@ const WindowSettings& Window::getWindowSettings() const
 /// \param  title The new title for the window.
 void Window::setTitle(const std::string& title)
 {
-   if (title != title_)
-   {
-      title_ = title;
-      glfwSetWindowTitle(glfw_window_, title.c_str());
-   }
+    if (title != title_)
+    {
+        title_ = title;
+        glfwSetWindowTitle(glfw_window_, title.c_str());
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -74,7 +74,7 @@ void Window::setTitle(const std::string& title)
 /// \return The current title of the window.
 const std::string& Window::getTitle() const
 {
-   return title_;
+    return title_;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -88,7 +88,7 @@ const std::string& Window::getTitle() const
 ///         the top-left corner of the window's client area.
 void Window::setPosition(const ivec2& position)
 {
-   glfwSetWindowPos(glfw_window_, position.x, position.y);
+    glfwSetWindowPos(glfw_window_, position.x, position.y);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -104,7 +104,7 @@ void Window::setPosition(const ivec2& position)
 ///         of the top edge of the window's client area.
 void Window::setPosition(int x, int y)
 {
-   glfwSetWindowPos(glfw_window_, x, y);
+    glfwSetWindowPos(glfw_window_, x, y);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -115,9 +115,9 @@ void Window::setPosition(int x, int y)
 ///         corner of the window's client area.
 ivec2 Window::getPosition() const
 {
-   ivec2 position;
-   glfwGetWindowPos(glfw_window_, &position.x, &position.y);
-   return position;
+    ivec2 position;
+    glfwGetWindowPos(glfw_window_, &position.x, &position.y);
+    return position;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -137,7 +137,7 @@ ivec2 Window::getPosition() const
 ///         client area in desktop coordinates.
 void Window::setSize(const ivec2& size)
 {
-   glfwSetWindowSize(glfw_window_, size.x, size.y);
+    glfwSetWindowSize(glfw_window_, size.x, size.y);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -159,7 +159,7 @@ void Window::setSize(const ivec2& size)
 ///         coordinates.
 void Window::setSize(int width, int height)
 {
-   glfwSetWindowSize(glfw_window_, width, height);
+    glfwSetWindowSize(glfw_window_, width, height);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -170,9 +170,9 @@ void Window::setSize(int width, int height)
 ///         coordinates.
 ivec2 Window::getSize() const
 {
-   ivec2 size;
-   glfwGetWindowSize(glfw_window_, &size.x, &size.y);
-   return size;
+    ivec2 size;
+    glfwGetWindowSize(glfw_window_, &size.x, &size.y);
+    return size;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -187,9 +187,9 @@ ivec2 Window::getSize() const
 ///         framebuffer.
 ivec2 Window::getContextSize() const
 {
-   ivec2 size;
-   glfwGetFramebufferSize(glfw_window_, &size.x, &size.y);
-   return size;
+    ivec2 size;
+    glfwGetFramebufferSize(glfw_window_, &size.x, &size.y);
+    return size;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -200,7 +200,7 @@ ivec2 Window::getContextSize() const
 /// \sa     setVisible(bool).
 void Window::show()
 {
-   setVisible(true);
+    setVisible(true);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -211,7 +211,7 @@ void Window::show()
 /// \sa     setVisible(bool).
 void Window::hide()
 {
-   setVisible(false);
+    setVisible(false);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -222,16 +222,16 @@ void Window::hide()
 /// \param  visible Whether or not the window should be visible (shown) or not.
 void Window::setVisible(bool visible)
 {
-   if (glfwGetWindowAttrib(glfw_window_, GLFW_VISIBLE) == 0)
-   {
-      if (visible)
-         glfwShowWindow(glfw_window_);
-   }
-   else
-   {
-      if (!visible)
-         glfwHideWindow(glfw_window_);
-   }
+    if (glfwGetWindowAttrib(glfw_window_, GLFW_VISIBLE) == 0)
+    {
+        if (visible)
+            glfwShowWindow(glfw_window_);
+    }
+    else
+    {
+        if (!visible)
+            glfwHideWindow(glfw_window_);
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -242,78 +242,83 @@ void Window::setVisible(bool visible)
 /// \return \c true if the window is visible.
 bool Window::isVisible() const
 {
-   return glfwGetWindowAttrib(glfw_window_, GLFW_VISIBLE) != 0;
+    return glfwGetWindowAttrib(glfw_window_, GLFW_VISIBLE) != 0;
 }
 
 void Window::iconify()
 {
-   setIconified(true);
+    setIconified(true);
 }
 
 void Window::restore()
 {
-   setIconified(false);
+    setIconified(false);
 }
 
 void Window::setIconified(bool iconified)
 {
-   if (glfwGetWindowAttrib(glfw_window_, GLFW_ICONIFIED) == 0)
-   {
-      if (iconified)
-         glfwIconifyWindow(glfw_window_);
-   }
-   else
-   {
-      if (!iconified)
-         glfwRestoreWindow(glfw_window_);
-   }
+    if (glfwGetWindowAttrib(glfw_window_, GLFW_ICONIFIED) == 0)
+    {
+        if (iconified)
+            glfwIconifyWindow(glfw_window_);
+    }
+    else
+    {
+        if (!iconified)
+            glfwRestoreWindow(glfw_window_);
+    }
 }
 
 bool Window::isIconified() const
 {
-   return glfwGetWindowAttrib(glfw_window_, GLFW_ICONIFIED) != 0;
+    return glfwGetWindowAttrib(glfw_window_, GLFW_ICONIFIED) != 0;
 }
 
 bool Window::isFocused() const
 {
-   return glfwGetWindowAttrib(glfw_window_, GLFW_FOCUSED) != 0;
+    return glfwGetWindowAttrib(glfw_window_, GLFW_FOCUSED) != 0;
 }
 
 
 void Window::requestClose()
 {
-   glfwSetWindowShouldClose(glfw_window_, 1);
+    glfwSetWindowShouldClose(glfw_window_, 1);
 }
 
 void Window::cancelClose()
 {
-   glfwSetWindowShouldClose(glfw_window_, 0);
+    glfwSetWindowShouldClose(glfw_window_, 0);
 }
 
 bool Window::isClosePending() const
 {
-   return glfwWindowShouldClose(glfw_window_) != 0;
+    return glfwWindowShouldClose(glfw_window_) != 0;
 }
 
 
 bool Window::isResizable() const
 {
-   return glfwGetWindowAttrib(glfw_window_, GLFW_RESIZABLE) != 0;
+    return glfwGetWindowAttrib(glfw_window_, GLFW_RESIZABLE) != 0;
 }
 
 bool Window::isDecorated() const
 {
-   return glfwGetWindowAttrib(glfw_window_, GLFW_DECORATED) != 0;
+    return glfwGetWindowAttrib(glfw_window_, GLFW_DECORATED) != 0;
 }
 
 int Window::getContextVersionMajor() const
 {
-   return glfwGetWindowAttrib(glfw_window_, GLFW_CONTEXT_VERSION_MAJOR) != 0;
+    return glfwGetWindowAttrib(glfw_window_, GLFW_CONTEXT_VERSION_MAJOR);
 }
 
 int Window::getContextVersionMinor() const
 {
-   return glfwGetWindowAttrib(glfw_window_, GLFW_CONTEXT_VERSION_MINOR);
+    return glfwGetWindowAttrib(glfw_window_, GLFW_CONTEXT_VERSION_MINOR);
+}
+
+int Window::getContextRevision() const
+{
+    return glfwGetWindowAttrib(glfw_window_, GLFW_CONTEXT_REVISION);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -622,6 +627,8 @@ Window::Window(const WindowSettings& window_settings)
    
 
     glfw_window_ = glfwCreateWindow(width, height, "bengine", monitor, nullptr);
+    glfwSetWindowUserPointer(glfw_window_, this);
+    glfwMakeContextCurrent(glfw_window_);
 
     if (fullscreen_exclusive)
     {
@@ -644,8 +651,6 @@ Window::Window(const WindowSettings& window_settings)
     }
 
     glfwSwapInterval(vsync);
-
-    glfwSetWindowUserPointer(glfw_window_, this);
 
     glfwSetWindowPosCallback(glfw_window_, glfwMoved_);
     glfwSetWindowSizeCallback(glfw_window_, glfwResized_);
@@ -752,13 +757,13 @@ void Window::glfwRepaintRequested_(GLFWwindow* window)
 void Window::glfwFocusChanged_(GLFWwindow* window, int state)
 {
     Window* wnd = static_cast<Window*>(glfwGetWindowUserPointer(window));
-    wnd->fireFocusChanged_(state);
+    wnd->fireFocusChanged_(state != 0);
 }
 
 void Window::glfwIconStateChanged_(GLFWwindow* window, int state)
 {
     Window* wnd = static_cast<Window*>(glfwGetWindowUserPointer(window));
-    wnd->fireStateChanged_(state);
+    wnd->fireStateChanged_(state != 0);
 }
 
 } // namespace pbj

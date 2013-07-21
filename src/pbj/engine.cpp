@@ -28,6 +28,7 @@
 #include "pbj/_gl.h"
 #include "pbj/sw/sandwich_open.h"
 
+#include <thread>
 #include <cassert>
 #include <iostream>
 
@@ -39,9 +40,9 @@ Engine* process_engine_ = nullptr;
 // GLFW error handler
 void glfwError(int error, const char* description)
 {
-   PBJ_LOG(VError) << "GLFW Error!" << PBJ_LOG_NL
-                   << "       Code: " << error << PBJ_LOG_NL
-                   << "Description: " << description << PBJ_LOG_END;
+    PBJ_LOG(VError) << "GLFW Error!" << PBJ_LOG_NL
+                    << "       Code: " << error << PBJ_LOG_NL
+                    << "Description: " << description << PBJ_LOG_END;
 }
 
 } // namespace be::(anon)
@@ -53,31 +54,60 @@ void glfwError(int error, const char* description)
 ///         local variable in main().
 Engine::Engine()
 {
-   if (process_engine_)
-      throw std::runtime_error("Engine already initialized!");
+    if (process_engine_)
+        throw std::runtime_error("Engine already initialized!");
 
-   process_engine_ = this;
+    process_engine_ = this;
 
-   glfwSetErrorCallback(glfwError);
+    glfwSetErrorCallback(glfwError);
 
-   if (!glfwInit())
-      PBJ_LOG(VError) << "GLFW could not be initialized!" << PBJ_LOG_END;
+    if (!glfwInit())
+        PBJ_LOG(VError) << "GLFW could not be initialized!" << PBJ_LOG_END;
 
-   sw::readDirectory("./");
+    sw::readDirectory("./");
 
-   WindowSettings settings;
-   std::shared_ptr<sw::Sandwich> sandwich(sw::open(Id("__pbjconfig__")));
-   settings = loadWindowSettings(*sandwich, Id("__editor__"));
+    std::shared_ptr<sw::Sandwich> config_sandwich;
+    config_sandwich = sw::open(Id("__pbjconfig__"));
 
-   Window* wnd = new Window(settings);
-   window_.reset(wnd);
+    Id window_settings_id;
+    std::string window_title;
+
+#ifdef PBJ_EDITOR
+    window_settings_id = Id("__editor__");
+    window_title = "PBJ Editor";
+#elif defined(PBJ_SERVER)
+    window_settings_id = Id("__server__");
+    window_title = "PBJ Server";
+#else
+    window_settings_id = Id("__client__");
+    window_title = "PBJ Client";
+#endif    
+
+    WindowSettings window_settings;
+    if (config_sandwich)
+        window_settings = loadWindowSettings(*config_sandwich, window_settings_id);
+
+    Window* wnd = new Window(window_settings);
+    window_.reset(wnd);
+
+    wnd->setTitle(window_title);
+    
+    PBJ_LOG(VInfo) << glGetString(GL_VERSION) << PBJ_LOG_END;
+
+    wnd->show();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief  Destructor.
 Engine::~Engine()
 {
-   glfwTerminate();
+    window_.reset();
+    glfwTerminate();
+}
+
+Window* Engine::getWindow() const
+{
+    return window_.get();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -89,8 +119,8 @@ Engine::~Engine()
 /// \return The process' engine object.
 Engine& getEngine()
 {
-   assert(process_engine_);
-   return *process_engine_;
+    assert(process_engine_);
+    return *process_engine_;
 }
 
 } // namespace pbj
