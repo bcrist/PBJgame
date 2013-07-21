@@ -1,4 +1,4 @@
-// Copyright (c) 2013 PBJ Productions
+// Copyright (c) 2013 PBJ^2 Productions
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -19,34 +19,7 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   pbj/ui_image.h
+/// \file   pbj/scene/ui_image.cpp
 /// \author Josh Douglas
 ///
-/// \brief  pbj::UIImage class header.
-
-#ifndef PBJ_UI_IMAGE_H_
-#define PBJ_UI_IMAGE_H_
-
-#include "pbj/ui_element.h"
-#include "pbj/scene/texture.h"
-#include "be/const_handle.h"
-
-namespace pbj {
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief  Text Image UI element.
-class UIImage : public UIElement
-{
-public:
-	UIImage();
-	virtual ~UIImage();
-	void setTexture(const be::ConstHandle<scene::Texture> &texture);
-    const be::ConstHandle<scene::Texture> &getTexture() const;
-
-private:
-	be::ConstHandle<scene::Texture> texture_;
-};
-
-}// namespace pbj 
-
-#endif
+/// \brief  pbj::scene::UIImage class source.

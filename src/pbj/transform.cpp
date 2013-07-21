@@ -1,4 +1,4 @@
-// Copyright (c) 2013 PBJ Productions
+// Copyright (c) 2013 PBJ^2 Productions
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -19,16 +19,14 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file /src/pbj/scene/transform.cpp
+/// \file   pbj/transform.cpp
 /// \author Peter Bartosch
-/// \date 2013-07-18
-/// \brief Implementation for Transform class
+/// \date   2013-07-18
+/// \brief  Implementation for Transform class
 
-#ifndef TRANSFORM_H_
-#include "pbj/scene/transform.h"
-#endif
+#include "pbj/transform.h"
 
-using namespace pbj::scene;
+namespace pbj {
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Constructor for Transform class
@@ -187,3 +185,5 @@ glm::mat4 Transform::getMatrix() const
 	ret = glm::scale(ret, _scale);
 	return ret;
 }
+
+} // namespace pbj

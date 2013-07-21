@@ -1,4 +1,4 @@
-// Copyright (c) 2013 PBJ Productions
+// Copyright (c) 2013 PBJ^2 Productions
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -29,6 +29,8 @@
 // Auto-link with libraries
 #ifdef _WIN32
 #pragma comment (lib, "opengl32.lib")
+#pragma comment (lib, "openal32.lib")
+#pragma comment (lib, "alut.lib")
 #ifdef DEBUG
 #pragma comment (lib, "glew32sd.lib")
 #pragma comment (lib, "glfw3sd.lib")

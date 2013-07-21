@@ -1,4 +1,4 @@
-// Copyright (c) 2013 PBJ Productions
+// Copyright (c) 2013 PBJ^2 Productions
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to

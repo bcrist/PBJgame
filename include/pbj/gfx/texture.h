@@ -1,4 +1,4 @@
-// Copyright (c) 2013 PBJ Productions
+// Copyright (c) 2013 PBJ^2 Productions
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -19,13 +19,13 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   pbj/scene/texture.h
+/// \file   pbj/gfx/texture.h
 /// \author Benjamin Crist
 ///
-/// \brief  pbj::scene::Texture class header.
+/// \brief  pbj::gfx::Texture class header.
 
-#ifndef PBJ_SCENE_TEXTURE_H_
-#define PBJ_SCENE_TEXTURE_H_
+#ifndef PBJ_GFX_TEXTURE_H_
+#define PBJ_GFX_TEXTURE_H_
 
 #include <map>
 #include <vector>
@@ -37,7 +37,7 @@
 #include "pbj/sw/resource_id.h"
 
 namespace pbj {
-namespace scene {
+namespace gfx {
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief  Represents an OpenGL texture object
@@ -129,7 +129,7 @@ private:
     void operator=(const Texture&);
 };
 
-} // namespace pbj::scene
+} // namespace pbj::gfx
 } // namespace pbj
 
 #endif

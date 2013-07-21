@@ -1,4 +1,4 @@
-// Copyright (c) 2013 PBJ Productions
+// Copyright (c) 2013 PBJ^2 Productions
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -19,18 +19,19 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   pbj/ui_element.h
+/// \file   pbj/scene/ui_element.h
 /// \author Benjamin Crist
 ///
-/// \brief  pbj::UIElement class header.
+/// \brief  pbj::scene::UIElement class header.
 
-#ifndef PBJ_UI_ELEMENT_H_
-#define PBJ_UI_ELEMENT_H_
+#ifndef PBJ_SCENE_UI_ELEMENT_H_
+#define PBJ_SCENE_UI_ELEMENT_H_
 
 #include "pbj/_pbj.h"
 #include "pbj/_math.h"
 
 namespace pbj {
+namespace scene {
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief  Abstract base class for UI elements.
@@ -94,6 +95,7 @@ protected:
     void operator=(const UIElement&);
 };
 
+} // namespace pbj::scene
 } // namespace pbj
 
 #endif

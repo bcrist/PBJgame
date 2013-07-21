@@ -19,43 +19,71 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   pbj/engine.h
+/// \file   pbj/scene/ui_label.h
 /// \author Benjamin Crist
 ///
-/// \brief  pbj::Engine class header.
+/// \brief  pbj::scene::UILabel class header.
 
-#ifndef PBJ_ENGINE_H_
-#define PBJ_ENGINE_H_
+#ifndef PBJ_SCENE_UI_LABEL_H_
+#define PBJ_SCENE_UI_LABEL_H_
 
-#include "be/id.h"
-#include "pbj/_pbj.h"
-#include "pbj/window.h"
-
-#include <memory>
+#include "pbj/scene/ui_element.h"
+#include "pbj/gfx/texture_font.h"
+#include "pbj/gfx/texture_font_text.h"
+#include "be/const_handle.h"
 
 namespace pbj {
+namespace scene {
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Manages global engine objects.
-/// \details Only one engine should be created per process.  Attempts to create
-///        multiple engines will result in an exception.
-class Engine
+/// \brief  Text Label UI element.
+class UILabel : public UIElement
 {
 public:
-   Engine();
-   ~Engine();
+    enum Align
+    {
+        AlignLeft,
+        AlignCenter,
+        AlignRight,
+    };
 
-   Window* getWindow() const;
+    UILabel();
+    virtual ~UILabel();
+
+    void setText(const std::string& text);
+    const std::string& getText() const;
+
+    void setScale(const vec2& scale);
+    const vec2& getScale() const;
+
+    void setBackgroundColor(const color4& color);
+    const color4& getBackgroundColor() const;
+
+    void setTextColor(const color4& color);
+    const color4& getTextColor() const;
+
+    void setFont(const be::ConstHandle<gfx::TextureFont>& font);
+    const be::ConstHandle<gfx::TextureFont>& getFont() const;
+
+    void setAlign(Align align);
+    Align getAlign() const;
+
+    virtual void draw(const mat4& view_projection);
 
 private:
-    std::unique_ptr<Window> window_;
+    std::string text_;
+    color4 background_color_;
+    color4 text_color_;
+    vec2 scale_;
+    be::ConstHandle<gfx::TextureFont> font_;
+    gfx::TextureFontText tf_text_;
+    Align align_;
 
-   Engine(const Engine&);
-   void operator=(const Engine&);
+    UILabel(const UILabel&);
+    void operator=(const UILabel&);
 };
 
-Engine& getEngine();
-
+} // namespace pbj::scene
 } // namespace pbj
 
 #endif

@@ -153,7 +153,7 @@ struct WindowSettings
    /// \details Set to zero to disable the stencil buffer.
    unsigned int stencil_bits;
 
-   /// \brief  If true, an SRGB-capable framebuffer will be requested.
+   /// \brief  If true, an sRGB-capable framebuffer will be requested.
    bool srgb_capable;
 
    /// \brief  Determines whether to use a custom gamma ramp.

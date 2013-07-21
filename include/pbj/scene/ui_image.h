@@ -1,4 +1,4 @@
-// Copyright (c) 2013 PBJ Productions
+// Copyright (c) 2013 PBJ^2 Productions
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -19,68 +19,36 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   pbj/ui_label.h
-/// \author Benjamin Crist
+/// \file   pbj/scene/ui_image.h
+/// \author Josh Douglas
 ///
-/// \brief  pbj::UILabel class header.
+/// \brief  pbj::scene::UIImage class header.
 
-#ifndef PBJ_UI_LABEL_H_
-#define PBJ_UI_LABEL_H_
+#ifndef PBJ_SCENE_UI_IMAGE_H_
+#define PBJ_SCENE_UI_IMAGE_H_
 
-#include "pbj/ui_element.h"
-#include "pbj/scene/texture_font.h"
+#include "pbj/scene/ui_element.h"
+#include "pbj/gfx/texture.h"
 #include "be/const_handle.h"
 
 namespace pbj {
+namespace scene {
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief  Text Label UI element.
-class UILabel : public UIElement
+/// \brief  Text Image UI element.
+class UIImage : public UIElement
 {
 public:
-    enum Align
-    {
-        AlignLeft,
-        AlignCenter,
-        AlignRight,
-    };
-
-    UILabel();
-    virtual ~UILabel();
-
-    void setText(const std::string& text);
-    const std::string& getText() const;
-
-    void setScale(const vec2& scale);
-    const vec2& getScale() const;
-
-    void setBackgroundColor(const color4& color);
-    const color4& getBackgroundColor() const;
-
-    void setTextColor(const color4& color);
-    const color4& getTextColor() const;
-
-    void setFont(const be::ConstHandle<TextureFont>& font);
-    const be::ConstHandle<TextureFont>& getFont() const;
-
-    void setAlign(Align align);
-    Align getAlign() const;
-
-    virtual void draw(const mat4& view_projection);
+	UIImage();
+	virtual ~UIImage();
+	void setTexture(const be::ConstHandle<gfx::Texture> &texture);
+    const be::ConstHandle<gfx::Texture> &getTexture() const;
 
 private:
-    std::string text_;
-    color4 background_color_;
-    color4 text_color_;
-    vec2 scale_;
-    be::ConstHandle<TextureFont> font_;
-    TextureFontText tf_text_;
-    Align align_;
-
-    UILabel(const UILabel&);
-    void operator=(const UILabel&);
+	be::ConstHandle<gfx::Texture> texture_;
 };
 
-} // namespace pbj
+} // namespace pbj::scene
+} // namespace pbj 
 
 #endif

@@ -1,4 +1,4 @@
-// Copyright (c) 2013 PBJ Productions
+// Copyright (c) 2013 PBJ^2 Productions
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -24,8 +24,8 @@
 ///
 /// \brief  pbj::scene::Shader class header.
 
-#ifndef PBJ_SCENE_SHADER_H_
-#define PBJ_SCENE_SHADER_H_
+#ifndef PBJ_GFX_SHADER_H_
+#define PBJ_GFX_SHADER_H_
 
 #include <map>
 
@@ -35,7 +35,7 @@
 #include "pbj/sw/resource_id.h"
 
 namespace pbj {
-namespace scene {
+namespace gfx {
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief  Represents a compiled Vertex/Fragment Shader
@@ -110,7 +110,7 @@ private:
     void operator=(const Shader&);
 };
 
-} // namespace pbj::scene
+} // namespace pbj::gfx
 } // namespace pbj
 
 #endif

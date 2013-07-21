@@ -1,4 +1,4 @@
-// Copyright (c) 2013 PBJ Productions
+// Copyright (c) 2013 PBJ^2 Productions
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -17,11 +17,10 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
-#ifndef INPUT_CONTROLLER_H_
-#include "pbj/input_controller.h"
-#endif
 
-using namespace pbj;
+#include "pbj/input_controller.h"
+
+namespace pbj {
 
 bool InputController::_initialized = false;
 GLFWwindow* InputController::_window = 0;
@@ -458,6 +457,8 @@ void InputController::registerScrollListener(scrollListener l)
 ////////////////////////////////////////////////////////////////////////////////
 void InputController::destroy()
 {
-	if(_window != 0)
-		delete _window;	
+//	if(_window != 0)
+//		delete _window;
 }
+
+} // namespace pbj

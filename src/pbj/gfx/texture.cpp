@@ -1,4 +1,4 @@
-// Copyright (c) 2013 PBJ Productions
+// Copyright (c) 2013 PBJ^2 Productions
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -19,12 +19,12 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   pbj/scene/texture.cpp
+/// \file   pbj/gfx/texture.cpp
 /// \author Benjamin Crist
 ///
 /// \brief  Implementations of pbj::scene::Texture functions.
 
-#include "pbj/scene/texture.h"
+#include "pbj/gfx/texture.h"
 
 #include "stb_image.h"
 
@@ -32,7 +32,7 @@
 #include <iostream>
 
 namespace pbj {
-namespace scene {
+namespace gfx {
 
 Texture::Texture(const sw::ResourceId& id, const GLubyte* data, size_t size, InternalFormat format, bool srgb_color, FilterMode mag_mode, FilterMode min_mode)
     : resource_id_(id),
@@ -311,5 +311,5 @@ void Texture::invalidate_()
     }
 }
 
-} // namespace pbj::scene
+} // namespace pbj::gfx
 } // namespace pbj

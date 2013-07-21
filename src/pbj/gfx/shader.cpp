@@ -1,4 +1,4 @@
-// Copyright (c) 2013 PBJ Productions
+// Copyright (c) 2013 PBJ^2 Productions
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -19,18 +19,18 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   pbj/scene/shader.cpp
+/// \file   pbj/gfx/shader.cpp
 /// \author Benjamin Crist
 ///
-/// \brief  Implementations of pbj::scene::Shader functions
+/// \brief  Implementations of pbj::gfx::Shader functions
 
-#include "pbj/scene/shader.h"
+#include "pbj/gfx/shader.h"
 
 #include <cassert>
 #include <iostream>
 
 namespace pbj {
-namespace scene {
+namespace gfx {
 
 Shader::Shader(const sw::ResourceId& id, Type type, const std::string& source)
     : type_(type),
@@ -252,5 +252,5 @@ void Shader::invalidate_()
     }
 }
 
-} // namespace pbj::scene
+} // namespace pbj::gfx
 } // namespace pbj

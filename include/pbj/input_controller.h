@@ -1,4 +1,4 @@
-// Copyright (c) 2013 PBJ Productions
+// Copyright (c) 2013 PBJ^2 Productions
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -19,31 +19,34 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   /include/pbj/input_controller.h
+/// \file   pbj/input_controller.h
 /// \author Peter Bartosch
-/// \date 2013-07-18
+/// \date   2013-07-18
 /// \brief  Intermediate class for input handling
 /// \details InputController is a class consisting of static methods and
-///          variables for grabbing GLFW input events and passing them to
-///          registered observers.  While GLFW does support more input events
-///          than those listed here, we are not concerned with joysticks at the
-///          moment and therefore do not register to hear them.  This is setup
-///          for use in only one window.  I do not anticipate that being an
-///          issue.  The double-click detection will work poorly without having
-///          a timer implemented.  C'est la vie.  Furthermore, I think the way
-///          listeners are implemented can be improved.
-#ifndef INPUT_CONTROLLER_H_
-#define INPUT_CONTROLLER_H_
+///         variables for grabbing GLFW input events and passing them to
+///         registered observers.  While GLFW does support more input events
+///         than those listed here, we are not concerned with joysticks at the
+///         moment and therefore do not register to hear them.  This is setup
+///         for use in only one window.  I do not anticipate that being an
+///         issue.  The double-click detection will work poorly without having
+///         a timer implemented.  C'est la vie.  Furthermore, I think the way
+///         listeners are implemented can be improved.
+
+#ifndef PBJ_INPUT_CONTROLLER_H_
+#define PBJ_INPUT_CONTROLLER_H_
 
 #include <functional>
 #include <deque>
+
 //I think I'm doing the include wrong here.  At this point using it to get off
 //intellisense's radar.
-#include "../vc11/include/GL/glfw3.h"
-#include "_pbj.h"
+//#include "GL/glfw3.h"
+#include "pbj/_gl.h"
 
-namespace pbj
-{
+#include "pbj/_pbj.h"
+
+namespace pbj {
 
 class InputController
 {
@@ -168,5 +171,7 @@ private:
 	static mouseButtonListeners _middleButtonUpListeners;
 
 };
+
 } //namespace pbj
+
 #endif

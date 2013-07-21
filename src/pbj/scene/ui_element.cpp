@@ -19,14 +19,15 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   pbj/ui_element.cpp
+/// \file   pbj/scene/ui_element.cpp
 /// \author Josh Douglas
 ///
-/// \brief  pbj::UIElement class source.
+/// \brief  pbj::scene::UIElement class source.
 
-#include "pbj\ui_element.h"
+#include "pbj/scene/ui_element.h"
 
 namespace pbj {
+namespace scene {
 
 UIElement::UIElement()
 {
@@ -41,6 +42,10 @@ UIElement::UIElement(const ivec2& position, const ivec2& dimensions)
 {
     position_ = position;
     dimensions_ = dimensions;
+}
+
+UIElement::~UIElement()
+{
 }
 
 void UIElement::setVisible(bool visible)
@@ -93,6 +98,16 @@ const ivec2& UIElement::getDimensions() const
     return dimensions_;
 }
 
+UIElement* UIElement::getElementAt(const ivec2& position)
+{
+    if (position.x >= position_.x && position.x < position_.x + dimensions_.x &&
+        position.y >= position_.y && position.y < position_.y + dimensions_.y)
+    {
+        return this;
+    }
+    return nullptr;
+}
+
 void UIElement::setNextFocusableElement(UIElement* element)
 {
     next_focus_ = element;
@@ -105,57 +120,47 @@ UIElement* UIElement::getNextFocusableElement()
 
 void UIElement::onMouseIn(const ivec2& position)
 {
-
 }
 	
 void UIElement::onMouseMove(const ivec2& position)
 {
-
 }
 	
 void UIElement::onMouseOut(const ivec2& position)
 {
-
 }
 	
 void UIElement::onMouseDown(F32 button)
 {
-
 }
 	
 void UIElement::onMouseUp(F32 button)
 {
-
 }
 	
 void UIElement::onMouseClick(F32 button)
 {
-
 }
 	
 void UIElement::onMouseDblClick(F32 button)
 {
-
 }
 
 void UIElement::onKeyDown(F32 keycode)
 {
-
 }
 	
 void UIElement::onKeyUp(F32 keycode)
 {
-
 }
 	
 void UIElement::onKeyPressed(F32 keycode)
 {
-
 }
 	
 void UIElement::onCharacter(F32 codepoint)
 {
-
 }
 
+} // namespace pbj::scene
 } // namespace pbj
