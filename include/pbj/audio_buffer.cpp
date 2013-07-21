@@ -1,15 +1,15 @@
-// Copyright (c) 2013 PBJ^2 Productions
-//
+// Copyright (c) 2013 PBJ Productions
+// 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
 // deal in the Software without restriction, including without limitation the
 // rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
 // sell copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-//
+// 
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-//
+// 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -19,15 +19,38 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   pbj/_al.h
-/// \author Benjamin Crist
+/// \file   pbj/audio_element.cpp
+/// \author Josh Douglas
 ///
-/// \brief  Includes OpenAL/ALC/ALext headers
+/// \brief  pbj::AudioBuffer class source.
 
-#ifndef PBJ_AL_H_
-#define PBJ_AL_H_
+#include "audio_buffer.h"
 
-#include <al.h>
-#include <alut.h>
+namespace pbj {
 
-#endif
+AudioBuffer::AudioBuffer()
+{
+	buffer_id_ = alutCreateBufferFromFileImage();
+}
+
+AudioBuffer::~AudioBuffer()
+{
+	
+}
+
+AudioBuffer::AudioBuffer(const ALubyte* data, size_t size)
+{
+
+}
+
+void AudioBuffer::setBufferID(ALuint bufferID)
+{
+
+}
+
+ALuint AudioBuffer::getBufferID()
+{
+	return buffer_id_;
+}
+
+} // namespace pbj
