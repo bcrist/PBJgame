@@ -29,6 +29,7 @@
 
 #include "audio_buffer.h"
 #include "pbj\_math.h"
+#include <vector>
 
 namespace pbj{
 namespace audio{
@@ -53,10 +54,14 @@ public:
 	void setSourcePos(vec3 sourcePos);
 	vec3 getSourcePos();
 
-	void genSources(ALuint numSources, ALuint sourceID);
+   void setSourceVel(vec3 sourceVel);
+   vec3 getSourceVel();
 
-	void play(ALuint sourceID);
-	void stop(ALuint sourceID);
+	void genSources(ALuint numSources, ALuint &sourceID);
+   void bindBufferSource();
+
+	void play(ALuint &sourceID);
+	void stop(ALuint &sourceID);
 
 private:
 	vec3 lisenterPos_;
@@ -69,7 +74,7 @@ private:
 	ALuint numSources_;
 	ALuint sourceID_;
 
-	AudioBuffer *buffer;
+	AudioBuffer *buffers;
 
 };
 

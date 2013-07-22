@@ -77,17 +77,32 @@ vec3 AudioSource::getSourcePos()
 	return sourcePos_;
 }
 
-void genSources(ALuint numSources, ALuint sourceID)
+void AudioSource::setSourceVel(vec3 sourceVel)
+{
+   sourceVel_ = sourceVel;
+}
+
+vec3 AudioSource::getSourceVel()
+{
+   return sourceVel_;
+}
+
+void AudioSource::genSources(ALuint numSources, ALuint &sourceID)
 {
 	alGenSources(numSources, &sourceID);
 }
 
-void play(ALuint sourceID)
+void AudioSource::bindBufferSource(ALuint &sourceID, AudioBuffer buffers)
+{
+   alSourcei(sourceID, AL_BUFFER, buffers);
+}
+
+void play(ALuint &sourceID)
 {
 	alSourcePlay(sourceID);
 }
 
-void stop(ALuint sourceID)
+void stop(ALuint &sourceID)
 {
 	alSourceStop(sourceID);
 }
