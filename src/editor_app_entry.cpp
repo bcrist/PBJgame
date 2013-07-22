@@ -31,6 +31,7 @@
 #pragma comment (lib, "opengl32.lib")
 #pragma comment (lib, "openal32.lib")
 #pragma comment (lib, "alut.lib")
+#pragma comment (lib, "box2d.lib")
 #ifdef DEBUG
 #pragma comment (lib, "glew32sd.lib")
 #pragma comment (lib, "glfw3sd.lib")
