@@ -58,6 +58,7 @@ public:
 	typedef std::function<void(F64, F64)> scrollListener;
 	typedef std::function<void(F64, F64)> mouseMotionListener;
 	typedef std::function<void(F64, F64, I32)> dragListener;
+	typedef std::function<void(U32)> charListener;
 
 	static void init(GLFWwindow* win);
 
@@ -92,7 +93,8 @@ public:
 	static void raiseKeyDownEvent(I32, I32, I32); ///< Event for key down
 	static void raiseKeyHeldEvent(I32, I32, I32); ///< Event for key held
 	static void raiseKeyUpEvent(I32, I32, I32); ///< Event for key being released
-
+	
+	//Registration methods
 	static void registerKeyAllListener(keyAllListener);
 	static void registerKeyDownListener(keyListener);
 	static void registerKeyHeldListener(keyListener);
@@ -117,7 +119,11 @@ public:
 	static void registerMouseMotionRightHeldListener(dragListener);
 	static void registerMouseMotionMiddleHeldListener(dragListener);
 
+	//Scroll listener
 	static void registerScrollListener(scrollListener);
+
+	//Char Input Listener
+	static void registerCharInputListener(charListener);
 
 	static void destroy();
 private:
@@ -132,6 +138,8 @@ private:
 
 	typedef std::deque<keyListener> keyListeners;
 	typedef std::deque<keyAllListener> keyAllListeners;
+
+	typedef std::deque<charListener> charListeners;
 
 	static bool _initialized;
 	static GLFWwindow* _window;
@@ -170,6 +178,7 @@ private:
 	static mouseButtonListeners _middleButtonDownListeners;
 	static mouseButtonListeners _middleButtonUpListeners;
 
+	static charListeners _charListeners;
 };
 
 } //namespace pbj

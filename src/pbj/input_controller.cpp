@@ -59,6 +59,8 @@ InputController::mouseButtonListeners InputController::_rightButtonUpListeners =
 InputController::mouseButtonListeners InputController::_middleButtonClickListeners = mouseButtonListeners();
 InputController::mouseButtonListeners InputController::_middleButtonDownListeners = mouseButtonListeners();
 InputController::mouseButtonListeners InputController::_middleButtonUpListeners = mouseButtonListeners();
+
+InputController::charListeners InputController::_charListeners = charListeners();
 ///////////////////////////////////////////////////////////////////////////////
 void InputController::init(GLFWwindow* win)
 {
@@ -452,6 +454,12 @@ void InputController::registerMouseMotionMiddleHeldListener(dragListener l)
 void InputController::registerScrollListener(scrollListener l)
 {
 	_scrollListeners.push_back(l);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::registerCharInputListener(charListener l)
+{
+	_charListeners.push_back(l);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
