@@ -1,4 +1,4 @@
-// Copyright (c) 2013 PBJ^2 Productions
+// Copyright (c) 2013 Benjamin Crist
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -19,47 +19,57 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   pbj/engine.h
+/// \file   be/bed/bed.h
 /// \author Benjamin Crist
 ///
-/// \brief  pbj::Engine class header.
+/// \brief  be::bed::Bed class header.
 
-#ifndef PBJ_ENGINE_H_
-#define PBJ_ENGINE_H_
+#ifndef BE_BED_BED_H_
+#define BE_BED_BED_H_
 
+#include "be/bed/db.h"
+#include "be/bed/stmt.h"
+#include "be/bed/stmt_cache.h"
 #include "be/id.h"
-#include "pbj/_pbj.h"
-#include "pbj/window.h"
-#include "pbj/gfx/built_ins.h"
+#include "be/source_handle.h"
 
 #include <memory>
 
-namespace pbj {
+#define BE_BED_SCHEMA_VERSION_MAJOR 0
+#define BE_BED_SCHEMA_VERSION_MINOR 2
+
+namespace be {
+namespace bed {
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Manages global engine objects.
-/// \details Only one engine should be created per process.  Attempts to create
-///        multiple engines will result in an exception.
-class Engine
+/// \class  Bed   be/bed/bed.h "be/bed/bed.h"
+///
+/// \brief  Represents a bengine database file which can be used to access
+///         persistent game data.
+/// \ingroup db
+class Bed : public std::enable_shared_from_this<Bed>
 {
 public:
-   Engine();
-   ~Engine();
+   Bed(const Id& id, const std::string& path, bool read_only);
 
-   Window* getWindow() const;
+   const Id& getId() const;
 
-   const gfx::BuiltIns& getBuiltIns() const;
+   Db& getDb();
+   StmtCache& getStmtCache();
 
 private:
-    std::unique_ptr<Window> window_;
-    std::unique_ptr<gfx::BuiltIns> built_ins_;
+   Id id_;
+   Db db_;
+   StmtCache stmt_cache_;
+   
 
-   Engine(const Engine&);
-   void operator=(const Engine&);
+   unsigned int schema_version_;
+
+   Bed(const Bed&);
+   void operator=(const Bed&);
 };
 
-Engine& getEngine();
-
-} // namespace pbj
+} // namespace be::bed
+} // namespace be
 
 #endif

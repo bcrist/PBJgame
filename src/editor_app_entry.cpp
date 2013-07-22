@@ -50,6 +50,11 @@
 
 #include "pbj/engine.h"
 
+#include "pbj/gfx/built_ins.h"
+#include "pbj/gfx/texture_font_text.h"
+#include "pbj/gfx/shader_program.h"
+#include "pbj/gfx/built_ins.h"
+
 #include <iostream>
 #include <fstream>
 #include <random>
@@ -112,6 +117,12 @@ int main(int argc, char* argv[])
    // Initialize game engine
    pbj::Engine engine;
 
+   pbj::gfx::TextureFontText text(engine.getBuiltIns().getTextureFont(pbj::Id("TextureFont.default")), "ABCDEFG");
+   pbj::mat4 transform = glm::ortho(0.0f, 320.0f, -120.0f, 120.0f);
+
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   glEnable(GL_BLEND);
+
    while (true)
     {
         glfwPollEvents();
@@ -123,7 +134,18 @@ int main(int argc, char* argv[])
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+
+        text.draw(transform);
+
         glfwSwapBuffers(wnd->getGlfwHandle());
+
+        GLenum gl_error;
+        while ((gl_error = glGetError()) != GL_NO_ERROR)
+        {
+            PBJ_LOG(pbj::VWarning) << "OpenGL error while rendering frame!" << PBJ_LOG_NL
+                                   << "Error Code: " << gl_error << PBJ_LOG_NL
+                                   << "     Error: " << pbj::getGlErrorString(gl_error) << PBJ_LOG_END;
+        }
     }
 };
 

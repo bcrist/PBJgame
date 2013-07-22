@@ -1,0 +1,1 @@
+@idgen < builtins.txt > ids.builtins.txt

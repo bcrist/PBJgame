@@ -148,8 +148,13 @@
     <ClCompile Include="..\..\src\pbj\audio\audio_buffer.cpp" />
     <ClCompile Include="..\..\src\pbj\audio\audio_source.cpp" />
     <ClCompile Include="..\..\src\pbj\engine.cpp" />
+    <ClCompile Include="..\..\src\pbj\gfx\built_ins.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\shader.cpp" />
+    <ClCompile Include="..\..\src\pbj\gfx\shader_program.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\texture.cpp" />
+    <ClCompile Include="..\..\src\pbj\gfx\texture_font.cpp" />
+    <ClCompile Include="..\..\src\pbj\gfx\texture_font_character.cpp" />
+    <ClCompile Include="..\..\src\pbj\gfx\texture_font_text.cpp" />
     <ClCompile Include="..\..\src\pbj\input_controller.cpp" />
     <ClCompile Include="..\..\src\pbj\scene\ui_element.cpp" />
     <ClCompile Include="..\..\src\pbj\scene\ui_image.cpp" />
@@ -179,6 +184,7 @@
     <ClInclude Include="..\..\include\pbj\audio\audio_buffer.h" />
     <ClInclude Include="..\..\include\pbj\audio\audio_source.h" />
     <ClInclude Include="..\..\include\pbj\engine.h" />
+    <ClInclude Include="..\..\include\pbj\gfx\built_ins.h" />
     <ClInclude Include="..\..\include\pbj\gfx\mesh.h" />
     <ClInclude Include="..\..\include\pbj\gfx\mesh_instance.h" />
     <ClInclude Include="..\..\include\pbj\gfx\shader.h" />
@@ -189,8 +195,10 @@
     <ClInclude Include="..\..\include\pbj\gfx\skeleton_pose.h" />
     <ClInclude Include="..\..\include\pbj\gfx\texture.h" />
     <ClInclude Include="..\..\include\pbj\gfx\texture_font.h" />
+    <ClInclude Include="..\..\include\pbj\gfx\texture_font_character.h" />
     <ClInclude Include="..\..\include\pbj\gfx\texture_font_text.h" />
     <ClInclude Include="..\..\include\pbj\input_controller.h" />
+    <ClInclude Include="..\..\include\pbj\scene\ui_button.h" />
     <ClInclude Include="..\..\include\pbj\scene\ui_element.h" />
     <ClInclude Include="..\..\include\pbj\scene\ui_image.h" />
     <ClInclude Include="..\..\include\pbj\scene\ui_label.h" />
@@ -221,6 +229,8 @@
     <None Include="..\..\include\be\source_handle.inl">
       <FileType>Document</FileType>
     </None>
+    <None Include="..\..\include\pbj\gfx\shader_program.inl" />
+    <None Include="..\..\include\pbj\gfx\texture_font.inl" />
     <None Include="..\..\include\pbj\sw\resource_id.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

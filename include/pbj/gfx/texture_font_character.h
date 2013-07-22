@@ -19,47 +19,43 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   pbj/engine.h
+/// \file   pbj/gfx/texture_font_character.h
 /// \author Benjamin Crist
 ///
-/// \brief  pbj::Engine class header.
+/// \brief  pbj::gfx::TextureFontCharacter class header.
 
-#ifndef PBJ_ENGINE_H_
-#define PBJ_ENGINE_H_
+#ifndef PBJ_GFX_TEXTURE_FONT_CHARACTER_H_
+#define PBJ_GFX_TEXTURE_FONT_CHARACTER_H_
 
-#include "be/id.h"
 #include "pbj/_pbj.h"
-#include "pbj/window.h"
-#include "pbj/gfx/built_ins.h"
-
-#include <memory>
+#include "pbj/_math.h"
 
 namespace pbj {
+namespace gfx {
 
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Manages global engine objects.
-/// \details Only one engine should be created per process.  Attempts to create
-///        multiple engines will result in an exception.
-class Engine
+struct TextureFontCharacter
 {
-public:
-   Engine();
-   ~Engine();
+    U32 codepoint;
 
-   Window* getWindow() const;
+    vec2 tex_offset;
+    vec2 tex_delta;
 
-   const gfx::BuiltIns& getBuiltIns() const;
+    vec2 dest_offset;
+    F32 advance;
 
-private:
-    std::unique_ptr<Window> window_;
-    std::unique_ptr<gfx::BuiltIns> built_ins_;
+    static const U32 cp_invalid = 0xFFFFFFFF;
 
-   Engine(const Engine&);
-   void operator=(const Engine&);
+    TextureFontCharacter();
+
+    bool operator==(const TextureFontCharacter& other) const;
+    bool operator!=(const TextureFontCharacter& other) const;
+    bool operator<(const TextureFontCharacter& other) const;
+    bool operator<=(const TextureFontCharacter& other) const;
+    bool operator>(const TextureFontCharacter& other) const;
+    bool operator>=(const TextureFontCharacter& other) const;
 };
 
-Engine& getEngine();
-
+} // namespace pbj::gfx
 } // namespace pbj
 
 #endif

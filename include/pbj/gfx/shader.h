@@ -19,10 +19,10 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   pbj/scene/shader.h
+/// \file   pbj/gfx/shader.h
 /// \author Benjamin Crist
 ///
-/// \brief  pbj::scene::Shader class header.
+/// \brief  pbj::gfx::Shader class header.
 
 #ifndef PBJ_GFX_SHADER_H_
 #define PBJ_GFX_SHADER_H_
