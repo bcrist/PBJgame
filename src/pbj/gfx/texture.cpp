@@ -292,7 +292,7 @@ void Texture::upload_(const GLubyte* data, size_t size, InternalFormat format, b
     glGenTextures(1, &gl_id_);
     glBindTexture(GL_TEXTURE_2D, gl_id_);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, internal_format, dimensions_.x, dimensions_.y, 0, source_format, GL_UNSIGNED_BYTE, data);
+    glTexImage2D(GL_TEXTURE_2D, 0, internal_format, dimensions_.x, dimensions_.y, 0, source_format, GL_UNSIGNED_BYTE, stbi_data);
 
     stbi_image_free(stbi_data);
 

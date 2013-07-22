@@ -100,15 +100,14 @@ BuiltIns::BuiltIns()
     {
         Shader* shader = new Shader(id, Shader::TVertex,
             "#version 330\n\n"
-            //"uniform mat4 transform;\n\n"
+            "uniform mat4 transform;\n\n"
             "layout(location = 0) in vec2 in_position;\n"
-            //"layout(location = 1) in vec2 in_texcoord;\n\n"
-            //"out vec2 texcoord;\n\n"
+            "layout(location = 1) in vec2 in_texcoord;\n\n"
+            "out vec2 texcoord;\n\n"
             "void main()\n"
             "{\n"
-            //"   texcoord = in_texcoord;\n"
-            //"   gl_Position = transform * vec4(in_position, 0.0, 1.0);\n"
-            "   gl_Position = vec4(in_position, 0.0, 1.0);\n"
+            "   texcoord = in_texcoord;\n"
+            "   gl_Position = transform * vec4(in_position, 0.0, 1.0);\n"
             "}\n");
         shaders_.insert(std::make_pair(shader->getId().resource, std::unique_ptr<Shader>(shader)));
     }
@@ -122,17 +121,13 @@ BuiltIns::BuiltIns()
     {
         Shader* shader = new Shader(id, Shader::TFragment,
             "#version 330\n\n"
-            //"uniform vec4 color;\n"
-            //"uniform sampler2D texture;\n\n"
-            //"in vec2 texcoord;\n\n"
+            "uniform vec4 color;\n"
+            "uniform sampler2D texsampler;\n\n"
+            "in vec2 texcoord;\n\n"
             "layout(location = 0) out vec4 out_fragcolor;\n\n"
             "void main()\n"
             "{\n"
-            //"   vec4 fragcolor = color;\n"
-            //"   fragcolor.a *= texture(texture, texcoord).r;\n"
-            //"   out_fragcolor = fragcolor;\n"
-            //"   out_fragcolor = vec4(1.0f,1.0f,1.0f,1.0f);\n"
-            "   gl_FragColor = vec4(1.0f,1.0f,1.0f,1.0f);\n"
+            "   out_fragcolor = vec4(color.rgb, color.a * texture(texsampler, texcoord).r);\n"
             "}\n");
         shaders_.insert(std::make_pair(shader->getId().resource, std::unique_ptr<Shader>(shader)));
     }
@@ -329,32 +324,32 @@ BuiltIns::BuiltIns()
 
         c.codepoint = TextureFontCharacter::cp_invalid;
         c.tex_delta = vec2(3, 9);
-        c.tex_offset = vec2(114, 128 - 11 - c.tex_delta.y);
-        c.dest_offset = vec2(0, -1);
+        c.tex_offset = vec2(114, 11);
+        c.dest_offset = vec2(0, 1);
         c.advance = 4;
         chars.push_back(c);
         
         c.codepoint = 65;
         c.tex_delta = vec2(7, 7);
-        c.tex_offset = vec2(8, 128 - 49 - c.tex_delta.y);
-        c.dest_offset = vec2(0, -3);
+        c.tex_offset = vec2(8, 49);
+        c.dest_offset = vec2(0, 3);
         c.advance = 8;
         chars.push_back(c);
 
         c.codepoint = 66;
-        c.tex_offset = vec2(16, 128 - 49 - c.tex_delta.y);
+        c.tex_offset = vec2(16, 49);
         chars.push_back(c);
 
         c.codepoint = 67;
-        c.tex_offset = vec2(24, 128 - 48 - c.tex_delta.y);
+        c.tex_offset = vec2(24, 48);
         chars.push_back(c);
 
         c.codepoint = 68;
-        c.tex_offset = vec2(32, 128 - 48 - c.tex_delta.y);
+        c.tex_offset = vec2(32, 48);
         chars.push_back(c);
 
         c.codepoint = 69;
-        c.tex_offset = vec2(40, 128 - 48 - c.tex_delta.y);
+        c.tex_offset = vec2(40, 48);
         chars.push_back(c);
 
         TextureFont* texture_font = new TextureFont(id,

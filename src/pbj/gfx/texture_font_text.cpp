@@ -64,8 +64,8 @@ TextureFontText::TextureFontText(const TextureFont& font, const std::string& tex
         // vertices
         vec2 bottom_left(cursor + ch.dest_offset);
         vec2 top_right(bottom_left + ch.tex_delta);
-        vec2 tex_bottom_left(ch.tex_offset);
-        vec2 tex_top_right(ch.tex_offset + ch.tex_delta);
+        vec2 tex_bottom_left(ch.tex_offset.x, ch.tex_offset.y + ch.tex_delta.y);
+        vec2 tex_top_right(ch.tex_offset.x + ch.tex_delta.x, ch.tex_offset.y);
         tex_bottom_left.x *= scale_x; tex_top_right.x *= scale_x;
         tex_bottom_left.y *= scale_y; tex_top_right.y *= scale_y;
 
@@ -101,6 +101,10 @@ TextureFontText::TextureFontText(const TextureFont& font, const std::string& tex
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(vec2), 0);
     // texture coords at shader index 1:
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(vec2), reinterpret_cast<void*>(sizeof(vec2)));
+
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+
     glBindBuffer(GL_ARRAY_BUFFER, 0);   // unbind VBO because GL_ARRAY_BUFFER is not part of the VAO state.
     glBindVertexArray(0);               // unbind VAO
 
@@ -110,7 +114,7 @@ TextureFontText::TextureFontText(const TextureFont& font, const std::string& tex
 
     shader_program_id_ = built_ins.getProgram(Id("ShaderProgram.TextureFontText")).getGlId();
     color_uniform_location_ = glGetUniformLocation(shader_program_id_, "color");
-    texture_uniform_location_ = glGetUniformLocation(shader_program_id_, "texture");
+    texture_uniform_location_ = glGetUniformLocation(shader_program_id_, "texsampler");
     transform_uniform_location_ = glGetUniformLocation(shader_program_id_, "transform");
 }
 
@@ -145,15 +149,15 @@ void TextureFontText::draw(const mat4& transform)
     }
 
     glUseProgram(shader_program_id_); // bind program
-    //glUniform1i(texture_uniform_location_, 0);
-    //glActiveTexture(GL_TEXTURE0);
+    glUniform1i(texture_uniform_location_, 0);
+    glActiveTexture(GL_TEXTURE0);
 
-    //const Texture* tex = texture_.get();
-    //glBindTexture(GL_TEXTURE_2D, tex ? tex->getGlId() : 0);
+    const Texture* tex = texture_.get();
+    glBindTexture(GL_TEXTURE_2D, tex ? tex->getGlId() : 0);
 
     glBindVertexArray(vao_id_); // bind VAO
 
-    //glUniform4fv(color_uniform_location_, 1, glm::value_ptr(color_));
+    glUniform4fv(color_uniform_location_, 1, glm::value_ptr(color_));
     glUniformMatrix4fv(transform_uniform_location_, 1, false, glm::value_ptr(transform));
 
     // draw text
