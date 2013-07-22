@@ -167,6 +167,7 @@
     </ClCompile>
     <ClCompile Include="..\..\src\pbj\audio\audio_source.cpp">
       <Filter>Source Files\pbj\pbj::audio</Filter>
+	</ClCompile>
     <ClCompile Include="..\..\src\pbj\gfx\texture_font.cpp">
       <Filter>Source Files\pbj\pbj::gfx</Filter>
     </ClCompile>
@@ -309,6 +310,7 @@
     </ClInclude>
     <ClInclude Include="..\..\include\pbj\audio\audio_source.h">
       <Filter>Header Files\pbj\pbj::audio</Filter>
+	</ClInclude>
     <ClInclude Include="..\..\include\pbj\gfx\texture_font_text.h">
       <Filter>Header Files\pbj\pbj::gfx</Filter>
     </ClInclude>
