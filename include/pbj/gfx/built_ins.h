@@ -39,6 +39,8 @@ class Engine;
 
 namespace gfx {
 
+class TextureFont;
+
 class Mesh;
 class Texture;
 class Shader;
@@ -50,6 +52,8 @@ class BuiltIns
     friend struct std::default_delete<BuiltIns>;
 
 public:
+    const TextureFont& getTextureFont(const Id& id) const;
+
     //const Mesh& getMesh(const Id& id) const;
     
     const Texture& getTexture(const Id& id) const;
@@ -62,6 +66,8 @@ private:
     ~BuiltIns();
 
     void logWarning(const char* type, const sw::ResourceId id, const std::string& what_arg) const;
+
+    std::unordered_map<Id, std::unique_ptr<TextureFont> > texture_fonts_;
 
     //std::unordered_map<Id, std::unique_ptr<Mesh> > meshes_;
 

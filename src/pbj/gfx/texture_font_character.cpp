@@ -19,43 +19,50 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   pbj/gfx/texture_font_character.h
+/// \file   pbj/gfx/texture_font_character.cpp
 /// \author Benjamin Crist
 ///
-/// \brief  pbj::gfx::TextureFontCharacter class header.
+/// \brief  Implementations of pbj::gfx::TextureFontCharacter functions.
 
-#ifndef PBJ_GFX_TEXTURE_FONT_CHARACTER_H_
-#define PBJ_GFX_TEXTURE_FONT_CHARACTER_H_
-
-#include "pbj/_pbj.h"
-#include "pbj/_math.h"
+#include "pbj/gfx/texture_font_character.h"
 
 namespace pbj {
 namespace gfx {
 
-struct TextureFontCharacter
+TextureFontCharacter::TextureFontCharacter()
+    : codepoint(cp_invalid),
+      advance(0)
+{}
+
+bool TextureFontCharacter::operator==(const TextureFontCharacter& other) const
 {
-    U32 codepoint;
+    return codepoint == other.codepoint;
+}
 
-    vec2 tex_offset;
-    vec2 tex_delta;
+bool TextureFontCharacter::operator!=(const TextureFontCharacter& other) const
+{
+    return codepoint != other.codepoint;
+}
 
-    vec2 dest_offset;
-    F32 advance;
+bool TextureFontCharacter::operator<(const TextureFontCharacter& other) const
+{
+    return codepoint < other.codepoint;
+}
 
-    static const U32 cp_invalid = 0xFFFFFFFF;
+bool TextureFontCharacter::operator<=(const TextureFontCharacter& other) const
+{
+    return codepoint <= other.codepoint;
+}
 
-    TextureFontCharacter();
+bool TextureFontCharacter::operator>(const TextureFontCharacter& other) const
+{
+    return codepoint > other.codepoint;
+}
 
-    bool operator==(const TextureFontCharacter& other) const;
-    bool operator!=(const TextureFontCharacter& other) const;
-    bool operator<(const TextureFontCharacter& other) const;
-    bool operator<=(const TextureFontCharacter& other) const;
-    bool operator>(const TextureFontCharacter& other) const;
-    bool operator>=(const TextureFontCharacter& other) const;
-};
+bool TextureFontCharacter::operator>=(const TextureFontCharacter& other) const
+{
+    return codepoint >= other.codepoint;
+}
 
 } // namespace pbj::gfx
 } // namespace pbj
-
-#endif

@@ -145,15 +145,15 @@ void TextureFontText::draw(const mat4& transform)
     }
 
     glUseProgram(shader_program_id_); // bind program
-    glUniform1i(texture_uniform_location_, 0);
-    glActiveTexture(GL_TEXTURE0);
+    //glUniform1i(texture_uniform_location_, 0);
+    //glActiveTexture(GL_TEXTURE0);
 
-    const Texture* tex = texture_.get();
-    glBindTexture(GL_TEXTURE_2D, tex ? tex->getGlId() : 0);
+    //const Texture* tex = texture_.get();
+    //glBindTexture(GL_TEXTURE_2D, tex ? tex->getGlId() : 0);
 
     glBindVertexArray(vao_id_); // bind VAO
 
-    glUniform4fv(color_uniform_location_, 1, glm::value_ptr(color_));
+    //glUniform4fv(color_uniform_location_, 1, glm::value_ptr(color_));
     glUniformMatrix4fv(transform_uniform_location_, 1, false, glm::value_ptr(transform));
 
     // draw text

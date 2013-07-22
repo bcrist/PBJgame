@@ -44,6 +44,7 @@ TextureFont::TextureFont(const sw::ResourceId& id,
                          const Iterator& chars_end)
     : resource_id_(id),
       texture_(texture),
+      texture_size_(texture_size),
       line_height_(line_height),
       baseline_(baseline)
 {
@@ -57,16 +58,14 @@ TextureFont::TextureFont(const sw::ResourceId& id,
         U32 codepoint = i->codepoint;
 
         if (codepoint == TextureFontCharacter::cp_invalid)
-            default_char = *i;
+            default_char_ = *i;
         else if (codepoint < base_chars_size_)
             base_chars_[codepoint] = *i;
         else 
         {
-            auto j = std::find(ext_chars_.begin(), ext_chars_.end(),
-                [] (const TextureFont& a, const TextureFont& b)
-                {
-                    return a.codepoint == b.codepoint;
-                });
+            TextureFontCharacter query;
+            query.codepoint = codepoint;
+            auto j = std::find(ext_chars_.begin(), ext_chars_.end(), query);
 
             if (j == ext_chars_.end())
             {
@@ -81,11 +80,7 @@ TextureFont::TextureFont(const sw::ResourceId& id,
         }
     }
 
-    std::sort(ext_chars_.begin(), ext_chars_.end(),
-        [](const TextureFontCharacter& a, const TextureFontCharacter& b)
-        {
-            return a.codepoint < b.codepoint;
-        });
+    std::sort(ext_chars_.begin(), ext_chars_.end());
 }
 
 } // namespace pbj::gfx

@@ -152,6 +152,7 @@
     <ClCompile Include="..\..\src\pbj\gfx\shader_program.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\texture.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\texture_font.cpp" />
+    <ClCompile Include="..\..\src\pbj\gfx\texture_font_character.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\texture_font_text.cpp" />
     <ClCompile Include="..\..\src\pbj\input_controller.cpp" />
     <ClCompile Include="..\..\src\pbj\scene\ui_element.cpp" />
