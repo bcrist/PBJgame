@@ -30,6 +30,7 @@
 #include "be/id.h"
 #include "pbj/_pbj.h"
 #include "pbj/window.h"
+#include "pbj/gfx/built_ins.h"
 
 #include <memory>
 
@@ -47,8 +48,11 @@ public:
 
    Window* getWindow() const;
 
+   const gfx::BuiltIns& getBuiltIns() const;
+
 private:
     std::unique_ptr<Window> window_;
+    std::unique_ptr<gfx::BuiltIns> built_ins_;
 
    Engine(const Engine&);
    void operator=(const Engine&);

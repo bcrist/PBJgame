@@ -33,11 +33,12 @@ namespace pbj {
 namespace gfx {
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief  Represents a 
+/// \brief  A mesh-like object which represents a specific text string rendered
+///         using a particular TextureFont.
 class TextureFontText
 {
 public:
-    TextureFontText(const TextureFont& font, const std::string& text);
+    TextureFontText(const TextureFont& font, const std::string& text, GLenum buffer_mode = GL_STATIC_DRAW);
     ~TextureFontText();
 
     void setColor(const vec4& color);
@@ -45,20 +46,20 @@ public:
 
     void draw(const mat4& transform);
 
-
-
 private:
     vec4 color_;
    
     be::ConstHandle<Texture> texture_;
 
-    GLint color_uniform_location_;
-    GLint texture_uniform_location_;
-    GLint transform_uniform_location_;
-
     GLuint vao_id_; ///< OpenGL Vertex array object id
     GLuint ibo_id_; ///< OpenGL Vertex Index buffer object id
     GLuint vbo_id_; ///< OpenGL Vertex buffer object id
+    GLsizei ibo_size_; ///< Size of IBO
+
+    GLuint shader_program_id_;
+    GLint color_uniform_location_;
+    GLint texture_uniform_location_;
+    GLint transform_uniform_location_;
 
     TextureFontText(const TextureFontText&);
     void operator=(const TextureFontText&);

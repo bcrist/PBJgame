@@ -35,7 +35,7 @@ ShaderProgram::ShaderProgram(const sw::ResourceId& id, const Shader& vertex_shad
     : resource_id_(id),
       gl_id_(0)
 {
-#ifndef PBJ_DEBUG
+#ifdef PBJ_DEBUG
     if (vertex_shader.getType() != Shader::TVertex)
         PBJ_LOG(VNotice) << "Expected first parameter to be vertex shader!" << PBJ_LOG_NL
                          << "       Sandwich ID: " << id.sandwich << PBJ_LOG_NL
