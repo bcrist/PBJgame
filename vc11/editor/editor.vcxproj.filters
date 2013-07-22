@@ -16,18 +16,6 @@
     <Filter Include="Source Files\_deps">
       <UniqueIdentifier>{82be8774-e569-45cd-8e71-8635139f8b4f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\be">
-      <UniqueIdentifier>{3906cfb3-1fa1-45fa-91ba-b26079807d6e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\be\be::util">
-      <UniqueIdentifier>{554ac71d-7688-4d70-846d-a70e849b063b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\be\be::bed">
-      <UniqueIdentifier>{b03a70db-a687-40f5-93ec-8bca35a7e716}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\be\be::bed\be::bed::detail">
-      <UniqueIdentifier>{8a896d2c-afe7-4629-bede-31883f809ed0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\pbj">
       <UniqueIdentifier>{3f8cefbc-39c6-4a39-832e-507e5cd5b6b4}</UniqueIdentifier>
     </Filter>
@@ -82,6 +70,18 @@
     <Filter Include="Source Files\pbj\pbj::scene\%28ui%29">
       <UniqueIdentifier>{5c64562c-b67b-473f-a393-8e878fd21093}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\pbj\pbj::gfx\be">
+      <UniqueIdentifier>{3906cfb3-1fa1-45fa-91ba-b26079807d6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\pbj\pbj::gfx\be\be::util">
+      <UniqueIdentifier>{554ac71d-7688-4d70-846d-a70e849b063b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\pbj\pbj::gfx\be\be::bed">
+      <UniqueIdentifier>{b03a70db-a687-40f5-93ec-8bca35a7e716}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\pbj\pbj::gfx\be\be::bed\be::bed::detail">
+      <UniqueIdentifier>{8a896d2c-afe7-4629-bede-31883f809ed0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\deps\pugixml.cpp">
@@ -94,34 +94,34 @@
       <Filter>Source Files\_deps</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\be\id.cpp">
-      <Filter>Source Files\be</Filter>
+      <Filter>Source Files\pbj\pbj::gfx\be</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\be\verbosity.cpp">
-      <Filter>Source Files\be</Filter>
+      <Filter>Source Files\pbj\pbj::gfx\be</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\be\util\nconvert.cpp">
-      <Filter>Source Files\be\be::util</Filter>
+      <Filter>Source Files\pbj\pbj::gfx\be\be::util</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\be\bed\cached_stmt.cpp">
-      <Filter>Source Files\be\be::bed</Filter>
+      <Filter>Source Files\pbj\pbj::gfx\be\be::bed</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\be\bed\db.cpp">
-      <Filter>Source Files\be\be::bed</Filter>
+      <Filter>Source Files\pbj\pbj::gfx\be\be::bed</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\be\bed\stmt.cpp">
-      <Filter>Source Files\be\be::bed</Filter>
+      <Filter>Source Files\pbj\pbj::gfx\be\be::bed</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\be\bed\stmt_cache.cpp">
-      <Filter>Source Files\be\be::bed</Filter>
+      <Filter>Source Files\pbj\pbj::gfx\be\be::bed</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\be\bed\transaction.cpp">
-      <Filter>Source Files\be\be::bed</Filter>
+      <Filter>Source Files\pbj\pbj::gfx\be\be::bed</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\be\bed\detail\db_error.cpp">
-      <Filter>Source Files\be\be::bed\be::bed::detail</Filter>
+      <Filter>Source Files\pbj\pbj::gfx\be\be::bed\be::bed::detail</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\be\bed\detail\stmt_cache_entry.cpp">
-      <Filter>Source Files\be\be::bed\be::bed::detail</Filter>
+      <Filter>Source Files\pbj\pbj::gfx\be\be::bed\be::bed::detail</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\pbj\engine.cpp">
       <Filter>Source Files\pbj</Filter>
@@ -175,6 +175,9 @@
       <Filter>Source Files\pbj\pbj::gfx</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\pbj\gfx\built_ins.cpp">
+      <Filter>Source Files\pbj\pbj::gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\gfx\texture_font_character.cpp">
       <Filter>Source Files\pbj\pbj::gfx</Filter>
     </ClCompile>
   </ItemGroup>

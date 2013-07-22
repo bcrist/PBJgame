@@ -215,8 +215,47 @@ void Texture::upload_(const GLubyte* data, size_t size, InternalFormat format, b
 {
     invalidate_();
 
+    GLenum error_status;
+    while ((error_status = glGetError()) != GL_NO_ERROR)
+    {
+        PBJ_LOG(VNotice) << "OpenGL error before uploading texture data!" << PBJ_LOG_NL
+                         << "    Error Code: " << error_status << PBJ_LOG_NL
+                         << "         Error: " << pbj::getGlErrorString(error_status) << PBJ_LOG_END;
+    }
+
+    int required_components = 4;
+
+    GLenum internal_format;
+    GLenum source_format;
+    switch (format)
+    {
+        case IF_R:
+            internal_format = GL_RED;
+            source_format = GL_RED;
+            required_components = 1;
+            break;
+
+        case IF_RG:
+            internal_format = GL_RG;
+            source_format = GL_RG;
+            required_components = 2;
+            break;
+
+        case IF_RGB:
+            internal_format = srgb_color ? GL_SRGB : GL_RGB;
+            source_format = GL_RGB;
+            required_components = 3;
+            break;
+
+        default: //case IF_RGBA:
+            internal_format = srgb_color ? GL_SRGB_ALPHA : GL_RGBA;
+            source_format = GL_RGBA;
+            required_components = 4;
+            break;
+    }
+
     int components;
-    stbi_uc* stbi_data = stbi_load_from_memory(data, size, &dimensions_.x, &dimensions_.y, &components, 4);
+    stbi_uc* stbi_data = stbi_load_from_memory(data, size, &dimensions_.x, &dimensions_.y, &components, required_components);
 
     if (stbi_data == nullptr)
     {
@@ -226,30 +265,6 @@ void Texture::upload_(const GLubyte* data, size_t size, InternalFormat format, b
                           << "    STBI Error: " << stbi_failure_reason() << PBJ_LOG_END;
 
         throw std::runtime_error("Failed to upload texture data to GPU!");
-    }
-
-    GLenum internal_format;
-    switch (format)
-    {
-        case IF_R:
-            internal_format = GL_RED;
-            break;
-
-        case IF_RG:
-            internal_format = GL_RG;
-            break;
-
-        case IF_RGB:
-            internal_format = srgb_color ? GL_SRGB : GL_RGB;
-            break;
-
-        case IF_RGBA:
-            internal_format = srgb_color ? GL_SRGB_ALPHA : GL_RGBA;
-            break;
-
-        default:
-            internal_format = GL_RGBA;
-            break;
     }
 
     GLenum mag_filter;
@@ -277,7 +292,7 @@ void Texture::upload_(const GLubyte* data, size_t size, InternalFormat format, b
     glGenTextures(1, &gl_id_);
     glBindTexture(GL_TEXTURE_2D, gl_id_);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, internal_format, dimensions_.x, dimensions_.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    glTexImage2D(GL_TEXTURE_2D, 0, internal_format, dimensions_.x, dimensions_.y, 0, source_format, GL_UNSIGNED_BYTE, data);
 
     stbi_image_free(stbi_data);
 
@@ -286,7 +301,7 @@ void Texture::upload_(const GLubyte* data, size_t size, InternalFormat format, b
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
 
-    GLenum error_status = glGetError();
+    error_status = glGetError();
 
     if (error_status != GL_NO_ERROR)
     {

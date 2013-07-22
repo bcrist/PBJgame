@@ -50,6 +50,11 @@
 
 #include "pbj/engine.h"
 
+#include "pbj/gfx/built_ins.h"
+#include "pbj/gfx/texture_font_text.h"
+#include "pbj/gfx/shader_program.h"
+#include "pbj/gfx/built_ins.h"
+
 #include <iostream>
 #include <fstream>
 #include <random>
@@ -112,6 +117,31 @@ int main(int argc, char* argv[])
    // Initialize game engine
    pbj::Engine engine;
 
+   pbj::gfx::TextureFontText text(engine.getBuiltIns().getTextureFont(pbj::Id("TextureFont.default")), "ABCDEFG");
+   pbj::mat4 transform = glm::ortho(-100.0f, 100.0f, -100.0f, 100.0f);
+
+
+   GLuint vao;
+   GLuint vbo;
+   GLuint ibo;
+   
+   glGenVertexArrays(1, &vao);
+   glBindVertexArray(vao);
+
+   glGenBuffers(1, &vbo);
+   glGenBuffers(1, &ibo);
+
+   glBindBuffer(GL_ARRAY_BUFFER, vbo);
+   pbj::vec2 verts[3] = { pbj::vec2(0, 0), pbj::vec2(0, -1), pbj::vec2(1, 0) };
+   glBufferData(GL_ARRAY_BUFFER, sizeof(pbj::vec2)*3, verts, GL_STATIC_DRAW);
+   glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, 0); 
+
+
+   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+   GLubyte indices[3] = { 0, 1, 2 };
+   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLubyte) * 3, indices, GL_STATIC_DRAW);
+   
+
    while (true)
     {
         glfwPollEvents();
@@ -123,7 +153,30 @@ int main(int argc, char* argv[])
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        glUseProgram(engine.getBuiltIns().getProgram(pbj::Id("ShaderProgram.TextureFontText")).getGlId());
+
+        glBindVertexArray(vao);
+        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_BYTE, 0);
+
+        GLenum gl_error;
+        while ((gl_error = glGetError()) != GL_NO_ERROR)
+        {
+            PBJ_LOG(pbj::VWarning) << "OpenGL error while rendering frame!" << PBJ_LOG_NL
+                                   << "Error Code: " << gl_error << PBJ_LOG_NL
+                                   << "     Error: " << pbj::getGlErrorString(gl_error) << PBJ_LOG_END;
+        }
+
+        //text.draw(transform);
+
         glfwSwapBuffers(wnd->getGlfwHandle());
+
+       // GLenum gl_error;
+        while ((gl_error = glGetError()) != GL_NO_ERROR)
+        {
+            PBJ_LOG(pbj::VWarning) << "OpenGL error while rendering frame!" << PBJ_LOG_NL
+                                   << "Error Code: " << gl_error << PBJ_LOG_NL
+                                   << "     Error: " << pbj::getGlErrorString(gl_error) << PBJ_LOG_END;
+        }
     }
 };
 
