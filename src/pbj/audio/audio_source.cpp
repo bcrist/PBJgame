@@ -77,5 +77,20 @@ vec3 AudioSource::getSourcePos()
 	return sourcePos_;
 }
 
+void genSources(ALuint numSources, ALuint sourceID)
+{
+	alGenSources(numSources, &sourceID);
+}
+
+void play(ALuint sourceID)
+{
+	alSourcePlay(sourceID);
+}
+
+void stop(ALuint sourceID)
+{
+	alSourceStop(sourceID);
+}
+
 } // namespace audio
 } // namespace pbj

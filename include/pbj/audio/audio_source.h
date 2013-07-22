@@ -34,7 +34,7 @@ namespace pbj{
 namespace audio{
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief  Audio source.
+/// \brief  Audio source header.
 class AudioSource
 {
 public:
@@ -53,12 +53,23 @@ public:
 	void setSourcePos(vec3 sourcePos);
 	vec3 getSourcePos();
 
+	void genSources(ALuint numSources, ALuint sourceID);
+
+	void play(ALuint sourceID);
+	void stop(ALuint sourceID);
+
 private:
 	vec3 lisenterPos_;
 	vec3 listenerVel_;
 	vec3 listenerDir_;
 
 	vec3 sourcePos_;
+	vec3 sourceVel_;
+
+	ALuint numSources_;
+	ALuint sourceID_;
+
+	AudioBuffer *buffer;
 
 };
 
