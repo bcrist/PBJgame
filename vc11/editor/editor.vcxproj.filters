@@ -165,6 +165,15 @@
     <ClCompile Include="..\..\src\pbj\transform.cpp">
       <Filter>Source Files\pbj</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\pbj\gfx\texture_font.cpp">
+      <Filter>Source Files\pbj\pbj::gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\gfx\texture_font_text.cpp">
+      <Filter>Source Files\pbj\pbj::gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\gfx\shader_program.cpp">
+      <Filter>Source Files\pbj\pbj::gfx</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\be\const_handle.h">
@@ -233,9 +242,6 @@
     <ClInclude Include="..\..\include\pbj\gfx\texture_font.h">
       <Filter>Header Files\pbj\pbj::gfx</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\pbj\gfx\texture_font_text.h">
-      <Filter>Header Files\pbj\pbj::gfx</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\pbj\gfx\mesh.h">
       <Filter>Header Files\pbj\pbj::gfx</Filter>
     </ClInclude>
@@ -293,6 +299,15 @@
     <ClInclude Include="..\..\include\pbj\transform.h">
       <Filter>Header Files\pbj</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\pbj\gfx\texture_font_text.h">
+      <Filter>Header Files\pbj\pbj::gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\scene\ui_button.h">
+      <Filter>Header Files\pbj\pbj::scene\%28ui%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\gfx\texture_font_character.h">
+      <Filter>Header Files\pbj\pbj::gfx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\include\be\const_handle.inl">
@@ -312,6 +327,12 @@
     </None>
     <None Include="..\..\include\pbj\sw\resource_id.inl">
       <Filter>Header Files\pbj\pbj::sw</Filter>
+    </None>
+    <None Include="..\..\include\pbj\gfx\texture_font.inl">
+      <Filter>Header Files\pbj\pbj::gfx</Filter>
+    </None>
+    <None Include="..\..\include\pbj\gfx\shader_program.inl">
+      <Filter>Header Files\pbj\pbj::gfx</Filter>
     </None>
   </ItemGroup>
 </Project>
