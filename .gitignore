@@ -13,6 +13,9 @@ doxygen/
 #private directories
 _*/
 
+stage/*.exe
+
+
 #################
 ## Visual Studio
 #################
