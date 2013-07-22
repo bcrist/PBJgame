@@ -19,36 +19,63 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   pbj/audio/audio_buffer.h
+/// \file   pbj/audio/audio_source.cpp
 /// \author Josh Douglas
 ///
-/// \brief  pbj::audio::AudioBuffer class header.
+/// \brief  pbj::audio::AudioBuffer class source.
 
-#ifndef PBJ_AUDIO_AUDIO_BUFFER_H_
-#define PBJ_AUDIO_AUDIO_BUFFER_H_
+#include "pbj\audio\audio_source.h"
 
-#include "pbj/_al.h"
-#include "pbj/_pbj.h"
+namespace pbj{
+namespace audio{
 
-namespace pbj {
-namespace audio {
-
-///////////////////////////////////////////////////////////////////////////////
-/// \brief  Audio buffer.
-class AudioBuffer
+AudioSource::AudioSource()
 {
-public:
-	AudioBuffer(const ALubyte* data, size_t size);
-	~AudioBuffer();
-	
-	ALuint getBufferID();
+}
 
-private:
-	ALuint buffer_id_;
+AudioSource::~AudioSource()
+{
+}
 
-};
+void AudioSource::setListenerPos(vec3 listenerPos)
+{
+	lisenterPos_ = listenerPos;
+}
 
-} // namespace pbj::audio
+vec3 AudioSource::getListenerPos()
+{
+	return lisenterPos_;
+}
+
+void AudioSource::setListenerVel(vec3 listenerVel)
+{
+	listenerVel_ = listenerVel;
+}
+
+vec3 AudioSource::getListenerVel()
+{
+	return listenerVel_;
+}
+
+void AudioSource::setListenerDir(vec3 listenerDir)
+{
+	listenerDir_ = listenerDir;
+}
+
+vec3 AudioSource::getListenerDir()
+{
+	return listenerDir_;
+}
+
+void AudioSource::setSourcePos(vec3 sourcePos)
+{
+	sourcePos_ = sourcePos;
+}
+
+vec3 AudioSource::getSourcePos()
+{
+	return sourcePos_;
+}
+
+} // namespace audio
 } // namespace pbj
-
-#endif

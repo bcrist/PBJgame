@@ -19,36 +19,53 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   pbj/audio/audio_buffer.h
+/// \file   pbj/audio/audio_source.h
 /// \author Josh Douglas
 ///
 /// \brief  pbj::audio::AudioBuffer class header.
 
-#ifndef PBJ_AUDIO_AUDIO_BUFFER_H_
-#define PBJ_AUDIO_AUDIO_BUFFER_H_
+#ifndef PBJ_AUDIO_AUDIO_SOURCE
+#define PBJ_AUDIO_AUDIO_SOURCE
 
-#include "pbj/_al.h"
-#include "pbj/_pbj.h"
+#include "audio_buffer.h"
+#include "pbj\_math.h"
 
-namespace pbj {
-namespace audio {
+namespace pbj{
+namespace audio{
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief  Audio buffer.
-class AudioBuffer
+/// \brief  Audio source.
+class AudioSource
 {
 public:
-	AudioBuffer(const ALubyte* data, size_t size);
-	~AudioBuffer();
-	
-	ALuint getBufferID();
+	AudioSource();
+	~AudioSource();
+
+	void setListenerPos(vec3 listenerPos);
+	vec3 getListenerPos();
+
+	void setListenerVel(vec3 listenerVel);
+	vec3 getListenerVel();
+
+	void setListenerDir(vec3 listenerDir);
+	vec3 getListenerDir();
+
+	void setSourcePos(vec3 sourcePos);
+	vec3 getSourcePos();
 
 private:
-	ALuint buffer_id_;
+	vec3 lisenterPos_;
+	vec3 listenerVel_;
+	vec3 listenerDir_;
+
+	vec3 sourcePos_;
 
 };
 
-} // namespace pbj::audio
+} // namespace audio
 } // namespace pbj
 
 #endif
+
+
+

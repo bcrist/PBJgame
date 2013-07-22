@@ -146,6 +146,7 @@
     <ClCompile Include="..\..\src\be\verbosity.cpp" />
     <ClCompile Include="..\..\src\editor_app_entry.cpp" />
     <ClCompile Include="..\..\src\pbj\audio\audio_buffer.cpp" />
+    <ClCompile Include="..\..\src\pbj\audio\audio_source.cpp" />
     <ClCompile Include="..\..\src\pbj\engine.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\shader.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\texture.cpp" />
@@ -176,6 +177,7 @@
     <ClInclude Include="..\..\include\be\util\nconvert.h" />
     <ClInclude Include="..\..\include\be\_be.h" />
     <ClInclude Include="..\..\include\pbj\audio\audio_buffer.h" />
+    <ClInclude Include="..\..\include\pbj\audio\audio_source.h" />
     <ClInclude Include="..\..\include\pbj\engine.h" />
     <ClInclude Include="..\..\include\pbj\gfx\mesh.h" />
     <ClInclude Include="..\..\include\pbj\gfx\mesh_instance.h" />

@@ -165,6 +165,9 @@
     <ClCompile Include="..\..\src\pbj\transform.cpp">
       <Filter>Source Files\pbj</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\pbj\audio\audio_source.cpp">
+      <Filter>Source Files\pbj\pbj::audio</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\be\const_handle.h">
@@ -292,6 +295,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\pbj\transform.h">
       <Filter>Header Files\pbj</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\audio\audio_source.h">
+      <Filter>Header Files\pbj\pbj::audio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
