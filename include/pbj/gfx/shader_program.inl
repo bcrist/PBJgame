@@ -19,57 +19,46 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   pbj/gfx/shader_program.h
+/// \file   pbj/gfx/shader_program.inl
 /// \author Benjamin Crist
 ///
-/// \brief  pbj::gfx::ShaderProgram class header.
+/// \brief  Implementations of pbj::gfx::ShaderProgram template functions.
 
-#ifndef PBJ_GFX_SHADER_PROGRAM_H_
-#define PBJ_GFX_SHADER_PROGRAM_H_
+#if !defined(PBJ_GFX_SHADER_PROGRAM_H_) && !defined(DOXYGEN)
+#include "pbj/gfx/shader_program.h"
+#elif !defined(PBJ_GFX_SHADER_PROGRAM_INL_)
+#define PBJ_GFX_SHADER_PROGRAM_INL_
 
-#include "pbj/gfx/shader.h"
+#include <algorithm>
 
 namespace pbj {
 namespace gfx {
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief  Represents a program consisting of one or more shaders.
-///
-/// \details Usually a single vertex shader and a single fragment shader are
-///         used together.
-///
-/// \sa     Shader
-class ShaderProgram
+template <typename Iterator>
+ShaderProgram::ShaderProgram(const sw::ResourceId& id,
+                             const Iterator& begin,
+                             const Iterator& end)
+    : resource_id_(id),
+      gl_id_(0)
 {
-public:
-    ShaderProgram(const sw::ResourceId& id, const Shader& vertex_shader, const Shader& fragment_shader);
-    template <typename Iterator>
-    ShaderProgram(const sw::ResourceId& id, const Iterator& begin, const Iterator& end);
-    ~ShaderProgram();
+    static_assert(std::is_same<std::iterator_traits<Iterator>::value_type, Shader>::value,
+        "begin and end must be iterators over Shader objects.");
 
-    const be::Handle<ShaderProgram>& getHandle();
-    const be::ConstHandle<ShaderProgram>& getHandle() const;
+    handle_.associate(this);
 
-    const sw::ResourceId& getId() const;
+    gl_id_ = glCreateProgram();
 
-    GLuint getGlId() const;
 
-private:
-    void checkLinkResult_();
-    void invalidate_();
+    for (Iterator i = begin; i != end; ++i)
+        glAttachShader(gl_id_, i->getGlId());
 
-    be::SourceHandle<ShaderProgram> handle_;
-    sw::ResourceId resource_id_;
+    glLinkProgram(gl_id_);
 
-    GLuint gl_id_;
-
-    ShaderProgram(const ShaderProgram&);
-    void operator=(const ShaderProgram&);
-};
+    checkLinkResult_();
+}
 
 } // namespace pbj::gfx
 } // namespace pbj
-
-#include "pbj/gfx/shader_program.inl"
 
 #endif

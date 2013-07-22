@@ -19,57 +19,36 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   pbj/gfx/shader_program.h
+/// \file   pbj/gfx/texture_font.h
 /// \author Benjamin Crist
 ///
-/// \brief  pbj::gfx::ShaderProgram class header.
+/// \brief  pbj::gfx::TextureFont class header.
 
-#ifndef PBJ_GFX_SHADER_PROGRAM_H_
-#define PBJ_GFX_SHADER_PROGRAM_H_
+#ifndef PBJ_GFX_TEXTURE_FONT_CHARACTER_H_
+#define PBJ_GFX_TEXTURE_FONT_CHARACTER_H_
 
-#include "pbj/gfx/shader.h"
+#include "pbj/_pbj.h"
+#include "pbj/_math.h"
 
 namespace pbj {
 namespace gfx {
 
-///////////////////////////////////////////////////////////////////////////////
-/// \brief  Represents a program consisting of one or more shaders.
-///
-/// \details Usually a single vertex shader and a single fragment shader are
-///         used together.
-///
-/// \sa     Shader
-class ShaderProgram
+struct TextureFontCharacter
 {
-public:
-    ShaderProgram(const sw::ResourceId& id, const Shader& vertex_shader, const Shader& fragment_shader);
-    template <typename Iterator>
-    ShaderProgram(const sw::ResourceId& id, const Iterator& begin, const Iterator& end);
-    ~ShaderProgram();
+    U32 codepoint;
 
-    const be::Handle<ShaderProgram>& getHandle();
-    const be::ConstHandle<ShaderProgram>& getHandle() const;
+    vec2 tex_offset;
+    vec2 tex_delta;
 
-    const sw::ResourceId& getId() const;
+    vec2 dest_offset;
+    F32 advance;
 
-    GLuint getGlId() const;
+    static const U32 cp_invalid = 0xFFFFFFFF;
 
-private:
-    void checkLinkResult_();
-    void invalidate_();
-
-    be::SourceHandle<ShaderProgram> handle_;
-    sw::ResourceId resource_id_;
-
-    GLuint gl_id_;
-
-    ShaderProgram(const ShaderProgram&);
-    void operator=(const ShaderProgram&);
+    TextureFontCharacter() : codepoint(cp_invalid), advance(0) {}
 };
 
 } // namespace pbj::gfx
 } // namespace pbj
-
-#include "pbj/gfx/shader_program.inl"
 
 #endif
