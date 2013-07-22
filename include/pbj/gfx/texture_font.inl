@@ -37,7 +37,8 @@ namespace gfx {
 ///////////////////////////////////////////////////////////////////////////////
 template <typename Iterator>
 TextureFont::TextureFont(const sw::ResourceId& id,
-                         const be::ConstHandle& texture,
+                         const be::ConstHandle<Texture>& texture,
+                         const ivec2& texture_size,
                          U16 line_height, U16 baseline,
                          const Iterator& chars_begin,
                          const Iterator& chars_end)
@@ -48,6 +49,8 @@ TextureFont::TextureFont(const sw::ResourceId& id,
 {
     static_assert(std::is_same<std::iterator_traits<Iterator>::value_type, TextureFontCharacter>::value,
         "chars_begin and chars_end must be iterators over TextureFontCharacter objects.");
+
+    handle_.associate(this);
 
     for (Iterator i = chars_begin; i != chars_end; ++i)
     {
@@ -77,6 +80,12 @@ TextureFont::TextureFont(const sw::ResourceId& id,
             }
         }
     }
+
+    std::sort(ext_chars_.begin(), ext_chars_.end(),
+        [](const TextureFontCharacter& a, const TextureFontCharacter& b)
+        {
+            return a.codepoint < b.codepoint;
+        });
 }
 
 } // namespace pbj::gfx

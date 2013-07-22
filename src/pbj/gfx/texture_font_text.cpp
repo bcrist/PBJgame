@@ -27,11 +27,12 @@
 #include "pbj/gfx/texture_font_text.h"
 
 #include "pbj/engine.h"
+#include "pbj/gfx/shader_program.h"
 
 namespace pbj {
 namespace gfx {
 
-TextureFontText::TextureFontText(const TextureFont& font, const std::string& text)
+TextureFontText::TextureFontText(const TextureFont& font, const std::string& text, GLenum buffer_mode)
     : color_(1.0f, 1.0f, 1.0f, 1.0f)
 {
     // calculate vertex data
@@ -90,17 +91,27 @@ TextureFontText::TextureFontText(const TextureFont& font, const std::string& tex
 
     glGenBuffers(1, &ibo_id_);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_id_);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, vert_indices.size() * sizeof(U16), vert_indices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, vert_indices.size() * sizeof(U16), vert_indices.data(), buffer_mode);
+    ibo_size_ = vert_indices.size();
 
     glGenBuffers(1, &vbo_id_);
     glBindBuffer(GL_ARRAY_BUFFER, vbo_id_);
-    glBufferData(GL_ARRAY_BUFFER, verts.size() * sizeof(vec2), verts.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, verts.size() * sizeof(vec2), verts.data(), buffer_mode);
     // vertex positions at shader index 0:
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(vec2), 0);
     // texture coords at shader index 1:
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(vec2), reinterpret_cast<void*>(sizeof(vec2)));
     glBindBuffer(GL_ARRAY_BUFFER, 0);   // unbind VBO because GL_ARRAY_BUFFER is not part of the VAO state.
     glBindVertexArray(0);               // unbind VAO
+
+
+    Engine& engine = getEngine();
+    const BuiltIns& built_ins = engine.getBuiltIns();
+
+    shader_program_id_ = built_ins.getProgram(Id("ShaderProgram.TextureFontText")).getGlId();
+    color_uniform_location_ = glGetUniformLocation(shader_program_id_, "color");
+    texture_uniform_location_ = glGetUniformLocation(shader_program_id_, "texture");
+    transform_uniform_location_ = glGetUniformLocation(shader_program_id_, "transform");
 }
 
 TextureFontText::~TextureFontText()
@@ -133,16 +144,24 @@ void TextureFontText::draw(const mat4& transform)
         return;
     }
 
-    Engine& engine = getEngine();
+    glUseProgram(shader_program_id_); // bind program
+    glUniform1i(texture_uniform_location_, 0);
+    glActiveTexture(GL_TEXTURE0);
 
-
+    const Texture* tex = texture_.get();
+    glBindTexture(GL_TEXTURE_2D, tex ? tex->getGlId() : 0);
 
     glBindVertexArray(vao_id_); // bind VAO
 
     glUniform4fv(color_uniform_location_, 1, glm::value_ptr(color_));
-    glUniform1i(texture_uniform_location_, 0);
+    glUniformMatrix4fv(transform_uniform_location_, 1, false, glm::value_ptr(transform));
+
+    // draw text
+    glDrawElements(GL_TRIANGLES, ibo_size_, GL_UNSIGNED_SHORT, 0);
 
     glBindVertexArray(0); // unbind VAO
+
+    glUseProgram(0); // unbind program
 }
     
 } // namespace pbj::gfx

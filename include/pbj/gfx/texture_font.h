@@ -41,7 +41,7 @@ class TextureFont
 
 public:
     template <typename Iterator>
-    TextureFont(const sw::ResourceId& id, const be::ConstHandle& texture, ivec2 texture_size, line_height, U16 baseline, const Iterator& chars_begin, const Iterator& chars_end);
+    TextureFont(const sw::ResourceId& id, const be::ConstHandle<Texture>& texture, const ivec2& texture_size, U16 line_height, U16 baseline, const Iterator& chars_begin, const Iterator& chars_end);
     ~TextureFont();
 
     const be::Handle<TextureFont>& getHandle();
