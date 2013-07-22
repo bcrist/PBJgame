@@ -92,9 +92,9 @@ void AudioSource::genSources(ALuint numSources, ALuint &sourceID)
 	alGenSources(numSources, &sourceID);
 }
 
-void AudioSource::bindBufferSource(ALuint &sourceID, AudioBuffer buffers)
+void AudioSource::bindBuffer(ALuint &sourceID, AudioBuffer buffers)
 {
-   alSourcei(sourceID, AL_BUFFER, buffers);
+   alSourcei(sourceID, AL_BUFFER, &buffers);
 }
 
 void play(ALuint &sourceID)

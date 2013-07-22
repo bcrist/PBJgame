@@ -58,7 +58,7 @@ public:
    vec3 getSourceVel();
 
 	void genSources(ALuint numSources, ALuint &sourceID);
-   void bindBufferSource();
+	void bindBuffer(ALuint &sourceID, AudioBuffer buffers);
 
 	void play(ALuint &sourceID);
 	void stop(ALuint &sourceID);
