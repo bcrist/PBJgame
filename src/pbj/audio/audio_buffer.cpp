@@ -38,7 +38,7 @@ AudioBuffer::~AudioBuffer()
 {
 }
 
-ALuint AudioBuffer::getBufferID()
+ALuint AudioBuffer::getBufferID() const
 {
 	return buffer_id_;
 }

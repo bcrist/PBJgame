@@ -41,7 +41,7 @@ public:
 	AudioBuffer(const ALubyte* data, size_t size);
 	~AudioBuffer();
 	
-	ALuint getBufferID();
+	ALuint getBufferID() const;
 
 private:
 	ALuint buffer_id_;

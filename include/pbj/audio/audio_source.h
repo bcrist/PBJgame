@@ -48,33 +48,33 @@ public:
 	void setListenerVel(vec3 listenerVel);
 	vec3 getListenerVel();
 
-	void setListenerDir(vec3 listenerDir);
-	vec3 getListenerDir();
+	void setListenerDir(vec3 listenerDir[2]);
+	vec3 getListenerAtDir();
+	vec3 getListenerUpDir();
 
 	void setSourcePos(vec3 sourcePos);
 	vec3 getSourcePos();
 
-   void setSourceVel(vec3 sourceVel);
-   vec3 getSourceVel();
+	void setSourceVel(vec3 sourceVel);
+	vec3 getSourceVel();
 
 	void genSources(ALuint numSources, ALuint &sourceID);
-	void bindBuffer(ALuint &sourceID, AudioBuffer buffers);
+	void bindBuffer(const AudioBuffer &buffer);
+
+	void loop(ALuint &sourceID);
 
 	void play(ALuint &sourceID);
 	void stop(ALuint &sourceID);
 
 private:
-	vec3 lisenterPos_;
+	vec3 listenerPos_;
 	vec3 listenerVel_;
-	vec3 listenerDir_;
+	vec3 listenerDir_[2];
 
 	vec3 sourcePos_;
 	vec3 sourceVel_;
 
-	ALuint numSources_;
 	ALuint sourceID_;
-
-	AudioBuffer *buffers;
 
 };
 

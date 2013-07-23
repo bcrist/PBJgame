@@ -31,25 +31,32 @@ namespace audio{
 
 AudioSource::AudioSource()
 {
+	alGenSources(1, &sourceID_);
 }
 
 AudioSource::~AudioSource()
 {
+	if(alIsSource(sourceID_))
+	{
+		alDeleteSources(1, &sourceID_);
+	}
 }
 
 void AudioSource::setListenerPos(vec3 listenerPos)
 {
-	lisenterPos_ = listenerPos;
+	listenerPos_ = listenerPos;
+	alListenerfv(AL_POSITION, glm::value_ptr(listenerPos_));
 }
 
 vec3 AudioSource::getListenerPos()
 {
-	return lisenterPos_;
+	return listenerPos_;
 }
 
 void AudioSource::setListenerVel(vec3 listenerVel)
 {
 	listenerVel_ = listenerVel;
+	alListenerfv(AL_VELOCITY, glm::value_ptr(listenerVel_));
 }
 
 vec3 AudioSource::getListenerVel()
@@ -57,19 +64,28 @@ vec3 AudioSource::getListenerVel()
 	return listenerVel_;
 }
 
-void AudioSource::setListenerDir(vec3 listenerDir)
+void AudioSource::setListenerDir(vec3 listenerDir[2])
 {
-	listenerDir_ = listenerDir;
+	listenerDir_[0] = listenerDir[0];
+	listenerDir_[1] = listenerDir[1];
+	alListenerfv(AL_ORIENTATION, glm::value_ptr(listenerDir_[0]));
+	alListenerfv(AL_ORIENTATION, glm::value_ptr(listenerDir_[1]));
 }
 
-vec3 AudioSource::getListenerDir()
+vec3 AudioSource::getListenerAtDir()
 {
-	return listenerDir_;
+	return listenerDir_[0];
+}
+
+vec3 AudioSource::getListenerUpDir()
+{
+	return listenerDir_[1];
 }
 
 void AudioSource::setSourcePos(vec3 sourcePos)
 {
 	sourcePos_ = sourcePos;
+	alSourcefv(sourceID_, AL_POSITION, glm::value_ptr(sourcePos_));
 }
 
 vec3 AudioSource::getSourcePos()
@@ -80,6 +96,7 @@ vec3 AudioSource::getSourcePos()
 void AudioSource::setSourceVel(vec3 sourceVel)
 {
    sourceVel_ = sourceVel;
+   alSourcefv(sourceID_, AL_VELOCITY, glm::value_ptr(sourceVel_));
 }
 
 vec3 AudioSource::getSourceVel()
@@ -87,22 +104,22 @@ vec3 AudioSource::getSourceVel()
    return sourceVel_;
 }
 
-void AudioSource::genSources(ALuint numSources, ALuint &sourceID)
+void AudioSource::bindBuffer(const AudioBuffer &buffer)
 {
-	alGenSources(numSources, &sourceID);
+   alSourcei(sourceID_, AL_BUFFER, buffer.getBufferID());
 }
 
-void AudioSource::bindBuffer(ALuint &sourceID, AudioBuffer buffers)
+void AudioSource::loop(ALuint &sourceID)
 {
-   alSourcei(sourceID, AL_BUFFER, &buffers);
+	alSourcef(sourceID, AL_LOOPING, AL_TRUE);
 }
 
-void play(ALuint &sourceID)
+void AudioSource::play(ALuint &sourceID)
 {
 	alSourcePlay(sourceID);
 }
 
-void stop(ALuint &sourceID)
+void AudioSource::stop(ALuint &sourceID)
 {
 	alSourceStop(sourceID);
 }
