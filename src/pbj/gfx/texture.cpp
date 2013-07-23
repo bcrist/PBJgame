@@ -76,6 +76,11 @@ GLuint Texture::getGlId() const
     return gl_id_;
 }
 
+const ivec2& Texture::getDimensions() const
+{
+    return dimensions_;
+}
+
 #ifdef PBJ_EDITOR
 Texture::Texture()
 {

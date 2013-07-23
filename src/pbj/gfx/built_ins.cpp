@@ -33,6 +33,8 @@
 #include "pbj/gfx/shader.h"
 #include "pbj/gfx/shader_program.h"
 
+#include "pbj/sw/import.h"
+
 #include "pbj/_gl.h"
 
 #include <iostream>
@@ -319,45 +321,209 @@ BuiltIns::BuiltIns()
     {
         const Texture& tex = getTexture(Id("Texture.TextureFont.default"));
 
-        std::vector<TextureFontCharacter> chars;
-        TextureFontCharacter c;
+        std::string src =
+            "<?xml version=\"1.0\"?>\n"
+            "<font>\n"
+            "  <info face=\"standard 07_51\" />\n"
+            "  <common lineHeight=\"12\" base=\"10\" scaleW=\"128\" scaleH=\"128\" />\n"
+            "  <chars count=\"253\">\n"
+            "    <char id=\"-1\" x=\"114\" y=\"11\" width=\"3\" height=\"9\" xoffset=\"0\" yoffset=\"1\" xadvance=\"4\" />\n"
+            "    <char id=\"0\" x=\"81\" y=\"88\" width=\"1\" height=\"1\" xoffset=\"0\" yoffset=\"0\" xadvance=\"0\" />\n"
+            "    <char id=\"32\" x=\"87\" y=\"88\" width=\"1\" height=\"1\" xoffset=\"0\" yoffset=\"0\" xadvance=\"4\" />\n"
+            "    <char id=\"33\" x=\"126\" y=\"62\" width=\"1\" height=\"7\" xoffset=\"1\" yoffset=\"3\" xadvance=\"4\" />\n"
+            "    <char id=\"34\" x=\"18\" y=\"91\" width=\"3\" height=\"2\" xoffset=\"0\" yoffset=\"3\" xadvance=\"5\" />\n"
+            "    <char id=\"35\" x=\"97\" y=\"54\" width=\"5\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"6\" />\n"
+            "    <char id=\"36\" x=\"36\" y=\"11\" width=\"7\" height=\"9\" xoffset=\"0\" yoffset=\"2\" xadvance=\"8\" />\n"
+            "    <char id=\"37\" x=\"26\" y=\"40\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"9\" />\n"
+            "    <char id=\"38\" x=\"34\" y=\"40\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"39\" x=\"25\" y=\"91\" width=\"1\" height=\"2\" xoffset=\"0\" yoffset=\"3\" xadvance=\"2\" />\n"
+            "    <char id=\"40\" x=\"102\" y=\"11\" width=\"3\" height=\"9\" xoffset=\"0\" yoffset=\"2\" xadvance=\"4\" />\n"
+            "    <char id=\"41\" x=\"118\" y=\"11\" width=\"3\" height=\"9\" xoffset=\"0\" yoffset=\"2\" xadvance=\"4\" />\n"
+            "    <char id=\"42\" x=\"42\" y=\"80\" width=\"5\" height=\"5\" xoffset=\"0\" yoffset=\"3\" xadvance=\"6\" />\n"
+            "    <char id=\"43\" x=\"36\" y=\"80\" width=\"5\" height=\"5\" xoffset=\"0\" yoffset=\"4\" xadvance=\"6\" />\n"
+            "    <char id=\"44\" x=\"110\" y=\"82\" width=\"2\" height=\"3\" xoffset=\"0\" yoffset=\"9\" xadvance=\"3\" />\n"
+            "    <char id=\"45\" x=\"50\" y=\"90\" width=\"4\" height=\"1\" xoffset=\"0\" yoffset=\"6\" xadvance=\"5\" />\n"
+            "    <char id=\"46\" x=\"89\" y=\"88\" width=\"1\" height=\"1\" xoffset=\"0\" yoffset=\"9\" xadvance=\"2\" />\n"
+            "    <char id=\"47\" x=\"53\" y=\"30\" width=\"4\" height=\"8\" xoffset=\"0\" yoffset=\"2\" xadvance=\"5\" />\n"
+            "    <char id=\"48\" x=\"50\" y=\"39\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"49\" x=\"52\" y=\"71\" width=\"2\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"3\" />\n"
+            "    <char id=\"50\" x=\"58\" y=\"39\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"51\" x=\"66\" y=\"39\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"52\" x=\"74\" y=\"39\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"53\" x=\"82\" y=\"38\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"54\" x=\"90\" y=\"38\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"55\" x=\"98\" y=\"38\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"56\" x=\"0\" y=\"49\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"57\" x=\"106\" y=\"38\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"58\" x=\"13\" y=\"87\" width=\"1\" height=\"4\" xoffset=\"1\" yoffset=\"5\" xadvance=\"4\" />\n"
+            "    <char id=\"59\" x=\"49\" y=\"71\" width=\"2\" height=\"7\" xoffset=\"0\" yoffset=\"5\" xadvance=\"4\" />\n"
+            "    <char id=\"60\" x=\"11\" y=\"73\" width=\"4\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"5\" />\n"
+            "    <char id=\"61\" x=\"42\" y=\"86\" width=\"5\" height=\"3\" xoffset=\"0\" yoffset=\"5\" xadvance=\"7\" />\n"
+            "    <char id=\"62\" x=\"16\" y=\"73\" width=\"4\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"5\" />\n"
+            "    <char id=\"63\" x=\"63\" y=\"55\" width=\"6\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"7\" />\n"
+            "    <char id=\"64\" x=\"0\" y=\"41\" width=\"8\" height=\"7\" xoffset=\"0\" yoffset=\"4\" xadvance=\"9\" />\n"
+            "    <char id=\"65\" x=\"8\" y=\"49\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"66\" x=\"16\" y=\"49\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"67\" x=\"24\" y=\"48\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"68\" x=\"32\" y=\"48\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"69\" x=\"40\" y=\"48\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"70\" x=\"48\" y=\"47\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"71\" x=\"56\" y=\"47\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"72\" x=\"64\" y=\"47\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"73\" x=\"59\" y=\"71\" width=\"1\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"2\" />\n"
+            "    <char id=\"74\" x=\"72\" y=\"47\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"75\" x=\"80\" y=\"47\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"76\" x=\"70\" y=\"55\" width=\"6\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"7\" />\n"
+            "    <char id=\"77\" x=\"118\" y=\"30\" width=\"8\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"9\" />\n"
+            "    <char id=\"78\" x=\"88\" y=\"46\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"79\" x=\"96\" y=\"46\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"80\" x=\"104\" y=\"46\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"81\" x=\"40\" y=\"21\" width=\"7\" height=\"8\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"82\" x=\"112\" y=\"46\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"83\" x=\"42\" y=\"39\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"84\" x=\"0\" y=\"57\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"85\" x=\"8\" y=\"57\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"86\" x=\"16\" y=\"57\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"87\" x=\"108\" y=\"30\" width=\"9\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"10\" />\n"
+            "    <char id=\"88\" x=\"24\" y=\"56\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"89\" x=\"32\" y=\"56\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"90\" x=\"40\" y=\"56\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"91\" x=\"3\" y=\"22\" width=\"2\" height=\"9\" xoffset=\"0\" yoffset=\"2\" xadvance=\"4\" />\n"
+            "    <char id=\"92\" x=\"63\" y=\"30\" width=\"4\" height=\"8\" xoffset=\"0\" yoffset=\"2\" xadvance=\"5\" />\n"
+            "    <char id=\"93\" x=\"6\" y=\"22\" width=\"2\" height=\"9\" xoffset=\"0\" yoffset=\"2\" xadvance=\"4\" />\n"
+            "    <char id=\"94\" x=\"24\" y=\"87\" width=\"5\" height=\"3\" xoffset=\"0\" yoffset=\"3\" xadvance=\"6\" />\n"
+            "    <char id=\"95\" x=\"27\" y=\"91\" width=\"6\" height=\"1\" xoffset=\"0\" yoffset=\"9\" xadvance=\"7\" />\n"
+            "    <char id=\"96\" x=\"22\" y=\"91\" width=\"2\" height=\"2\" xoffset=\"0\" yoffset=\"3\" xadvance=\"3\" />\n"
+            "    <char id=\"97\" x=\"60\" y=\"79\" width=\"5\" height=\"5\" xoffset=\"0\" yoffset=\"5\" xadvance=\"6\" />\n"
+            "    <char id=\"98\" x=\"6\" y=\"65\" width=\"5\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"6\" />\n"
+            "    <char id=\"99\" x=\"54\" y=\"79\" width=\"5\" height=\"5\" xoffset=\"0\" yoffset=\"5\" xadvance=\"6\" />\n"
+            "    <char id=\"100\" x=\"12\" y=\"65\" width=\"5\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"6\" />\n"
+            "    <char id=\"101\" x=\"24\" y=\"81\" width=\"5\" height=\"5\" xoffset=\"0\" yoffset=\"5\" xadvance=\"6\" />\n"
+            "    <char id=\"102\" x=\"33\" y=\"72\" width=\"3\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"4\" />\n"
+            "    <char id=\"103\" x=\"18\" y=\"65\" width=\"5\" height=\"7\" xoffset=\"0\" yoffset=\"5\" xadvance=\"6\" />\n"
+            "    <char id=\"104\" x=\"24\" y=\"64\" width=\"5\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"6\" />\n"
+            "    <char id=\"105\" x=\"63\" y=\"71\" width=\"1\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"2\" />\n"
+            "    <char id=\"106\" x=\"0\" y=\"22\" width=\"2\" height=\"9\" xoffset=\"0\" yoffset=\"3\" xadvance=\"3\" />\n"
+            "    <char id=\"107\" x=\"30\" y=\"64\" width=\"5\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"6\" />\n"
+            "    <char id=\"108\" x=\"61\" y=\"71\" width=\"1\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"2\" />\n"
+            "    <char id=\"109\" x=\"99\" y=\"70\" width=\"9\" height=\"5\" xoffset=\"0\" yoffset=\"5\" xadvance=\"10\" />\n"
+            "    <char id=\"110\" x=\"102\" y=\"76\" width=\"5\" height=\"5\" xoffset=\"0\" yoffset=\"5\" xadvance=\"6\" />\n"
+            "    <char id=\"111\" x=\"6\" y=\"81\" width=\"5\" height=\"5\" xoffset=\"0\" yoffset=\"5\" xadvance=\"6\" />\n"
+            "    <char id=\"112\" x=\"36\" y=\"64\" width=\"5\" height=\"7\" xoffset=\"0\" yoffset=\"5\" xadvance=\"6\" />\n"
+            "    <char id=\"113\" x=\"42\" y=\"64\" width=\"5\" height=\"7\" xoffset=\"0\" yoffset=\"5\" xadvance=\"6\" />\n"
+            "    <char id=\"114\" x=\"0\" y=\"87\" width=\"4\" height=\"5\" xoffset=\"0\" yoffset=\"5\" xadvance=\"5\" />\n"
+            "    <char id=\"115\" x=\"18\" y=\"81\" width=\"5\" height=\"5\" xoffset=\"0\" yoffset=\"5\" xadvance=\"6\" />\n"
+            "    <char id=\"116\" x=\"25\" y=\"72\" width=\"3\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"4\" />\n"
+            "    <char id=\"117\" x=\"72\" y=\"78\" width=\"5\" height=\"5\" xoffset=\"0\" yoffset=\"5\" xadvance=\"6\" />\n"
+            "    <char id=\"118\" x=\"78\" y=\"78\" width=\"5\" height=\"5\" xoffset=\"0\" yoffset=\"5\" xadvance=\"6\" />\n"
+            "    <char id=\"119\" x=\"119\" y=\"70\" width=\"7\" height=\"5\" xoffset=\"0\" yoffset=\"5\" xadvance=\"8\" />\n"
+            "    <char id=\"120\" x=\"0\" y=\"81\" width=\"5\" height=\"5\" xoffset=\"0\" yoffset=\"5\" xadvance=\"6\" />\n"
+            "    <char id=\"121\" x=\"102\" y=\"62\" width=\"5\" height=\"7\" xoffset=\"0\" yoffset=\"5\" xadvance=\"6\" />\n"
+            "    <char id=\"122\" x=\"96\" y=\"77\" width=\"5\" height=\"5\" xoffset=\"0\" yoffset=\"5\" xadvance=\"6\" />\n"
+            "    <char id=\"123\" x=\"98\" y=\"11\" width=\"3\" height=\"9\" xoffset=\"0\" yoffset=\"2\" xadvance=\"4\" />\n"
+            "    <char id=\"124\" x=\"126\" y=\"11\" width=\"1\" height=\"8\" xoffset=\"1\" yoffset=\"3\" xadvance=\"4\" />\n"
+            "    <char id=\"125\" x=\"110\" y=\"11\" width=\"3\" height=\"9\" xoffset=\"0\" yoffset=\"2\" xadvance=\"4\" />\n"
+            "    <char id=\"126\" x=\"115\" y=\"82\" width=\"4\" height=\"2\" xoffset=\"0\" yoffset=\"3\" xadvance=\"5\" />\n"
+            "    <char id=\"160\" x=\"83\" y=\"88\" width=\"1\" height=\"1\" xoffset=\"0\" yoffset=\"0\" xadvance=\"3\" />\n"
+            "    <char id=\"161\" x=\"57\" y=\"71\" width=\"1\" height=\"7\" xoffset=\"1\" yoffset=\"3\" xadvance=\"4\" />\n"
+            "    <char id=\"162\" x=\"96\" y=\"62\" width=\"5\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"6\" />\n"
+            "    <char id=\"163\" x=\"84\" y=\"55\" width=\"6\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"7\" />\n"
+            "    <char id=\"164\" x=\"48\" y=\"55\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"165\" x=\"78\" y=\"63\" width=\"5\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"6\" />\n"
+            "    <char id=\"166\" x=\"55\" y=\"71\" width=\"1\" height=\"7\" xoffset=\"1\" yoffset=\"3\" xadvance=\"4\" />\n"
+            "    <char id=\"167\" x=\"6\" y=\"73\" width=\"4\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"5\" />\n"
+            "    <char id=\"168\" x=\"73\" y=\"88\" width=\"3\" height=\"1\" xoffset=\"1\" yoffset=\"3\" xadvance=\"5\" />\n"
+            "    <char id=\"169\" x=\"114\" y=\"38\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"170\" x=\"54\" y=\"63\" width=\"5\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"6\" />\n"
+            "    <char id=\"171\" x=\"30\" y=\"86\" width=\"5\" height=\"3\" xoffset=\"0\" yoffset=\"5\" xadvance=\"6\" />\n"
+            "    <char id=\"172\" x=\"48\" y=\"86\" width=\"5\" height=\"3\" xoffset=\"0\" yoffset=\"6\" xadvance=\"6\" />\n"
+            "    <char id=\"173\" x=\"45\" y=\"90\" width=\"4\" height=\"1\" xoffset=\"0\" yoffset=\"6\" xadvance=\"5\" />\n"
+            "    <char id=\"174\" x=\"120\" y=\"46\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"175\" x=\"65\" y=\"89\" width=\"3\" height=\"1\" xoffset=\"0\" yoffset=\"4\" xadvance=\"4\" />\n"
+            "    <char id=\"176\" x=\"83\" y=\"84\" width=\"3\" height=\"3\" xoffset=\"0\" yoffset=\"3\" xadvance=\"4\" />\n"
+            "    <char id=\"177\" x=\"71\" y=\"71\" width=\"5\" height=\"6\" xoffset=\"0\" yoffset=\"4\" xadvance=\"6\" />\n"
+            "    <char id=\"178\" x=\"120\" y=\"76\" width=\"4\" height=\"5\" xoffset=\"0\" yoffset=\"3\" xadvance=\"5\" />\n"
+            "    <char id=\"179\" x=\"5\" y=\"87\" width=\"3\" height=\"5\" xoffset=\"0\" yoffset=\"3\" xadvance=\"4\" />\n"
+            "    <char id=\"180\" x=\"125\" y=\"82\" width=\"2\" height=\"2\" xoffset=\"1\" yoffset=\"2\" xadvance=\"4\" />\n"
+            "    <char id=\"181\" x=\"121\" y=\"54\" width=\"5\" height=\"7\" xoffset=\"0\" yoffset=\"5\" xadvance=\"6\" />\n"
+            "    <char id=\"182\" x=\"48\" y=\"63\" width=\"5\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"6\" />\n"
+            "    <char id=\"183\" x=\"91\" y=\"87\" width=\"1\" height=\"1\" xoffset=\"1\" yoffset=\"6\" xadvance=\"4\" />\n"
+            "    <char id=\"184\" x=\"87\" y=\"84\" width=\"3\" height=\"3\" xoffset=\"0\" yoffset=\"9\" xadvance=\"4\" />\n"
+            "    <char id=\"185\" x=\"125\" y=\"76\" width=\"2\" height=\"5\" xoffset=\"0\" yoffset=\"3\" xadvance=\"3\" />\n"
+            "    <char id=\"186\" x=\"84\" y=\"63\" width=\"5\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"6\" />\n"
+            "    <char id=\"187\" x=\"54\" y=\"85\" width=\"5\" height=\"3\" xoffset=\"0\" yoffset=\"5\" xadvance=\"6\" />\n"
+            "    <char id=\"188\" x=\"30\" y=\"22\" width=\"9\" height=\"8\" xoffset=\"0\" yoffset=\"2\" xadvance=\"10\" />\n"
+            "    <char id=\"189\" x=\"20\" y=\"22\" width=\"9\" height=\"8\" xoffset=\"0\" yoffset=\"2\" xadvance=\"10\" />\n"
+            "    <char id=\"190\" x=\"9\" y=\"22\" width=\"10\" height=\"8\" xoffset=\"0\" yoffset=\"2\" xadvance=\"11\" />\n"
+            "    <char id=\"191\" x=\"60\" y=\"63\" width=\"5\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"6\" />\n"
+            "    <char id=\"192\" x=\"8\" y=\"11\" width=\"7\" height=\"10\" xoffset=\"0\" yoffset=\"0\" xadvance=\"8\" />\n"
+            "    <char id=\"193\" x=\"0\" y=\"11\" width=\"7\" height=\"10\" xoffset=\"0\" yoffset=\"0\" xadvance=\"8\" />\n"
+            "    <char id=\"194\" x=\"120\" y=\"0\" width=\"7\" height=\"10\" xoffset=\"0\" yoffset=\"0\" xadvance=\"8\" />\n"
+            "    <char id=\"195\" x=\"112\" y=\"0\" width=\"7\" height=\"10\" xoffset=\"0\" yoffset=\"0\" xadvance=\"8\" />\n"
+            "    <char id=\"196\" x=\"52\" y=\"11\" width=\"7\" height=\"9\" xoffset=\"0\" yoffset=\"1\" xadvance=\"8\" />\n"
+            "    <char id=\"197\" x=\"104\" y=\"0\" width=\"7\" height=\"10\" xoffset=\"0\" yoffset=\"0\" xadvance=\"8\" />\n"
+            "    <char id=\"198\" x=\"88\" y=\"30\" width=\"9\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"10\" />\n"
+            "    <char id=\"199\" x=\"84\" y=\"11\" width=\"7\" height=\"9\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
+            "    <char id=\"200\" x=\"96\" y=\"0\" width=\"7\" height=\"10\" xoffset=\"0\" yoffset=\"0\" xadvance=\"8\" />\n"
+            "    <char id=\"201\" x=\"88\" y=\"0\" width=\"7\" height=\"10\" xoffset=\"0\" yoffset=\"0\" xadvance=\"8\" />\n"
+            "    <char id=\"202\" x=\"80\" y=\"0\" width=\"7\" height=\"10\" xoffset=\"0\" yoffset=\"0\" xadvance=\"8\" />\n"
+            "    <char id=\"203\" x=\"76\" y=\"11\" width=\"7\" height=\"9\" xoffset=\"0\" yoffset=\"1\" xadvance=\"8\" />\n"
+            "    <char id=\"204\" x=\"33\" y=\"11\" width=\"2\" height=\"10\" xoffset=\"-1\" yoffset=\"0\" xadvance=\"2\" />\n"
+            "    <char id=\"205\" x=\"30\" y=\"11\" width=\"2\" height=\"10\" xoffset=\"0\" yoffset=\"0\" xadvance=\"2\" />\n"
+            "    <char id=\"206\" x=\"26\" y=\"11\" width=\"3\" height=\"10\" xoffset=\"-1\" yoffset=\"0\" xadvance=\"2\" />\n"
+            "    <char id=\"207\" x=\"106\" y=\"11\" width=\"3\" height=\"9\" xoffset=\"-1\" yoffset=\"1\" xadvance=\"2\" />\n"
+            "    <char id=\"208\" x=\"9\" y=\"41\" width=\"8\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"9\" />\n"
+            "    <char id=\"209\" x=\"0\" y=\"0\" width=\"7\" height=\"10\" xoffset=\"0\" yoffset=\"0\" xadvance=\"8\" />\n"
+            "    <char id=\"210\" x=\"16\" y=\"0\" width=\"7\" height=\"10\" xoffset=\"0\" yoffset=\"0\" xadvance=\"8\" />\n"
+            "    <char id=\"211\" x=\"32\" y=\"0\" width=\"7\" height=\"10\" xoffset=\"0\" yoffset=\"0\" xadvance=\"8\" />\n"
+            "    <char id=\"212\" x=\"72\" y=\"0\" width=\"7\" height=\"10\" xoffset=\"0\" yoffset=\"0\" xadvance=\"8\" />\n"
+            "    <char id=\"213\" x=\"61\" y=\"21\" width=\"5\" height=\"8\" xoffset=\"0\" yoffset=\"2\" xadvance=\"6\" />\n"
+            "    <char id=\"214\" x=\"44\" y=\"11\" width=\"7\" height=\"9\" xoffset=\"0\" yoffset=\"1\" xadvance=\"8\" />\n"
+            "    <char id=\"215\" x=\"66\" y=\"78\" width=\"5\" height=\"5\" xoffset=\"0\" yoffset=\"4\" xadvance=\"6\" />\n"
+            "    <char id=\"216\" x=\"72\" y=\"63\" width=\"5\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"6\" />\n"
+            "    <char id=\"217\" x=\"64\" y=\"0\" width=\"7\" height=\"10\" xoffset=\"0\" yoffset=\"0\" xadvance=\"8\" />\n"
+            "    <char id=\"218\" x=\"48\" y=\"0\" width=\"7\" height=\"10\" xoffset=\"0\" yoffset=\"0\" xadvance=\"8\" />\n"
+            "    <char id=\"219\" x=\"24\" y=\"0\" width=\"7\" height=\"10\" xoffset=\"0\" yoffset=\"0\" xadvance=\"8\" />\n"
+            "    <char id=\"220\" x=\"68\" y=\"11\" width=\"7\" height=\"9\" xoffset=\"0\" yoffset=\"1\" xadvance=\"8\" />\n"
+            "    <char id=\"221\" x=\"56\" y=\"0\" width=\"7\" height=\"10\" xoffset=\"0\" yoffset=\"0\" xadvance=\"8\" />\n"
+            "    <char id=\"222\" x=\"67\" y=\"21\" width=\"5\" height=\"8\" xoffset=\"0\" yoffset=\"3\" xadvance=\"6\" />\n"
+            "    <char id=\"223\" x=\"48\" y=\"21\" width=\"6\" height=\"8\" xoffset=\"0\" yoffset=\"3\" xadvance=\"7\" />\n"
+            "    <char id=\"224\" x=\"73\" y=\"21\" width=\"5\" height=\"8\" xoffset=\"0\" yoffset=\"2\" xadvance=\"6\" />\n"
+            "    <char id=\"225\" x=\"79\" y=\"21\" width=\"5\" height=\"8\" xoffset=\"0\" yoffset=\"2\" xadvance=\"6\" />\n"
+            "    <char id=\"226\" x=\"85\" y=\"21\" width=\"5\" height=\"8\" xoffset=\"0\" yoffset=\"2\" xadvance=\"6\" />\n"
+            "    <char id=\"227\" x=\"91\" y=\"21\" width=\"5\" height=\"8\" xoffset=\"0\" yoffset=\"2\" xadvance=\"6\" />\n"
+            "    <char id=\"228\" x=\"66\" y=\"63\" width=\"5\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"6\" />\n"
+            "    <char id=\"229\" x=\"97\" y=\"21\" width=\"5\" height=\"8\" xoffset=\"0\" yoffset=\"2\" xadvance=\"6\" />\n"
+            "    <char id=\"230\" x=\"89\" y=\"71\" width=\"9\" height=\"5\" xoffset=\"0\" yoffset=\"5\" xadvance=\"10\" />\n"
+            "    <char id=\"231\" x=\"0\" y=\"65\" width=\"5\" height=\"7\" xoffset=\"0\" yoffset=\"5\" xadvance=\"6\" />\n"
+            "    <char id=\"232\" x=\"103\" y=\"21\" width=\"5\" height=\"8\" xoffset=\"0\" yoffset=\"2\" xadvance=\"6\" />\n"
+            "    <char id=\"233\" x=\"109\" y=\"21\" width=\"5\" height=\"8\" xoffset=\"0\" yoffset=\"2\" xadvance=\"6\" />\n"
+            "    <char id=\"234\" x=\"115\" y=\"21\" width=\"5\" height=\"8\" xoffset=\"0\" yoffset=\"2\" xadvance=\"6\" />\n"
+            "    <char id=\"235\" x=\"115\" y=\"54\" width=\"5\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"6\" />\n"
+            "    <char id=\"236\" x=\"72\" y=\"30\" width=\"2\" height=\"8\" xoffset=\"-1\" yoffset=\"2\" xadvance=\"2\" />\n"
+            "    <char id=\"237\" x=\"75\" y=\"30\" width=\"2\" height=\"8\" xoffset=\"0\" yoffset=\"2\" xadvance=\"2\" />\n"
+            "    <char id=\"238\" x=\"68\" y=\"30\" width=\"3\" height=\"8\" xoffset=\"-1\" yoffset=\"2\" xadvance=\"2\" />\n"
+            "    <char id=\"239\" x=\"21\" y=\"73\" width=\"3\" height=\"7\" xoffset=\"-1\" yoffset=\"3\" xadvance=\"2\" />\n"
+            "    <char id=\"240\" x=\"103\" y=\"54\" width=\"5\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"6\" />\n"
+            "    <char id=\"241\" x=\"121\" y=\"21\" width=\"5\" height=\"8\" xoffset=\"0\" yoffset=\"2\" xadvance=\"6\" />\n"
+            "    <char id=\"242\" x=\"0\" y=\"32\" width=\"5\" height=\"8\" xoffset=\"0\" yoffset=\"2\" xadvance=\"6\" />\n"
+            "    <char id=\"243\" x=\"6\" y=\"32\" width=\"5\" height=\"8\" xoffset=\"0\" yoffset=\"2\" xadvance=\"6\" />\n"
+            "    <char id=\"244\" x=\"12\" y=\"31\" width=\"5\" height=\"8\" xoffset=\"0\" yoffset=\"2\" xadvance=\"6\" />\n"
+            "    <char id=\"245\" x=\"18\" y=\"31\" width=\"5\" height=\"8\" xoffset=\"0\" yoffset=\"2\" xadvance=\"6\" />\n"
+            "    <char id=\"246\" x=\"109\" y=\"54\" width=\"5\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"6\" />\n"
+            "    <char id=\"247\" x=\"48\" y=\"80\" width=\"5\" height=\"5\" xoffset=\"0\" yoffset=\"4\" xadvance=\"6\" />\n"
+            "    <char id=\"248\" x=\"30\" y=\"80\" width=\"5\" height=\"5\" xoffset=\"0\" yoffset=\"5\" xadvance=\"6\" />\n"
+            "    <char id=\"249\" x=\"24\" y=\"31\" width=\"5\" height=\"8\" xoffset=\"0\" yoffset=\"2\" xadvance=\"6\" />\n"
+            "    <char id=\"250\" x=\"30\" y=\"31\" width=\"5\" height=\"8\" xoffset=\"0\" yoffset=\"2\" xadvance=\"6\" />\n"
+            "    <char id=\"251\" x=\"36\" y=\"31\" width=\"5\" height=\"8\" xoffset=\"0\" yoffset=\"2\" xadvance=\"6\" />\n"
+            "    <char id=\"252\" x=\"90\" y=\"63\" width=\"5\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"6\" />\n"
+            "    <char id=\"253\" x=\"16\" y=\"11\" width=\"5\" height=\"10\" xoffset=\"0\" yoffset=\"2\" xadvance=\"6\" />\n"
+            "    <char id=\"254\" x=\"55\" y=\"21\" width=\"5\" height=\"8\" xoffset=\"0\" yoffset=\"4\" xadvance=\"6\" />\n"
+            "    <char id=\"255\" x=\"92\" y=\"11\" width=\"5\" height=\"9\" xoffset=\"0\" yoffset=\"3\" xadvance=\"6\" />\n"
+            "  </chars>\n"
+            "</font>\n";
 
-        c.codepoint = TextureFontCharacter::cp_invalid;
-        c.tex_delta = vec2(3, 9);
-        c.tex_offset = vec2(114, 11);
-        c.dest_offset = vec2(0, 1);
-        c.advance = 4;
-        chars.push_back(c);
-        
-        c.codepoint = 65;
-        c.tex_delta = vec2(7, 7);
-        c.tex_offset = vec2(8, 49);
-        c.dest_offset = vec2(0, 3);
-        c.advance = 8;
-        chars.push_back(c);
-
-        c.codepoint = 66;
-        c.tex_offset = vec2(16, 49);
-        chars.push_back(c);
-
-        c.codepoint = 67;
-        c.tex_offset = vec2(24, 48);
-        chars.push_back(c);
-
-        c.codepoint = 68;
-        c.tex_offset = vec2(32, 48);
-        chars.push_back(c);
-
-        c.codepoint = 69;
-        c.tex_offset = vec2(40, 48);
-        chars.push_back(c);
-
-        TextureFont* texture_font = new TextureFont(id,
-            tex.getHandle(),
-            ivec2(128, 128),
-            12, 10,
-            chars.begin(), chars.end());
-        texture_fonts_.insert(std::make_pair(texture_font->getId().resource, std::unique_ptr<TextureFont>(texture_font)));
+        texture_fonts_.insert(std::make_pair(id.resource, std::move(sw::parseBmFontXml(id, tex.getHandle(), src.data(), src.size()))));
     }
     catch (const std::exception& err)
     {

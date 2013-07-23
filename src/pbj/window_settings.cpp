@@ -42,15 +42,15 @@
       "msaa_level, red_bits, green_bits, blue_bits, alpha_bits, " \
       "depth_bits, stencil_bits, " \
       "srgb_capable, use_custom_gamma, custom_gamma " \
-      "FROM pbj_window_settings WHERE id = ? " \
+      "FROM sw_window_settings WHERE id = ? " \
       "ORDER BY history_index DESC LIMIT 1"
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief  SQL statement to check if the pbj_window_settings table exists
+/// \brief  SQL statement to check if the sw_window_settings table exists
 ///         in a sandwich.
 #define PBJ_WINDOW_SETTINGS_SQL_TABLE_EXISTS \
       "SELECT count(*) FROM sqlite_master " \
-      "WHERE type='table' AND name='pbj_window_settings'"
+      "WHERE type='table' AND name='sw_window_settings'"
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief  SQL statement to get the active (highest) history_index for the
@@ -58,12 +58,12 @@
 /// \param  1 The id of the window settings stack to look at.
 #define PBJ_WINDOW_SETTINGS_SQL_LATEST_INDEX \
       "SELECT max(history_index) " \
-      "FROM pbj_window_settings WHERE id = ?"
+      "FROM sw_window_settings WHERE id = ?"
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief  SQL statement to create the pbj_window_settings table.
+/// \brief  SQL statement to create the sw_window_settings table.
 #define PBJ_WINDOW_SETTINGS_SQL_CREATE_TABLE \
-      "CREATE TABLE IF NOT EXISTS pbj_window_settings (" \
+      "CREATE TABLE IF NOT EXISTS sw_window_settings (" \
       "id INTEGER NOT NULL, " \
       "history_index INTEGER NOT NULL, " \
       "window_mode INTEGER NOT NULL, " \
@@ -118,7 +118,7 @@
 /// \param  21 The value of be::wnd::WindowSettings::use_custom_gamma.
 /// \param  22 The value of be::wnd::WindowSettings::custom_gamma.
 #define PBJ_WINDOW_SETTINGS_SQL_SAVE \
-      "INSERT INTO pbj_window_settings (" \
+      "INSERT INTO sw_window_settings (" \
       "id, history_index, window_mode, " \
       "system_positioned, save_pos_on_close, position_x, position_y, " \
       "size_x, size_y, monitor_index, refresh_rate, v_sync, " \
@@ -144,7 +144,7 @@
 /// \param  5 The id of the window settings stack to update.
 /// \param  6 The history_index to update.
 #define PBJ_WINDOW_SETTINGS_SQL_SAVE_POS \
-      "UPDATE pbj_window_settings " \
+      "UPDATE sw_window_settings " \
       "SET position_x = ?, position_y = ?, " \
       "size_x = ?, size_y = ? " \
       "WHERE id = ? AND history_index = ?"
@@ -156,7 +156,7 @@
 /// \param  1 The id of the window settings stack to truncate.
 /// \param  2 The minimum history_index that will remain untouched.
 #define PBJ_WINDOW_SETTINGS_SQL_TRUNCATE \
-      "DELETE FROM pbj_window_settings " \
+      "DELETE FROM sw_window_settings " \
       "WHERE id = ? AND history_index < ?"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -169,7 +169,7 @@
 /// \param  1 The id of the window_settings stack to modify.
 /// \param  2 This history_index to delete.
 #define PBJ_WINDOW_SETTINGS_SQL_REVERT \
-      "DELETE FROM pbj_window_settings " \
+      "DELETE FROM sw_window_settings " \
       "WHERE id = ? AND history_index = ?"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -184,7 +184,7 @@
 ///         this statement.
 /// \param  2 The id of the window_settings stack to modify.
 #define PBJ_WINDOW_SETTINGS_SQL_COMPRESS \
-      "UPDATE pbj_window_settings " \
+      "UPDATE sw_window_settings " \
       "SET history_index = history_index - ? " \
       "WHERE id = ?"
 

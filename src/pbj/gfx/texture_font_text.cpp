@@ -32,83 +32,13 @@
 namespace pbj {
 namespace gfx {
 
-TextureFontText::TextureFontText(const TextureFont& font, const std::string& text, GLenum buffer_mode)
+TextureFontText::TextureFontText()
     : color_(1.0f, 1.0f, 1.0f, 1.0f)
 {
-    // calculate vertex data
-    std::vector<U16> vert_indices;
-    std::vector<vec2> verts;
-    vert_indices.reserve(text.length() * 6);    // 6 vertex indices (2 tris) per character
-    verts.reserve(text.length() * 8);  // 4 vertices & 4 texcoords per character
-
-    vec2 cursor; // where the current character should be drawn
-
-    F32 scale_x = 1.0f / font.getTextureSize().x;
-    F32 scale_y = 1.0f / font.getTextureSize().y;
-
-    for (char c : text)
-    {
-        const TextureFontCharacter& ch = font[c];
-
-        // indices
-        U16 base_index = verts.size() >> 1;     // 1 vertex & 1 texcoord per index
-
-        vert_indices.push_back(base_index);     // first tri
-        vert_indices.push_back(base_index + 1);
-        vert_indices.push_back(base_index + 2);
-
-        vert_indices.push_back(base_index);     // second tri
-        vert_indices.push_back(base_index + 2);
-        vert_indices.push_back(base_index + 3);
-
-        // vertices
-        vec2 bottom_left(cursor + ch.dest_offset);
-        vec2 top_right(bottom_left + ch.tex_delta);
-        vec2 tex_bottom_left(ch.tex_offset.x, ch.tex_offset.y + ch.tex_delta.y);
-        vec2 tex_top_right(ch.tex_offset.x + ch.tex_delta.x, ch.tex_offset.y);
-        tex_bottom_left.x *= scale_x; tex_top_right.x *= scale_x;
-        tex_bottom_left.y *= scale_y; tex_top_right.y *= scale_y;
-
-        verts.push_back(bottom_left);       // vertex
-        verts.push_back(tex_bottom_left);   // texcoord
-
-        verts.push_back(vec2(top_right.x, bottom_left.y));
-        verts.push_back(vec2(tex_top_right.x, tex_bottom_left.y));
-
-        verts.push_back(top_right);
-        verts.push_back(tex_top_right);
-
-        verts.push_back(vec2(bottom_left.x, top_right.y));
-        verts.push_back(vec2(tex_bottom_left.x, tex_top_right.y));
-        
-        cursor.x += ch.advance;
-    }
-
-    texture_ = font.texture_;
-
     glGenVertexArrays(1, &vao_id_);
-    glBindVertexArray(vao_id_);
-
     glGenBuffers(1, &ibo_id_);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_id_);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, vert_indices.size() * sizeof(U16), vert_indices.data(), buffer_mode);
-    ibo_size_ = vert_indices.size();
-
     glGenBuffers(1, &vbo_id_);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_id_);
-    glBufferData(GL_ARRAY_BUFFER, verts.size() * sizeof(vec2), verts.data(), buffer_mode);
-    // vertex positions at shader index 0:
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(vec2), 0);
-    // texture coords at shader index 1:
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(vec2), reinterpret_cast<void*>(sizeof(vec2)));
-
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);   // unbind VBO because GL_ARRAY_BUFFER is not part of the VAO state.
-    glBindVertexArray(0);               // unbind VAO
-
-
+    
     Engine& engine = getEngine();
     const BuiltIns& built_ins = engine.getBuiltIns();
 
@@ -138,6 +68,127 @@ void TextureFontText::setColor(const vec4& color)
 const vec4& TextureFontText::getColor() const
 {
     return color_;
+}
+
+void TextureFontText::setFont(const be::ConstHandle<TextureFont>& font)
+{
+    if (font != font_)
+    {
+        font_ = font;
+        const TextureFont* f = font.get();
+        texture_ = (f ? f->texture_ : be::ConstHandle<Texture>());
+
+        setText(text_, buffer_mode_);
+    }
+}
+
+const be::ConstHandle<TextureFont>& TextureFontText::getFont() const
+{
+    return font_;
+}
+
+void TextureFontText::setText(const std::string& text, GLenum buffer_mode)
+{
+    text_ = text;
+    buffer_mode_ = buffer_mode;
+
+    bool font_data_valid = true;
+
+    // calculate vertex data
+    std::vector<U16> vert_indices;
+    std::vector<vec2> verts;
+    vert_indices.reserve(text.length() * 6);    // 6 vertex indices (2 tris) per character
+    verts.reserve(text.length() * 8);  // 4 vertices & 4 texcoords per character
+
+    vec2 cursor; // where the current character should be drawn
+
+    const Texture* tex = texture_.get();
+    if (!tex)
+    {
+        // TODO: log warning
+        font_data_valid = false;
+    }
+
+    const TextureFont* font = font_.get();
+    if (!font)
+    {
+        // TODO: log warning
+        font_data_valid = false;
+    }
+
+    if (font_data_valid)
+    {
+        F32 scale_x = 1.0f / tex->getDimensions().x;
+        F32 scale_y = 1.0f / tex->getDimensions().y;
+
+        for (char c : text)
+        {
+            const TextureFontCharacter& ch = (*font)[c];
+
+            // indices
+            U16 base_index = verts.size() >> 1;     // 1 vertex & 1 texcoord per index
+
+            vert_indices.push_back(base_index);     // first tri
+            vert_indices.push_back(base_index + 1);
+            vert_indices.push_back(base_index + 2);
+
+            vert_indices.push_back(base_index);     // second tri
+            vert_indices.push_back(base_index + 2);
+            vert_indices.push_back(base_index + 3);
+
+            // vertices
+            vec2 top_left(cursor + ch.character_offset);
+            vec2 bottom_right(top_left.x + ch.texture_dimensions.x, top_left.y - ch.texture_dimensions.y);
+            vec2 tex_top_left(ch.texture_offset);
+            vec2 tex_bottom_right(tex_top_left + ch.texture_dimensions);
+            tex_top_left.x *= scale_x; tex_bottom_right.x *= scale_x;
+            tex_top_left.y *= scale_y; tex_bottom_right.y *= scale_y;
+
+            verts.push_back(top_left);      // vertex pos
+            verts.push_back(tex_top_left);  // tex coord
+
+            verts.push_back(vec2(top_left.x, bottom_right.y));
+            verts.push_back(vec2(tex_top_left.x, tex_bottom_right.y));
+
+            verts.push_back(bottom_right);
+            verts.push_back(tex_bottom_right);
+
+            verts.push_back(vec2(bottom_right.x, top_left.y));
+            verts.push_back(vec2(tex_bottom_right.x, tex_top_left.y));
+            
+            cursor.x += ch.character_advance;
+        }
+    }
+
+    text_width_ = cursor.x;
+
+    ibo_size_ = vert_indices.size();
+
+    glBindVertexArray(vao_id_); // bind VAO
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_id_); // set VAO's bound IBO
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, ibo_size_ * sizeof(U16), vert_indices.data(), buffer_mode);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_id_);  // bind VBO
+    glBufferData(GL_ARRAY_BUFFER, verts.size() * sizeof(vec2), verts.data(), buffer_mode);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(vec2), 0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(vec2), reinterpret_cast<void*>(sizeof(vec2)));
+    glBindBuffer(GL_ARRAY_BUFFER, 0);       // unbind VBO
+
+    glEnableVertexAttribArray(0); // vertex positions at shader index 0
+    glEnableVertexAttribArray(1); // texture coords at shader index 1
+
+    glBindVertexArray(0);   // unbind VAO
+}
+
+const std::string& TextureFontText::getText() const
+{
+    return text_;
+}
+
+F32 TextureFontText::getTextWidth() const
+{
+    return text_width_;
 }
 
 void TextureFontText::draw(const mat4& transform)

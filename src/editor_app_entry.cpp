@@ -116,8 +116,7 @@ int main(int argc, char* argv[])
 
    // Initialize game engine
    pbj::Engine engine;
-
-   pbj::gfx::TextureFontText text(engine.getBuiltIns().getTextureFont(pbj::Id("TextureFont.default")), "ABCDEFG");
+   pbj::gfx::TextureFontText text(engine.getBuiltIns().getTextureFont(pbj::Id("TextureFont.default")), "...<12309876654>abcFe*^~`{|} [\] ?$#@!:;\"'");
    pbj::mat4 transform = glm::ortho(0.0f, 320.0f, -120.0f, 120.0f);
 
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -134,6 +133,11 @@ int main(int argc, char* argv[])
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        glBegin(GL_LINES);
+        glColor4f(1, 0, 0, 1);
+        glVertex2f(-10,0);
+        glVertex2f(10, 0);
+        glEnd();
 
         text.draw(transform);
 

@@ -38,18 +38,30 @@ namespace gfx {
 class TextureFontText
 {
 public:
-    TextureFontText(const TextureFont& font, const std::string& text, GLenum buffer_mode = GL_STATIC_DRAW);
+    TextureFontText();
     ~TextureFontText();
 
     void setColor(const vec4& color);
     const vec4& getColor() const;
+
+    void setFont(const be::ConstHandle<TextureFont>& font);
+    const be::ConstHandle<TextureFont>& getFont() const;
+
+    void setText(const std::string& text, GLenum buffer_mode = GL_STATIC_DRAW);
+    const std::string& getText() const;
+    F32 getTextWidth() const;
 
     void draw(const mat4& transform);
 
 private:
     vec4 color_;
    
+    std::string text_;
+    F32 text_width_;
+    GLenum buffer_mode_;
+
     be::ConstHandle<Texture> texture_;
+    be::ConstHandle<TextureFont> font_;
 
     GLuint vao_id_; ///< OpenGL Vertex array object id
     GLuint ibo_id_; ///< OpenGL Vertex Index buffer object id

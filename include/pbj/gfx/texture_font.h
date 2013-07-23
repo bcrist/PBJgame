@@ -41,7 +41,7 @@ class TextureFont
 
 public:
     template <typename Iterator>
-    TextureFont(const sw::ResourceId& id, const be::ConstHandle<Texture>& texture, const ivec2& texture_size, U16 line_height, U16 baseline, const Iterator& chars_begin, const Iterator& chars_end);
+    TextureFont(const sw::ResourceId& id, const be::ConstHandle<Texture>& texture, F32 cap_height, const Iterator& chars_begin, const Iterator& chars_end);
     ~TextureFont();
 
     const be::Handle<TextureFont>& getHandle();
@@ -49,7 +49,7 @@ public:
 
     const sw::ResourceId& getId() const;
 
-    const ivec2& getTextureSize() const;
+    F32 getCapHeight() const;
 
     const TextureFontCharacter& operator[](U32 codepoint) const;
 
@@ -63,10 +63,7 @@ private:
     sw::ResourceId texture_id_;
     be::ConstHandle<Texture> texture_;
 
-    ivec2 texture_size_;
-    
-    U16 line_height_;
-	unsigned short baseline_;
+    F32 cap_height_;
 
     static const size_t base_chars_size_ = 128;
     TextureFontCharacter default_char_;

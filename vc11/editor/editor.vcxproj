@@ -157,6 +157,8 @@
     <ClCompile Include="..\..\src\pbj\input_controller.cpp" />
     <ClCompile Include="..\..\src\pbj\scene\ui_element.cpp" />
     <ClCompile Include="..\..\src\pbj\scene\ui_image.cpp" />
+    <ClCompile Include="..\..\src\pbj\scene\ui_label.cpp" />
+    <ClCompile Include="..\..\src\pbj\sw\import.cpp" />
     <ClCompile Include="..\..\src\pbj\sw\resource_id.cpp" />
     <ClCompile Include="..\..\src\pbj\sw\sandwich.cpp" />
     <ClCompile Include="..\..\src\pbj\sw\sandwich_open.cpp" />
@@ -200,6 +202,7 @@
     <ClInclude Include="..\..\include\pbj\scene\ui_element.h" />
     <ClInclude Include="..\..\include\pbj\scene\ui_image.h" />
     <ClInclude Include="..\..\include\pbj\scene\ui_label.h" />
+    <ClInclude Include="..\..\include\pbj\sw\import.h" />
     <ClInclude Include="..\..\include\pbj\sw\resource_id.h" />
     <ClInclude Include="..\..\include\pbj\sw\sandwich.h" />
     <ClInclude Include="..\..\include\pbj\sw\sandwich_open.h" />

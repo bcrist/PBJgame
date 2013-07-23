@@ -180,6 +180,12 @@
     <ClCompile Include="..\..\src\pbj\gfx\texture_font_character.cpp">
       <Filter>Source Files\pbj\pbj::gfx</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\pbj\sw\import.cpp">
+      <Filter>Source Files\pbj\pbj::sw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\scene\ui_label.cpp">
+      <Filter>Source Files\pbj\pbj::scene\%28ui%29</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\be\const_handle.h">
@@ -316,6 +322,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\pbj\gfx\built_ins.h">
       <Filter>Header Files\pbj\pbj::gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\sw\import.h">
+      <Filter>Header Files\pbj\pbj::sw</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

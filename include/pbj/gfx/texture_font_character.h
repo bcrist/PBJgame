@@ -37,11 +37,11 @@ struct TextureFontCharacter
 {
     U32 codepoint;
 
-    vec2 tex_offset;
-    vec2 tex_delta;
+    vec2 texture_offset;
+    vec2 texture_dimensions;
 
-    vec2 dest_offset;
-    F32 advance;
+    vec2 character_offset;
+    F32 character_advance;
 
     static const U32 cp_invalid = 0xFFFFFFFF;
 

@@ -48,9 +48,9 @@ const sw::ResourceId& TextureFont::getId() const
     return resource_id_;
 }
 
-const ivec2& TextureFont::getTextureSize() const
+F32 TextureFont::getCapHeight() const
 {
-    return texture_size_;
+    return cap_height_;
 }
 
 const TextureFontCharacter& TextureFont::operator[](U32 codepoint) const
