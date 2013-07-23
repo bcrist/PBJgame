@@ -19,70 +19,43 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   pbj/audio/audio_source.cpp
+/// \file   pbj/audio/audio_listener.h
 /// \author Josh Douglas
 ///
-/// \brief  pbj::audio::AudioBuffer class source.
+/// \brief  pbj::audio::AudioListener class header.
+
+#ifndef PBJ_AUDIO_AUDIO_LISTENER
+#define PBJ_AUDIO_AUDIO_LISTENER
 
 #include "pbj\audio\audio_source.h"
 
 namespace pbj{
 namespace audio{
 
-AudioSource::AudioSource()
+class AudioListener
 {
-	alGenSources(1, &sourceID_);
-}
+public:
+	AudioListener();
+	~AudioListener();
 
-AudioSource::~AudioSource()
-{
-	if(alIsSource(sourceID_))
-	{
-		alDeleteSources(1, &sourceID_);
-	}
-}
+	void setListenerPos(vec3 listenerPos);
+	vec3 getListenerPos();
 
-void AudioSource::setSourcePos(vec3 sourcePos)
-{
-	sourcePos_ = sourcePos;
-	alSourcefv(sourceID_, AL_POSITION, glm::value_ptr(sourcePos_));
-}
+	void setListenerVel(vec3 listenerVel);
+	vec3 getListenerVel();
 
-vec3 AudioSource::getSourcePos()
-{
-	return sourcePos_;
-}
+	void setListenerDir(vec3 listenerDir[2]);
+	vec3 getListenerAtDir();
+	vec3 getListenerUpDir();
 
-void AudioSource::setSourceVel(vec3 sourceVel)
-{
-   sourceVel_ = sourceVel;
-   alSourcefv(sourceID_, AL_VELOCITY, glm::value_ptr(sourceVel_));
-}
+private:
+	vec3 listenerPos_;
+	vec3 listenerVel_;
+	vec3 listenerDir_[2];
 
-vec3 AudioSource::getSourceVel()
-{
-   return sourceVel_;
-}
-
-void AudioSource::bindBuffer(const AudioBuffer &buffer)
-{
-   alSourcei(sourceID_, AL_BUFFER, buffer.getBufferID());
-}
-
-void AudioSource::loop(ALuint &sourceID)
-{
-	alSourcef(sourceID, AL_LOOPING, AL_TRUE);
-}
-
-void AudioSource::play(ALuint &sourceID)
-{
-	alSourcePlay(sourceID);
-}
-
-void AudioSource::stop(ALuint &sourceID)
-{
-	alSourceStop(sourceID);
-}
+};
 
 } // namespace audio
 } // namespace pbj
+
+#endif

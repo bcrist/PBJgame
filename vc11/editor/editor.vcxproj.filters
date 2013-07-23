@@ -167,7 +167,7 @@
     </ClCompile>
     <ClCompile Include="..\..\src\pbj\audio\audio_source.cpp">
       <Filter>Source Files\pbj\pbj::audio</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\..\src\pbj\gfx\texture_font.cpp">
       <Filter>Source Files\pbj\pbj::gfx</Filter>
     </ClCompile>
@@ -182,6 +182,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\pbj\gfx\texture_font_character.cpp">
       <Filter>Source Files\pbj\pbj::gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="audio_listener.cpp">
+      <Filter>Source Files\pbj\pbj::audio</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -310,7 +313,7 @@
     </ClInclude>
     <ClInclude Include="..\..\include\pbj\audio\audio_source.h">
       <Filter>Header Files\pbj\pbj::audio</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\..\include\pbj\gfx\texture_font_text.h">
       <Filter>Header Files\pbj\pbj::gfx</Filter>
     </ClInclude>
@@ -322,6 +325,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\pbj\gfx\built_ins.h">
       <Filter>Header Files\pbj\pbj::gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="audio_listener.h">
+      <Filter>Header Files\pbj\pbj::audio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

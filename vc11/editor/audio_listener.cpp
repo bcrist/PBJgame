@@ -19,69 +19,64 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   pbj/audio/audio_source.cpp
+/// \file   pbj/audio/audio_listener.cpp
 /// \author Josh Douglas
 ///
-/// \brief  pbj::audio::AudioBuffer class source.
+/// \brief  pbj::audio::AudioListener class source.
 
-#include "pbj\audio\audio_source.h"
+#include "pbj\audio\audio_listener.h"
 
 namespace pbj{
 namespace audio{
 
-AudioSource::AudioSource()
+AudioListener::AudioListener()
 {
-	alGenSources(1, &sourceID_);
+
 }
 
-AudioSource::~AudioSource()
+AudioListener::~AudioListener()
 {
-	if(alIsSource(sourceID_))
-	{
-		alDeleteSources(1, &sourceID_);
-	}
+
 }
 
-void AudioSource::setSourcePos(vec3 sourcePos)
+void AudioListener::setListenerPos(vec3 listenerPos)
 {
-	sourcePos_ = sourcePos;
-	alSourcefv(sourceID_, AL_POSITION, glm::value_ptr(sourcePos_));
+	listenerPos_ = listenerPos;
+	alListenerfv(AL_POSITION, glm::value_ptr(listenerPos_));
 }
 
-vec3 AudioSource::getSourcePos()
+vec3 AudioListener::getListenerPos()
 {
-	return sourcePos_;
+	return listenerPos_;
 }
 
-void AudioSource::setSourceVel(vec3 sourceVel)
+void AudioListener::setListenerVel(vec3 listenerVel)
 {
-   sourceVel_ = sourceVel;
-   alSourcefv(sourceID_, AL_VELOCITY, glm::value_ptr(sourceVel_));
+	listenerVel_ = listenerVel;
+	alListenerfv(AL_VELOCITY, glm::value_ptr(listenerVel_));
 }
 
-vec3 AudioSource::getSourceVel()
+vec3 AudioListener::getListenerVel()
 {
-   return sourceVel_;
+	return listenerVel_;
 }
 
-void AudioSource::bindBuffer(const AudioBuffer &buffer)
+void AudioListener::setListenerDir(vec3 listenerDir[2])
 {
-   alSourcei(sourceID_, AL_BUFFER, buffer.getBufferID());
+	listenerDir_[0] = listenerDir[0];
+	listenerDir_[1] = listenerDir[1];
+	alListenerfv(AL_ORIENTATION, glm::value_ptr(listenerDir_[0]));
+	alListenerfv(AL_ORIENTATION, glm::value_ptr(listenerDir_[1]));
 }
 
-void AudioSource::loop(ALuint &sourceID)
+vec3 AudioListener::getListenerAtDir()
 {
-	alSourcef(sourceID, AL_LOOPING, AL_TRUE);
+	return listenerDir_[0];
 }
 
-void AudioSource::play(ALuint &sourceID)
+vec3 AudioListener::getListenerUpDir()
 {
-	alSourcePlay(sourceID);
-}
-
-void AudioSource::stop(ALuint &sourceID)
-{
-	alSourceStop(sourceID);
+	return listenerDir_[1];
 }
 
 } // namespace audio

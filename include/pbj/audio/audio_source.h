@@ -42,16 +42,6 @@ public:
 	AudioSource();
 	~AudioSource();
 
-	void setListenerPos(vec3 listenerPos);
-	vec3 getListenerPos();
-
-	void setListenerVel(vec3 listenerVel);
-	vec3 getListenerVel();
-
-	void setListenerDir(vec3 listenerDir[2]);
-	vec3 getListenerAtDir();
-	vec3 getListenerUpDir();
-
 	void setSourcePos(vec3 sourcePos);
 	vec3 getSourcePos();
 
@@ -65,12 +55,9 @@ public:
 
 	void play(ALuint &sourceID);
 	void stop(ALuint &sourceID);
+	void pause(ALuint &sourceID);
 
 private:
-	vec3 listenerPos_;
-	vec3 listenerVel_;
-	vec3 listenerDir_[2];
-
 	vec3 sourcePos_;
 	vec3 sourceVel_;
 
@@ -82,6 +69,3 @@ private:
 } // namespace pbj
 
 #endif
-
-
-

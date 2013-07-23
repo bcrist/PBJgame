@@ -19,70 +19,7 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   pbj/audio/audio_source.cpp
+/// \file   pbj/audio/audio_buffer.cpp
 /// \author Josh Douglas
 ///
 /// \brief  pbj::audio::AudioBuffer class source.
-
-#include "pbj\audio\audio_source.h"
-
-namespace pbj{
-namespace audio{
-
-AudioSource::AudioSource()
-{
-	alGenSources(1, &sourceID_);
-}
-
-AudioSource::~AudioSource()
-{
-	if(alIsSource(sourceID_))
-	{
-		alDeleteSources(1, &sourceID_);
-	}
-}
-
-void AudioSource::setSourcePos(vec3 sourcePos)
-{
-	sourcePos_ = sourcePos;
-	alSourcefv(sourceID_, AL_POSITION, glm::value_ptr(sourcePos_));
-}
-
-vec3 AudioSource::getSourcePos()
-{
-	return sourcePos_;
-}
-
-void AudioSource::setSourceVel(vec3 sourceVel)
-{
-   sourceVel_ = sourceVel;
-   alSourcefv(sourceID_, AL_VELOCITY, glm::value_ptr(sourceVel_));
-}
-
-vec3 AudioSource::getSourceVel()
-{
-   return sourceVel_;
-}
-
-void AudioSource::bindBuffer(const AudioBuffer &buffer)
-{
-   alSourcei(sourceID_, AL_BUFFER, buffer.getBufferID());
-}
-
-void AudioSource::loop(ALuint &sourceID)
-{
-	alSourcef(sourceID, AL_LOOPING, AL_TRUE);
-}
-
-void AudioSource::play(ALuint &sourceID)
-{
-	alSourcePlay(sourceID);
-}
-
-void AudioSource::stop(ALuint &sourceID)
-{
-	alSourceStop(sourceID);
-}
-
-} // namespace audio
-} // namespace pbj
