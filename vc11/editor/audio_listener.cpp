@@ -31,12 +31,14 @@ namespace audio{
 
 AudioListener::AudioListener()
 {
-
+	listenerPos_ = vec3(0,0,0);
+	listenerVel_ = vec3(0,0,0);
+	listenerDir_[0] = vec3(0,0,0);
+	listenerDir_[1] = vec3(0,0,0);
 }
 
 AudioListener::~AudioListener()
 {
-
 }
 
 void AudioListener::setListenerPos(vec3 listenerPos)
