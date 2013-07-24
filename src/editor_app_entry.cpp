@@ -141,8 +141,9 @@ int main(int argc, char* argv[])
 
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    glEnable(GL_BLEND);
-
-   int frame = 0;
+   
+   double current_time;
+   double last_time = current_time = glfwGetTime();
 
    while (true)
     {
@@ -161,7 +162,10 @@ int main(int argc, char* argv[])
         glVertex2f(10, 0);
         glEnd();
 
-        label2.setText(std::to_string(frame++));
+        last_time = current_time;
+        current_time = glfwGetTime();
+
+        label2.setText(std::to_string(1000.0 * (current_time - last_time)) + " ms");
 
         label.draw(transform);
         label2.draw(transform);
