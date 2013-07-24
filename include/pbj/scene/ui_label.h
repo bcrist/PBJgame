@@ -68,6 +68,8 @@ public:
     virtual void draw(const mat4& view_projection);
 
 private:
+    virtual void onBoundsChange();
+
     void calculateTextTransform();
 
     vec2 text_scale_;
@@ -75,6 +77,7 @@ private:
     Align align_;
 
     mat4 text_transform_;
+    bool text_transform_valid_;
 
     UILabel(const UILabel&);
     void operator=(const UILabel&);

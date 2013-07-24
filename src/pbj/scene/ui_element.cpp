@@ -162,5 +162,9 @@ void UIElement::onCharacter(F32 codepoint)
 {
 }
 
+void UIElement::onBoundsChange()
+{
+}
+
 } // namespace pbj::scene
 } // namespace pbj

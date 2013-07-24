@@ -41,15 +41,21 @@ public:
     TextureFontText();
     ~TextureFontText();
 
+    void setBufferMode(GLenum buffer_mode);
+    GLenum getBufferMode() const;
+
     void setColor(const vec4& color);
     const vec4& getColor() const;
 
     void setFont(const be::ConstHandle<TextureFont>& font);
     const be::ConstHandle<TextureFont>& getFont() const;
 
-    void setText(const std::string& text, GLenum buffer_mode = GL_STATIC_DRAW);
+    void setText(const std::string& text);
     const std::string& getText() const;
-    F32 getTextWidth() const;
+    F32 getTextWidth();
+
+    void prepare();
+    bool isPrepared() const;
 
     void draw(const mat4& transform);
 
@@ -57,7 +63,7 @@ private:
     vec4 color_;
    
     std::string text_;
-    F32 text_width_;
+    
     GLenum buffer_mode_;
 
     be::ConstHandle<Texture> texture_;
@@ -67,6 +73,8 @@ private:
     GLuint ibo_id_; ///< OpenGL Vertex Index buffer object id
     GLuint vbo_id_; ///< OpenGL Vertex buffer object id
     GLsizei ibo_size_; ///< Size of IBO
+    bool buffers_valid_;
+    F32 text_width_;
 
     GLuint shader_program_id_;
     GLint color_uniform_location_;

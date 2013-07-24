@@ -26,13 +26,15 @@
 
 #include "pbj/scene/ui_label.h"
 
+#include "pbj/_math.h"
+
 namespace pbj {
 namespace scene {
 
 UILabel::UILabel()
-    : background_color_(0.0f, 0.0f, 0.0f, 0.0f),
-      text_scale_(1.0f, 1.0f),
-      align_(AlignLeft)
+    : text_scale_(1.0f, 1.0f),
+      align_(AlignLeft),
+      text_transform_valid_(false)
 {
 }
 
@@ -43,7 +45,7 @@ UILabel::~UILabel()
 void UILabel::setText(const std::string& text)
 {
     tf_text_.setText(text);
-    calculateTextTransform();
+    text_transform_valid_ = false;
 }
 
 const std::string& UILabel::getText() const
@@ -53,23 +55,16 @@ const std::string& UILabel::getText() const
 
 void UILabel::setTextScale(const vec2& scale)
 {
-    text_scale_ = scale;
-    calculateTextTransform();
+    if (scale != text_scale_)
+    {
+        text_scale_ = scale;
+        text_transform_valid_ = false;
+    }
 }
 
 const vec2& UILabel::getTextScale() const
 {
     return text_scale_;
-}
-
-void UILabel::setBackgroundColor(const color4& color)
-{
-    background_color_ = color;
-}
-
-const color4& UILabel::getBackgroundColor() const
-{
-    return background_color_;
 }
 
 void UILabel::setTextColor(const color4& color)
@@ -84,13 +79,16 @@ const color4& UILabel::getTextColor() const
 
 void UILabel::setFont(const be::ConstHandle<gfx::TextureFont>& font)
 {
-    tf_text_.setFont(font);
-    calculateTextTransform();
+    if (font != tf_text_.getFont())
+    {
+        tf_text_.setFont(font);
+        text_transform_valid_ = false;
+    }
 }
 
 const be::ConstHandle<gfx::TextureFont>& UILabel::getFont() const
 {
-    tf_text_.getFont();
+    return tf_text_.getFont();
 }
 
 void UILabel::setAlign(Align align)
@@ -98,7 +96,7 @@ void UILabel::setAlign(Align align)
     if (align != align_)
     {
         align_ = align;
-        calculateTextTransform();
+        text_transform_valid_ = false;
     }
 }
 
@@ -109,7 +107,15 @@ UILabel::Align UILabel::getAlign() const
 
 void UILabel::draw(const mat4& view_projection)
 {
+    if (!text_transform_valid_)
+        calculateTextTransform();
+
     tf_text_.draw(view_projection * text_transform_);
+}
+
+void UILabel::onBoundsChange()
+{
+    text_transform_valid_ = false;
 }
 
 void UILabel::calculateTextTransform()
@@ -132,8 +138,9 @@ void UILabel::calculateTextTransform()
 
     vec2 translation(getPosition());
     translation.y += getDimensions().y - bottom_spacing;
+    translation.x += left_spacing;
 
-
+    text_transform_ = glm::scale(glm::translate(mat4(), vec3(translation, 0)), vec3(text_scale_.x, -text_scale_.y, 1));
 }
 
 } // namespace pbj::scene

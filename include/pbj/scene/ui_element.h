@@ -82,6 +82,8 @@ public:
     virtual void draw(const mat4& view_projection) = 0;
 
 protected:
+    virtual void onBoundsChange();      ///< Called when the position or dimensions of the element changes.
+
     ivec2 position_;
     ivec2 dimensions_;
 

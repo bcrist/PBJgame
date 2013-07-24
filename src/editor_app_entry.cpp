@@ -53,7 +53,7 @@
 #include "pbj/gfx/built_ins.h"
 #include "pbj/gfx/texture_font_text.h"
 #include "pbj/gfx/shader_program.h"
-#include "pbj/gfx/built_ins.h"
+#include "pbj/scene/ui_label.h"
 
 #include <iostream>
 #include <fstream>
@@ -114,13 +114,35 @@ int main(int argc, char* argv[])
    }
 #endif
 
-   // Initialize game engine
-   pbj::Engine engine;
-   pbj::gfx::TextureFontText text(engine.getBuiltIns().getTextureFont(pbj::Id("TextureFont.default")), "...<12309876654>abcFe*^~`{|} [\] ?$#@!:;\"'");
-   pbj::mat4 transform = glm::ortho(0.0f, 320.0f, -120.0f, 120.0f);
+    // Initialize game engine
+    pbj::Engine engine;
+   
+    be::ConstHandle<pbj::gfx::TextureFont> font = engine.getBuiltIns().getTextureFont(pbj::Id("TextureFont.default")).getHandle();
+
+    pbj::scene::UILabel label;
+    pbj::scene::UILabel label2;
+
+    label.setDimensions(pbj::ivec2(200, 50));
+    label.setAlign(pbj::scene::UILabel::AlignCenter);
+    label.setTextScale(pbj::vec2(2.0f,2.0f));
+    label.setTextColor(pbj::color4(1.0f, 0.5f, 0.0f, 1.0f));
+    label.setFont(font);
+    label.setText("Testing 1 2 3...");
+
+    label2.setDimensions(pbj::ivec2(640, 480));
+    label2.setAlign(pbj::scene::UILabel::AlignRight);
+    label2.setTextScale(pbj::vec2(5.0f, 5.0f));
+    label2.setTextColor(pbj::color4(0, 1.0f, 1.0f, 1.0f));
+    label2.setFont(font);
+    label2.setText("Frame");
+        
+
+   pbj::mat4 transform = glm::ortho(0.0f, 640.0f, 480.0f, 0.0f);
 
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    glEnable(GL_BLEND);
+
+   int frame = 0;
 
    while (true)
     {
@@ -139,7 +161,10 @@ int main(int argc, char* argv[])
         glVertex2f(10, 0);
         glEnd();
 
-        text.draw(transform);
+        label2.setText(std::to_string(frame++));
+
+        label.draw(transform);
+        label2.draw(transform);
 
         glfwSwapBuffers(wnd->getGlfwHandle());
 

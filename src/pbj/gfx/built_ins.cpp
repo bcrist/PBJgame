@@ -346,7 +346,7 @@ BuiltIns::BuiltIns()
             "    <char id=\"46\" x=\"89\" y=\"88\" width=\"1\" height=\"1\" xoffset=\"0\" yoffset=\"9\" xadvance=\"2\" />\n"
             "    <char id=\"47\" x=\"53\" y=\"30\" width=\"4\" height=\"8\" xoffset=\"0\" yoffset=\"2\" xadvance=\"5\" />\n"
             "    <char id=\"48\" x=\"50\" y=\"39\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
-            "    <char id=\"49\" x=\"52\" y=\"71\" width=\"2\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"3\" />\n"
+            "    <char id=\"49\" x=\"52\" y=\"71\" width=\"2\" height=\"7\" xoffset=\"2\" yoffset=\"3\" xadvance=\"8\" />\n"
             "    <char id=\"50\" x=\"58\" y=\"39\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
             "    <char id=\"51\" x=\"66\" y=\"39\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
             "    <char id=\"52\" x=\"74\" y=\"39\" width=\"7\" height=\"7\" xoffset=\"0\" yoffset=\"3\" xadvance=\"8\" />\n"
