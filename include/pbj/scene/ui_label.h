@@ -70,7 +70,7 @@ public:
 private:
     virtual void onBoundsChange();
 
-    void calculateTextTransform();
+    void calculateTextTransform_();
 
     vec2 text_scale_;
     gfx::TextureFontText tf_text_;

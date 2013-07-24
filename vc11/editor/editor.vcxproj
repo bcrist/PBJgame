@@ -148,6 +148,7 @@
     <ClCompile Include="..\..\src\pbj\audio\audio_buffer.cpp" />
     <ClCompile Include="..\..\src\pbj\engine.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\built_ins.cpp" />
+    <ClCompile Include="..\..\src\pbj\gfx\mesh.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\shader.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\shader_program.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\texture.cpp" />
@@ -155,6 +156,7 @@
     <ClCompile Include="..\..\src\pbj\gfx\texture_font_character.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\texture_font_text.cpp" />
     <ClCompile Include="..\..\src\pbj\input_controller.cpp" />
+    <ClCompile Include="..\..\src\pbj\scene\ui_button.cpp" />
     <ClCompile Include="..\..\src\pbj\scene\ui_element.cpp" />
     <ClCompile Include="..\..\src\pbj\scene\ui_image.cpp" />
     <ClCompile Include="..\..\src\pbj\scene\ui_label.cpp" />

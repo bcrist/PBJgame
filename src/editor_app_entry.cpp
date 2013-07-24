@@ -54,6 +54,7 @@
 #include "pbj/gfx/texture_font_text.h"
 #include "pbj/gfx/shader_program.h"
 #include "pbj/scene/ui_label.h"
+#include "pbj/scene/ui_button.h"
 
 #include <iostream>
 #include <fstream>
@@ -119,15 +120,14 @@ int main(int argc, char* argv[])
    
     be::ConstHandle<pbj::gfx::TextureFont> font = engine.getBuiltIns().getTextureFont(pbj::Id("TextureFont.default")).getHandle();
 
-    pbj::scene::UILabel label;
+    pbj::scene::UIButton btn;
     pbj::scene::UILabel label2;
 
-    label.setDimensions(pbj::ivec2(200, 50));
-    label.setAlign(pbj::scene::UILabel::AlignCenter);
-    label.setTextScale(pbj::vec2(2.0f,2.0f));
-    label.setTextColor(pbj::color4(1.0f, 0.5f, 0.0f, 1.0f));
-    label.setFont(font);
-    label.setText("Testing 1 2 3...");
+    btn.setPosition(pbj::ivec2(100, 100));
+    btn.setDimensions(pbj::ivec2(200, 50));
+    btn.setTextScale(pbj::vec2(2.0f,2.0f));
+    btn.setFont(font);
+    btn.setText("Testing 1 2 3...");
 
     label2.setDimensions(pbj::ivec2(640, 480));
     label2.setAlign(pbj::scene::UILabel::AlignRight);

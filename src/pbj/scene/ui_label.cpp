@@ -108,7 +108,7 @@ UILabel::Align UILabel::getAlign() const
 void UILabel::draw(const mat4& view_projection)
 {
     if (!text_transform_valid_)
-        calculateTextTransform();
+        calculateTextTransform_();
 
     tf_text_.draw(view_projection * text_transform_);
 }
@@ -118,7 +118,7 @@ void UILabel::onBoundsChange()
     text_transform_valid_ = false;
 }
 
-void UILabel::calculateTextTransform()
+void UILabel::calculateTextTransform_()
 {
     const gfx::TextureFont* font = tf_text_.getFont().get();
 

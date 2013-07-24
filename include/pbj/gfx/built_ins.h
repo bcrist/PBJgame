@@ -54,7 +54,7 @@ class BuiltIns
 public:
     const TextureFont& getTextureFont(const Id& id) const;
 
-    //const Mesh& getMesh(const Id& id) const;
+    const Mesh& getMesh(const Id& id) const;
     
     const Texture& getTexture(const Id& id) const;
 
@@ -69,7 +69,7 @@ private:
 
     std::unordered_map<Id, std::unique_ptr<TextureFont> > texture_fonts_;
 
-    //std::unordered_map<Id, std::unique_ptr<Mesh> > meshes_;
+    std::unordered_map<Id, std::unique_ptr<Mesh> > meshes_;
 
     std::unordered_map<Id, std::unique_ptr<Texture> > textures_;
 

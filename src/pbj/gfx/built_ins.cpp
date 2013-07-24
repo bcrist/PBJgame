@@ -52,7 +52,7 @@ const TextureFont& BuiltIns::getTextureFont(const Id& id) const
     throw std::invalid_argument("TextureFont not found!");
 }
 
-/*
+
 const Mesh& BuiltIns::getMesh(const Id& id) const
 {
     auto i = meshes_.find(id);
@@ -61,7 +61,7 @@ const Mesh& BuiltIns::getMesh(const Id& id) const
 
     // TODO: log warning
     throw std::invalid_argument("Mesh not found!");
-}*/
+}
     
 const Texture& BuiltIns::getTexture(const Id& id) const
 {
@@ -96,6 +96,104 @@ const ShaderProgram& BuiltIns::getProgram(const Id& id) const
 BuiltIns::BuiltIns()
 {
     sw::ResourceId id(Id(0), Id(0));
+
+    id.resource = Id("Mesh.std_quad");
+    try
+    {
+        MeshVertexAttributeSpec attr_spec;
+        attr_spec.indices[0] = 0; // vertex position
+        attr_spec.indices[1] = 1; // vertex normal
+        attr_spec.indices[2] = 2; // vertex texcoords
+        
+
+        std::vector<vec4> verts;
+        verts.push_back(vec4(0, 0, 0, 1));
+        verts.push_back(vec4(0, 0, 1, 0));
+        verts.push_back(vec4(0, 0, 0, 1));
+
+        verts.push_back(vec4(1, 0, 0, 1));
+        verts.push_back(vec4(0, 0, 1, 0));
+        verts.push_back(vec4(1, 0, 0, 1));
+
+        verts.push_back(vec4(1, 1, 0, 1));
+        verts.push_back(vec4(0, 0, 1, 0));
+        verts.push_back(vec4(1, 1, 0, 1));
+        
+        verts.push_back(vec4(0, 1, 0, 1));
+        verts.push_back(vec4(0, 0, 1, 0));
+        verts.push_back(vec4(0, 1, 0, 1));
+
+        std::vector<U8> indices;
+        indices.push_back(0);
+        indices.push_back(1);
+        indices.push_back(2);
+
+        indices.push_back(0);
+        indices.push_back(2);
+        indices.push_back(3);
+
+        Mesh* mesh = new Mesh(id, verts.data(), attr_spec, 4, indices.data(), indices.size(), GL_UNSIGNED_BYTE);
+
+    }
+    catch (const std::exception& err)
+    {
+        logWarning("Mesh", id, err.what());
+    }
+
+    id.resource = Id("Shader.UIButton.vertex");
+    try
+    {
+        Shader* shader = new Shader(id, Shader::TVertex,
+            "#version 330\n\n"
+            "uniform mat4 transform;\n\n"
+            "layout(location = 0) in vec4 in_position;\n\n"
+            "out vec2 position;\n\n"
+            "void main()\n"
+            "{\n"
+            "   position = in_position.xy;\n"
+            "   gl_Position = transform * in_position;\n"
+            "}\n");
+        shaders_.insert(std::make_pair(shader->getId().resource, std::unique_ptr<Shader>(shader)));
+    }
+    catch (const std::exception& err)
+    {
+        logWarning("Shader", id, err.what());
+    }
+
+    id.resource = Id("Shader.UIButton.fragment");
+    try
+    {
+        Shader* shader = new Shader(id, Shader::TFragment,
+            "#version 330\n\n"
+            "uniform vec2 border_bounds[4];\n"
+            "uniform vec4 border_color;\n"
+            "uniform vec4 background_color;\n\n"
+            "uniform vec4 outside_color;\n\n"
+            "in vec2 position;\n\n"
+            "layout(location = 0) out vec4 out_fragcolor;\n\n"
+            "void main()\n"
+            "{\n"
+            "   if (position.x >= border_bounds[0].x && position.x <= border_bounds[1].x &&\n"
+            "       position.y >= border_bounds[0].y && position.y <= border_bounds[1].y)\n"
+            "   {\n"
+            "      out_fragcolor = background_color;\n"
+            "   }\n"
+            "   else if (position.x >= border_bounds[2].x && position.x <= border_bounds[3].x &&\n"
+            "            position.y >= border_bounds[2].y && position.y <= border_bounds[3].y)\n"
+            "   {\n"
+            "      out_fragcolor = border_color;\n"
+            "   }\n"
+            "   else\n"
+            "   {\n"
+            "      out_fragcolor = outside_color;\n"
+            "   }\n"
+            "}\n");
+        shaders_.insert(std::make_pair(shader->getId().resource, std::unique_ptr<Shader>(shader)));
+    }
+    catch (const std::exception& err)
+    {
+        logWarning("Shader", id, err.what());
+    }
 
     id.resource = Id("Shader.TextureFontText.vertex");
     try
