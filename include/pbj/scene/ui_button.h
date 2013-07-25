@@ -116,8 +116,7 @@ public:
 private:
     virtual void onBoundsChange_();
 
-    virtual void onFocusGained_();
-    virtual void onFocusLost_();
+    virtual void onFocusChange_(bool focused);
 
     const Id& getCurrentState_();
     void setState_(const Id& state);

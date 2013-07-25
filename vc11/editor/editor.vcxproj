@@ -157,9 +157,12 @@
     <ClCompile Include="..\..\src\pbj\gfx\texture_font_text.cpp" />
     <ClCompile Include="..\..\src\pbj\input_controller.cpp" />
     <ClCompile Include="..\..\src\pbj\scene\ui_button.cpp" />
+    <ClCompile Include="..\..\src\pbj\scene\ui_container.cpp" />
     <ClCompile Include="..\..\src\pbj\scene\ui_element.cpp" />
     <ClCompile Include="..\..\src\pbj\scene\ui_image.cpp" />
     <ClCompile Include="..\..\src\pbj\scene\ui_label.cpp" />
+    <ClCompile Include="..\..\src\pbj\scene\ui_panel.cpp" />
+    <ClCompile Include="..\..\src\pbj\scene\ui_root.cpp" />
     <ClCompile Include="..\..\src\pbj\sw\import.cpp" />
     <ClCompile Include="..\..\src\pbj\sw\resource_id.cpp" />
     <ClCompile Include="..\..\src\pbj\sw\sandwich.cpp" />
@@ -200,10 +203,14 @@
     <ClInclude Include="..\..\include\pbj\gfx\texture_font_character.h" />
     <ClInclude Include="..\..\include\pbj\gfx\texture_font_text.h" />
     <ClInclude Include="..\..\include\pbj\input_controller.h" />
+    <ClInclude Include="..\..\include\pbj\scene\scene.h" />
     <ClInclude Include="..\..\include\pbj\scene\ui_button.h" />
+    <ClInclude Include="..\..\include\pbj\scene\ui_container.h" />
     <ClInclude Include="..\..\include\pbj\scene\ui_element.h" />
     <ClInclude Include="..\..\include\pbj\scene\ui_image.h" />
     <ClInclude Include="..\..\include\pbj\scene\ui_label.h" />
+    <ClInclude Include="..\..\include\pbj\scene\ui_panel.h" />
+    <ClInclude Include="..\..\include\pbj\scene\ui_root.h" />
     <ClInclude Include="..\..\include\pbj\sw\import.h" />
     <ClInclude Include="..\..\include\pbj\sw\resource_id.h" />
     <ClInclude Include="..\..\include\pbj\sw\sandwich.h" />

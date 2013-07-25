@@ -310,14 +310,11 @@ void UIButton::onBoundsChange_()
     btn_transform_valid_ = false;
 }
 
-void UIButton::onFocusGained_()
+void UIButton::onFocusChange_(bool focused)
 {
-    setState_(getCurrentState_());
-}
+    if (!focused)
+        kbd_active_ = false;
 
-void UIButton::onFocusLost_()
-{
-    kbd_active_ = false;
     setState_(getCurrentState_());
 }
 

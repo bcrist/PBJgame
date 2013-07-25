@@ -31,6 +31,8 @@
 namespace pbj {
 namespace scene {
 
+UIElement* UIElement::focused_element_ = nullptr;
+
 UIElement::UIElement()
     : visible_(true),
       focused_(false),
@@ -44,7 +46,11 @@ UIElement::~UIElement()
 
 void UIElement::setVisible(bool visible)
 {
-    visible_ = visible;
+    if (visible_ != visible)
+    {
+        visible_ = visible;
+        onVisibilityChange_(visible);
+    }
 }
     
 bool UIElement::isVisible() const
@@ -66,11 +72,14 @@ void UIElement::setFocused(bool focused)
                 element = element->getNextFocusableElement();
             }
             
-            onFocusGained_();
+            focused_element_ = this;
+            onFocusChange_(true);
         }
         else
         {
-            onFocusLost_();
+            if (focused_element_ == this)
+                focused_element_ = nullptr;
+            onFocusChange_(false);
         }
     }
 }
@@ -188,11 +197,11 @@ void UIElement::onBoundsChange_()
 {
 }
 
-void UIElement::onFocusGained_()
+void UIElement::onFocusChange_(bool focused)
 {
 }
 
-void UIElement::onFocusLost_()
+void UIElement::onVisibilityChange_(bool visible)
 {
 }
 

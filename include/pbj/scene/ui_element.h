@@ -80,9 +80,10 @@ public:
 protected:
     virtual void onBoundsChange_();      ///< Called when the position or dimensions of the element changes.
 
-    virtual void onFocusGained_();        ///< Called when this element receives keyboard focus
-    virtual void onFocusLost_();          ///< Called when this element loses keyboard focus
-
+    virtual void onFocusChange_(bool focused);      ///< Called when this element receives or loses keyboard focus
+    virtual void onVisibilityChange_(bool visible); ///< Called when this element is shown or hidden
+    
+    static UIElement* focused_element_;
 
     ivec2 position_;
     ivec2 dimensions_;

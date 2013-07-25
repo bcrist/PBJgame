@@ -192,6 +192,15 @@
     <ClCompile Include="..\..\src\pbj\scene\ui_button.cpp">
       <Filter>Source Files\pbj\pbj::scene\%28ui%29</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\pbj\scene\ui_container.cpp">
+      <Filter>Source Files\pbj\pbj::scene\%28ui%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\scene\ui_root.cpp">
+      <Filter>Source Files\pbj\pbj::scene\%28ui%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\scene\ui_panel.cpp">
+      <Filter>Source Files\pbj\pbj::scene\%28ui%29</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\be\const_handle.h">
@@ -331,6 +340,18 @@
     </ClInclude>
     <ClInclude Include="..\..\include\pbj\sw\import.h">
       <Filter>Header Files\pbj\pbj::sw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\scene\ui_root.h">
+      <Filter>Header Files\pbj\pbj::scene\%28ui%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\scene\scene.h">
+      <Filter>Header Files\pbj\pbj::scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\scene\ui_container.h">
+      <Filter>Header Files\pbj\pbj::scene\%28ui%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\scene\ui_panel.h">
+      <Filter>Header Files\pbj\pbj::scene\%28ui%29</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
