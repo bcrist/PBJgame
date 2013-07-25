@@ -107,13 +107,16 @@ UILabel::Align UILabel::getAlign() const
 
 void UILabel::draw(const mat4& view_projection)
 {
-    if (!text_transform_valid_)
-        calculateTextTransform_();
+    if (isVisible())
+    {
+        if (!text_transform_valid_)
+            calculateTextTransform_();
 
-    tf_text_.draw(view_projection * text_transform_);
+        tf_text_.draw(view_projection * text_transform_);
+    }
 }
 
-void UILabel::onBoundsChange()
+void UILabel::onBoundsChange_()
 {
     text_transform_valid_ = false;
 }

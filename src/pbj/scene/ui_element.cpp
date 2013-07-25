@@ -26,22 +26,16 @@
 
 #include "pbj/scene/ui_element.h"
 
+#include "pbj/_gl.h"
+
 namespace pbj {
 namespace scene {
 
 UIElement::UIElement()
+    : visible_(false),
+      focused_(false),
+      next_focus_(nullptr)
 {
-    visible_ = false;
-    enabled_ = false;
-    focused_ = false;
-    next_focus_ = NULL;
-
-}
-
-UIElement::UIElement(const ivec2& position, const ivec2& dimensions)
-{
-    position_ = position;
-    dimensions_ = dimensions;
 }
 
 UIElement::~UIElement()
@@ -58,19 +52,27 @@ bool UIElement::isVisible() const
     return visible_;
 }
 
-void UIElement::setEnabled(bool enabled)
-{
-    enabled_ = enabled;
-}
-    
-bool UIElement::isEnabled() const
-{
-    return enabled_;
-}
-
 void UIElement::setFocused(bool focused)
 {
-    focused_ = focused;
+    if (focused != focused_ && next_focus_)
+    {
+        focused_ = focused;
+        if (focused)
+        {
+            UIElement* element = next_focus_;
+            while (element && element != this)
+            {
+                element->setFocused(false);
+                element = element->getNextFocusableElement();
+            }
+            
+            onFocusGained_();
+        }
+        else
+        {
+            onFocusLost_();
+        }
+    }
 }
 
 bool UIElement::isFocused() const
@@ -81,6 +83,7 @@ bool UIElement::isFocused() const
 void UIElement::setPosition(const ivec2& position)
 {
     position_ = position;
+    onBoundsChange_();
 }
 
 const ivec2& UIElement::getPosition() const
@@ -91,6 +94,7 @@ const ivec2& UIElement::getPosition() const
 void UIElement::setDimensions(const ivec2& dimensions)
 {
     dimensions_ = dimensions;
+    onBoundsChange_();
 }
 
 const ivec2& UIElement::getDimensions() const
@@ -100,7 +104,8 @@ const ivec2& UIElement::getDimensions() const
 
 UIElement* UIElement::getElementAt(const ivec2& position)
 {
-    if (position.x >= position_.x && position.x < position_.x + dimensions_.x &&
+    if (isVisible() &&
+        position.x >= position_.x && position.x < position_.x + dimensions_.x &&
         position.y >= position_.y && position.y < position_.y + dimensions_.y)
     {
         return this;
@@ -130,39 +135,64 @@ void UIElement::onMouseOut(const ivec2& position)
 {
 }
 	
-void UIElement::onMouseDown(F32 button)
+void UIElement::onMouseDown(I32 button)
 {
 }
 	
-void UIElement::onMouseUp(F32 button)
+void UIElement::onMouseUp(I32 button)
 {
 }
 	
-void UIElement::onMouseClick(F32 button)
+void UIElement::onMouseClick(I32 button)
 {
+    if (next_focus_)
+        setFocused(true);
 }
 	
-void UIElement::onMouseDblClick(F32 button)
+void UIElement::onMouseDblClick(I32 button)
 {
 }
 
-void UIElement::onKeyDown(F32 keycode)
+void UIElement::onKeyDown(I32 keycode, I32 modifiers)
 {
 }
 	
-void UIElement::onKeyUp(F32 keycode)
+void UIElement::onKeyUp(I32 keycode, I32 modifiers)
 {
 }
 	
-void UIElement::onKeyPressed(F32 keycode)
+void UIElement::onKeyPressed(I32 keycode, I32 modifiers)
 {
+    if (next_focus_ && keycode == GLFW_KEY_TAB && (0 == (modifiers & (GLFW_MOD_ALT | GLFW_MOD_CONTROL | GLFW_MOD_SUPER))))
+    {
+        if (modifiers & GLFW_MOD_SHIFT)
+        {
+            UIElement* prev = next_focus_;
+            while (prev->next_focus_ && prev->next_focus_ != this)
+                prev = prev->next_focus_;
+
+            prev->setFocused(true);
+        }
+        else
+        {
+            next_focus_->setFocused(true);
+        }
+    }
 }
 	
-void UIElement::onCharacter(F32 codepoint)
+void UIElement::onCharacter(I32 codepoint)
 {
 }
 
-void UIElement::onBoundsChange()
+void UIElement::onBoundsChange_()
+{
+}
+
+void UIElement::onFocusGained_()
+{
+}
+
+void UIElement::onFocusLost_()
 {
 }
 

@@ -35,10 +35,12 @@
 namespace pbj {
 namespace scene {
 
-struct UIButtonAppearance
+struct UIButtonStateConfig
 {
     Id button_state;            ///< The button state under which these parameters apply
     
+    std::function<void()> click_callback;
+
     be::ConstHandle<gfx::TextureFont> font;
     vec2 text_scale;
 
@@ -57,7 +59,7 @@ struct UIButtonAppearance
     F32 border_width_top;
     F32 border_width_bottom;
 
-    bool visible;
+    UIButtonStateConfig();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -71,8 +73,8 @@ public:
     void setText(const std::string& text);
     const std::string& getText() const;
 
-    void setStateAppearance(const Id& state, const UIButtonAppearance& appearance);
-    const UIButtonAppearance& getStateAppearance(const Id& state) const;
+    void setStateConfig(const Id& state, const UIButtonStateConfig& config);
+    const UIButtonStateConfig& getStateConfig(const Id& state) const;
 
     void setNormalState(const Id& state);
     const Id& getNormalState() const;
@@ -90,12 +92,10 @@ public:
     const Id& getFocusedHoveredState() const;
 
     void setFocusedActiveState(const Id& state);
-    const Id& getFocusedHoveredState() const;
+    const Id& getFocusedActiveState() const;
 
     void setDisabledState(const Id& state);
     const Id& getDisabledState() const;
-
-    void setClickCallback(const std::function<void()>& callback);
 
     virtual void draw(const mat4& view_projection);
 
@@ -107,36 +107,48 @@ public:
 
     void onMouseIn(const ivec2& position);
     void onMouseOut(const ivec2& position);
-    void onMouseDown(F32 button);
-    void onMouseUp(F32 button);
-    void onMouseClick(F32 button);
-    void onMouseDblClick(F32 button);
-    void onKeyDown(F32 keycode);
-    void onKeyUp(F32 keycode);
-    void onKeyPressed(F32 keycode);
-    void onCharacter(F32 codepoint);
+    void onMouseDown(I32 button);
+    void onMouseUp(I32 button);
+    void onMouseClick(I32 button);
+    void onKeyUp(I32 keycode, I32 modifiers);
+    void onKeyPressed(I32 keycode, I32 modifiers);
 
 private:
-    virtual void onBoundsChange();
+    virtual void onBoundsChange_();
 
-    UIButtonAppearance& getAppearance_(const Id& id);
+    virtual void onFocusGained_();
+    virtual void onFocusLost_();
+
+    const Id& getCurrentState_();
+    void setState_(const Id& state);
+    void calculateTransforms_();
+    UIButtonStateConfig* getStateConfig_(const Id& id);
+
+    static const UIButtonStateConfig& getDefaultStateConfig_();
 
     UILabel label_;
 
-    std::vector<UIButtonAppearance> state_appearances_;
+    const gfx::Mesh& btn_mesh_;
+    GLint 
+    mat4 btn_transform_;
+    bool btn_transform_valid_;
+
+    
+
+    std::vector<UIButtonStateConfig> state_configs_;
 
     Id normal_state_;
     Id hovered_state_;
     Id active_state_;
     Id disabled_state_;
+    Id focused_state_;
+    Id focused_hovered_state_;
+    Id focused_active_state_;
     
     bool disabled_;
     bool active_;
+    bool kbd_active_;
     bool hovered_;
-    
-    
-    
-    std::function<void()> click_fn_;
 
     UIButton(const UIButton&);
     void operator=(const UIButton&);

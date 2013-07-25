@@ -68,7 +68,7 @@ public:
     virtual void draw(const mat4& view_projection);
 
 private:
-    virtual void onBoundsChange();
+    virtual void onBoundsChange_();
 
     void calculateTextTransform_();
 

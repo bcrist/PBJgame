@@ -125,9 +125,12 @@ int main(int argc, char* argv[])
 
     btn.setPosition(pbj::ivec2(100, 100));
     btn.setDimensions(pbj::ivec2(200, 50));
-    btn.setTextScale(pbj::vec2(2.0f,2.0f));
-    btn.setFont(font);
     btn.setText("Testing 1 2 3...");
+
+    pbj::scene::UIButtonStateConfig config;
+    config.background_color = pbj::color4(
+    btn.setStateConfig(Id("normal"), config);
+
 
     label2.setDimensions(pbj::ivec2(640, 480));
     label2.setAlign(pbj::scene::UILabel::AlignRight);
@@ -156,18 +159,12 @@ int main(int argc, char* argv[])
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glBegin(GL_LINES);
-        glColor4f(1, 0, 0, 1);
-        glVertex2f(-10,0);
-        glVertex2f(10, 0);
-        glEnd();
-
         last_time = current_time;
         current_time = glfwGetTime();
 
         label2.setText(std::to_string(1000.0 * (current_time - last_time)) + " ms");
 
-        label.draw(transform);
+        btn.draw(transform);
         label2.draw(transform);
 
         glfwSwapBuffers(wnd->getGlfwHandle());
