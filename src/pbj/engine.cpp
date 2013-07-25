@@ -84,8 +84,13 @@ Engine::Engine()
 #endif    
 
     WindowSettings window_settings;
+
+    window_settings.msaa_level = 4;
+
     if (config_sandwich)
         window_settings = loadWindowSettings(*config_sandwich, window_settings_id);
+
+    
 
     Window* wnd = new Window(window_settings);
     window_.reset(wnd);

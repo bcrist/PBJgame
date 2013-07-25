@@ -121,21 +121,38 @@ int main(int argc, char* argv[])
     be::ConstHandle<pbj::gfx::TextureFont> font = engine.getBuiltIns().getTextureFont(pbj::Id("TextureFont.default")).getHandle();
 
     pbj::scene::UIButton btn;
+    pbj::scene::UIButton btn2;
     pbj::scene::UILabel label2;
-
+    
     btn.setPosition(pbj::ivec2(100, 100));
+    btn2.setPosition(pbj::ivec2(400, 100));
     btn.setDimensions(pbj::ivec2(200, 50));
-    btn.setText("Testing 1 2 3...");
+    btn2.setDimensions(pbj::ivec2(100, 50));
+    btn.setText("Hello");
+    btn2.setText("World");
 
     pbj::scene::UIButtonStateConfig config;
-    config.background_color = pbj::color4(
-    btn.setStateConfig(Id("normal"), config);
+    config.button_state = pbj::Id("__normal__");
+    config.background_color = pbj::color4(1, 0,1, 0.33f);
+    config.border_color = pbj::color4(1,0,1,1);
+    config.click_callback = []() { PBJ_LOG(pbj::VInfo) << "Button Pressed!" << PBJ_LOG_END; };
+    config.font = font;
+    config.text_color = pbj::color4(1,1,1,1);
+    config.border_width_bottom = 5;
+    config.margin_left = 10;
+    config.margin_color = pbj::color4(0, 0.7, 1, 0.66);
+    btn.setStateConfig(config);
 
+    config.border_width_left = 0.5;
+    config.border_width_top = 0.5;
+    config.border_width_right = 0.5;
+    btn2.setStateConfig(config);
+    
 
     label2.setDimensions(pbj::ivec2(640, 480));
     label2.setAlign(pbj::scene::UILabel::AlignRight);
     label2.setTextScale(pbj::vec2(5.0f, 5.0f));
-    label2.setTextColor(pbj::color4(0, 1.0f, 1.0f, 1.0f));
+    label2.setTextColor(pbj::color4(0, 0.6f, 1.0f, 1.0f));
     label2.setFont(font);
     label2.setText("Frame");
         
@@ -165,6 +182,7 @@ int main(int argc, char* argv[])
         label2.setText(std::to_string(1000.0 * (current_time - last_time)) + " ms");
 
         btn.draw(transform);
+        btn2.draw(transform);
         label2.draw(transform);
 
         glfwSwapBuffers(wnd->getGlfwHandle());

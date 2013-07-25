@@ -95,7 +95,15 @@ const ShaderProgram& BuiltIns::getProgram(const Id& id) const
 
 BuiltIns::BuiltIns()
 {
+    GLenum err;
     sw::ResourceId id(Id(0), Id(0));
+
+        while ((err = glGetError()) != GL_NO_ERROR)
+    {
+        PBJ_LOG(pbj::VWarning) << "OpenGL error!" << PBJ_LOG_NL
+                               << "Error Code: " << err << PBJ_LOG_NL
+                               << "     Error: " << pbj::getGlErrorString(err) << PBJ_LOG_END;
+    }
 
     id.resource = Id("Mesh.std_quad");
     try
@@ -133,11 +141,18 @@ BuiltIns::BuiltIns()
         indices.push_back(3);
 
         Mesh* mesh = new Mesh(id, verts.data(), attr_spec, 4, indices.data(), indices.size(), GL_UNSIGNED_BYTE);
-
+        meshes_.insert(std::make_pair(id.resource, std::unique_ptr<Mesh>(mesh)));
     }
     catch (const std::exception& err)
     {
         logWarning("Mesh", id, err.what());
+    }
+
+        while ((err = glGetError()) != GL_NO_ERROR)
+    {
+        PBJ_LOG(pbj::VWarning) << "OpenGL error!" << PBJ_LOG_NL
+                               << "Error Code: " << err << PBJ_LOG_NL
+                               << "     Error: " << pbj::getGlErrorString(err) << PBJ_LOG_END;
     }
 
     id.resource = Id("Shader.UIButton.vertex");
@@ -158,6 +173,13 @@ BuiltIns::BuiltIns()
     catch (const std::exception& err)
     {
         logWarning("Shader", id, err.what());
+    }
+
+        while ((err = glGetError()) != GL_NO_ERROR)
+    {
+        PBJ_LOG(pbj::VWarning) << "OpenGL error!" << PBJ_LOG_NL
+                               << "Error Code: " << err << PBJ_LOG_NL
+                               << "     Error: " << pbj::getGlErrorString(err) << PBJ_LOG_END;
     }
 
     id.resource = Id("Shader.UIButton.fragment");
@@ -193,6 +215,26 @@ BuiltIns::BuiltIns()
     catch (const std::exception& err)
     {
         logWarning("Shader", id, err.what());
+    }
+
+        while ((err = glGetError()) != GL_NO_ERROR)
+    {
+        PBJ_LOG(pbj::VWarning) << "OpenGL error!" << PBJ_LOG_NL
+                               << "Error Code: " << err << PBJ_LOG_NL
+                               << "     Error: " << pbj::getGlErrorString(err) << PBJ_LOG_END;
+    }
+
+    id.resource = Id("ShaderProgram.UIButton");
+    try
+    {
+        ShaderProgram* program = new ShaderProgram(id,
+            getShader(Id("Shader.UIButton.vertex")), 
+            getShader(Id("Shader.UIButton.fragment")));
+        programs_.insert(std::make_pair(program->getId().resource, std::unique_ptr<ShaderProgram>(program)));
+    }
+    catch (const std::exception& err)
+    {
+        logWarning("ShaderProgram", id, err.what());
     }
 
     id.resource = Id("Shader.TextureFontText.vertex");
@@ -246,7 +288,7 @@ BuiltIns::BuiltIns()
     }
     catch (const std::exception& err)
     {
-        logWarning("Program", id, err.what());
+        logWarning("ShaderProgram", id, err.what());
     }
 
     id.resource = Id("Texture.TextureFont.default");

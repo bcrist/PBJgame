@@ -28,6 +28,7 @@
 
 #include "pbj/engine.h"
 #include "pbj/gfx/built_ins.h"
+#include "pbj/gfx/shader_program.h"
 
 #include "pbj/_math.h"
 
@@ -54,6 +55,7 @@ UIButtonStateConfig::UIButtonStateConfig()
 
 UIButton::UIButton()
     : btn_transform_valid_(false),
+      btn_mesh_(getEngine().getBuiltIns().getMesh(Id("Mesh.std_quad"))),
       normal_state_("__normal__"),
       hovered_state_("__hovered__"),
       active_state_("__active__"),
@@ -66,6 +68,15 @@ UIButton::UIButton()
       hovered_(false)
 {
     label_.setAlign(UILabel::AlignCenter);
+
+    const gfx::BuiltIns& builtins = getEngine().getBuiltIns();
+
+    shader_program_id_ = builtins.getProgram(Id("ShaderProgram.UIButton")).getGlId();
+    transform_uniform_location_ = glGetUniformLocation(shader_program_id_, "transform");
+    border_bounds_uniform_location_ = glGetUniformLocation(shader_program_id_, "border_bounds");
+    border_color_uniform_location_ = glGetUniformLocation(shader_program_id_, "border_color");
+    background_color_uniform_location_ = glGetUniformLocation(shader_program_id_, "background_color");
+    outside_color_uniform_location_ = glGetUniformLocation(shader_program_id_, "outside_color");
 
     setState_(getCurrentState_());
 }
@@ -84,17 +95,18 @@ const std::string& UIButton::getText() const
     return label_.getText();
 }
 
-void UIButton::setStateConfig(const Id& state, const UIButtonStateConfig& config)
+void UIButton::setStateConfig(const UIButtonStateConfig& config)
 {
     for (UIButtonStateConfig& cfg : state_configs_)
     {
-        if (cfg.button_state == state)
+        if (cfg.button_state == config.button_state)
         {
             cfg = config;
             setState_(getCurrentState_());
             return;
         }
     }
+    state_configs_.push_back(config);
 }
 
 const UIButtonStateConfig& UIButton::getStateConfig(const Id& state) const
@@ -179,7 +191,35 @@ void UIButton::draw(const mat4& view_projection)
         if (!btn_transform_valid_)
             calculateTransforms_();
 
-        getEngine().getBuiltIns().getMesh(
+        auto cfg = getStateConfig_(getCurrentState_());
+
+        if (cfg)
+        {
+            const ivec2& dims(getDimensions());
+            vec2 inv_scale(1.0f / dims.x, 1.0f / dims.y);
+            vec2 border_bounds[4];
+
+            border_bounds[0] = inv_scale * vec2(cfg->margin_left + cfg->border_width_left, cfg->margin_top + cfg->border_width_top);
+            border_bounds[1] = vec2(1, 1) - inv_scale * vec2(cfg->margin_right + cfg->border_width_right, cfg->margin_bottom + cfg->border_width_bottom);
+
+            border_bounds[2] = inv_scale * vec2(cfg->margin_left - cfg->border_width_left, cfg->margin_top - cfg->border_width_top);
+            border_bounds[3] = vec2(1, 1) - inv_scale * vec2(cfg->margin_right - cfg->border_width_right, cfg->margin_bottom - cfg->border_width_bottom);
+
+            glUseProgram(shader_program_id_);   // set up shader program
+
+            glUniformMatrix4fv(transform_uniform_location_, 1, false, glm::value_ptr(view_projection * btn_transform_));
+            glUniform2fv(border_bounds_uniform_location_, 4, glm::value_ptr(border_bounds[0]));
+            glUniform4fv(border_color_uniform_location_, 1, glm::value_ptr(cfg->border_color));
+            glUniform4fv(background_color_uniform_location_, 1, glm::value_ptr(cfg->background_color));
+            glUniform4fv(outside_color_uniform_location_, 1, glm::value_ptr(cfg->margin_color));
+
+            glBindVertexArray(btn_mesh_.getVaoId()); // bind VAO
+            glDrawElements(GL_TRIANGLES, btn_mesh_.getIndexCount(), btn_mesh_.getIndexType(), 0);
+            glBindVertexArray(0);       // unbind VAO
+            glUseProgram(0);            // unbind shader program
+
+            label_.draw(view_projection);
+        }
     }
 }
 
@@ -241,7 +281,7 @@ void UIButton::onMouseClick(I32 button)
 	
 void UIButton::onKeyUp(I32 keycode, I32 modifiers)
 {
-    if (kbd_active_ && modifiers & (GLFW_MOD_ALT | GLFW_MOD_CONTROL | GLFW_MOD_SHIFT | GLFW_MOD_SUPER) == 0)
+    if (kbd_active_ && ((modifiers & (GLFW_MOD_ALT | GLFW_MOD_CONTROL | GLFW_MOD_SHIFT | GLFW_MOD_SUPER)) == 0))
     {
         if (keycode == GLFW_KEY_SPACE || keycode == GLFW_KEY_ENTER || keycode == GLFW_KEY_KP_ENTER)
         {
@@ -255,7 +295,7 @@ void UIButton::onKeyUp(I32 keycode, I32 modifiers)
 void UIButton::onKeyPressed(I32 keycode, I32 modifiers)
 {
     UIElement::onKeyPressed(keycode, modifiers);
-    if (isFocused() && modifiers & (GLFW_MOD_ALT | GLFW_MOD_CONTROL | GLFW_MOD_SHIFT | GLFW_MOD_SUPER) == 0)
+    if (isFocused() && ((modifiers & (GLFW_MOD_ALT | GLFW_MOD_CONTROL | GLFW_MOD_SHIFT | GLFW_MOD_SUPER)) == 0))
     {
         if (keycode == GLFW_KEY_SPACE || keycode == GLFW_KEY_ENTER || keycode == GLFW_KEY_KP_ENTER)
         {
@@ -267,7 +307,7 @@ void UIButton::onKeyPressed(I32 keycode, I32 modifiers)
 	
 void UIButton::onBoundsChange_()
 {
-    calculateTransforms_();
+    btn_transform_valid_ = false;
 }
 
 void UIButton::onFocusGained_()
@@ -325,7 +365,10 @@ void UIButton::setState_(const Id& state)
 
 void UIButton::calculateTransforms_()
 {
-    btn_transform_ = glm::translate(mat4(), vec3(getPosition(), 0));
+    vec3 scale(getDimensions(), 1);
+    vec3 translate(getPosition(), 0);
+
+    btn_transform_ = glm::scale(glm::translate(mat4(), translate), scale);
     setState_(getCurrentState_());
     btn_transform_valid_ = true;
 }
@@ -341,7 +384,7 @@ UIButtonStateConfig* UIButton::getStateConfig_(const Id& id)
     return nullptr;
 }
 
-const UIButtonStateConfig& getDefaultStateConfig_()
+const UIButtonStateConfig& UIButton::getDefaultStateConfig_()
 {
     static UIButtonStateConfig cfg;
     return cfg;

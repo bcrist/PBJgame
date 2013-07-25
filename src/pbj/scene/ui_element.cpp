@@ -32,7 +32,7 @@ namespace pbj {
 namespace scene {
 
 UIElement::UIElement()
-    : visible_(false),
+    : visible_(true),
       focused_(false),
       next_focus_(nullptr)
 {

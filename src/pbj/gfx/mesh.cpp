@@ -90,18 +90,25 @@ Mesh::Mesh(const sw::ResourceId& id,
     }
     GLsizei stride = n_attributes * sizeof(vec4);
 
-    // Generate & fill VBO
-    glGenBuffers(1, &vbo_id_);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_id_); // bind VBO
-    glBufferData(GL_ARRAY_BUFFER, stride * n_vertices, vertex_data, GL_STATIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);       // unbind VBO
-
     // Generate & fill IBO
     glGenBuffers(1, &ibo_id_);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_id_); // bind IBO
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_data_size, index_data, GL_STATIC_DRAW);
     // don't unbind IBO because it is part of the VAO's state.
 
+    GLenum err;
+    while ((err = glGetError()) != GL_NO_ERROR)
+    {
+        PBJ_LOG(pbj::VWarning) << "OpenGL error!" << PBJ_LOG_NL
+                               << "Error Code: " << err << PBJ_LOG_NL
+                               << "     Error: " << pbj::getGlErrorString(err) << PBJ_LOG_END;
+    }
+
+    // Generate & fill VBO
+    glGenBuffers(1, &vbo_id_);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_id_); // bind VBO
+    glBufferData(GL_ARRAY_BUFFER, stride * n_vertices, vertex_data, GL_STATIC_DRAW);
+    
     // set up vertex attribute pointers & enable them
     for (size_t i = 0; i < n_attributes; ++i)
     {
@@ -109,6 +116,7 @@ Mesh::Mesh(const sw::ResourceId& id,
         glVertexAttribPointer(attribute_index, 4, GL_FLOAT, false, stride, reinterpret_cast<void*>(i * sizeof(vec4)));
         glEnableVertexAttribArray(attribute_index);
     }
+    glBindBuffer(GL_ARRAY_BUFFER, 0);       // unbind VBO
 
     glBindVertexArray(0);                   // unbind VAO
 }

@@ -73,7 +73,7 @@ public:
     void setText(const std::string& text);
     const std::string& getText() const;
 
-    void setStateConfig(const Id& state, const UIButtonStateConfig& config);
+    void setStateConfig(const UIButtonStateConfig& config);
     const UIButtonStateConfig& getStateConfig(const Id& state) const;
 
     void setNormalState(const Id& state);
@@ -129,11 +129,14 @@ private:
     UILabel label_;
 
     const gfx::Mesh& btn_mesh_;
-    GLint 
+    GLuint shader_program_id_;
+    GLint transform_uniform_location_;
+    GLint border_bounds_uniform_location_;
+    GLint border_color_uniform_location_;
+    GLint background_color_uniform_location_;
+    GLint outside_color_uniform_location_;
     mat4 btn_transform_;
     bool btn_transform_valid_;
-
-    
 
     std::vector<UIButtonStateConfig> state_configs_;
 
