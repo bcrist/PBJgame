@@ -272,9 +272,6 @@
     <ClInclude Include="..\..\include\pbj\gfx\mesh.h">
       <Filter>Header Files\pbj\pbj::gfx</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\pbj\gfx\mesh_instance.h">
-      <Filter>Header Files\pbj\pbj::gfx</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\pbj\gfx\shader.h">
       <Filter>Header Files\pbj\pbj::gfx</Filter>
     </ClInclude>
@@ -282,9 +279,6 @@
       <Filter>Header Files\pbj\pbj::gfx</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\pbj\gfx\skeletal_mesh.h">
-      <Filter>Header Files\pbj\pbj::gfx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\pbj\gfx\skeletal_mesh_instance.h">
       <Filter>Header Files\pbj\pbj::gfx</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\pbj\gfx\skeleton.h">
@@ -352,6 +346,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\pbj\scene\ui_panel.h">
       <Filter>Header Files\pbj\pbj::scene\%28ui%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\scene\batcher.h">
+      <Filter>Header Files\pbj\pbj::gfx</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -191,11 +191,9 @@
     <ClInclude Include="..\..\include\pbj\engine.h" />
     <ClInclude Include="..\..\include\pbj\gfx\built_ins.h" />
     <ClInclude Include="..\..\include\pbj\gfx\mesh.h" />
-    <ClInclude Include="..\..\include\pbj\gfx\mesh_instance.h" />
     <ClInclude Include="..\..\include\pbj\gfx\shader.h" />
     <ClInclude Include="..\..\include\pbj\gfx\shader_program.h" />
     <ClInclude Include="..\..\include\pbj\gfx\skeletal_mesh.h" />
-    <ClInclude Include="..\..\include\pbj\gfx\skeletal_mesh_instance.h" />
     <ClInclude Include="..\..\include\pbj\gfx\skeleton.h" />
     <ClInclude Include="..\..\include\pbj\gfx\skeleton_pose.h" />
     <ClInclude Include="..\..\include\pbj\gfx\texture.h" />
@@ -203,6 +201,7 @@
     <ClInclude Include="..\..\include\pbj\gfx\texture_font_character.h" />
     <ClInclude Include="..\..\include\pbj\gfx\texture_font_text.h" />
     <ClInclude Include="..\..\include\pbj\input_controller.h" />
+    <ClInclude Include="..\..\include\pbj\scene\batcher.h" />
     <ClInclude Include="..\..\include\pbj\scene\scene.h" />
     <ClInclude Include="..\..\include\pbj\scene\ui_button.h" />
     <ClInclude Include="..\..\include\pbj\scene\ui_container.h" />

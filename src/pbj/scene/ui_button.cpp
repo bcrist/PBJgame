@@ -185,7 +185,6 @@ const Id& UIButton::getDisabledState() const
 
 void UIButton::draw(const mat4& view_projection)
 {
-    // TODO
     if (isVisible())
     {
         if (!btn_transform_valid_)
