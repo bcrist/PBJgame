@@ -14,6 +14,29 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\pbj\net\flow_control.h" />
+    <ClInclude Include="..\..\include\pbj\net\net_address.h" />
+    <ClInclude Include="..\..\include\pbj\net\net_beacon.h" />
+    <ClInclude Include="..\..\include\pbj\net\net_connection.h" />
+    <ClInclude Include="..\..\include\pbj\net\net_listener.h" />
+    <ClInclude Include="..\..\include\pbj\net\net_node_mesh.h" />
+    <ClInclude Include="..\..\include\pbj\net\net_platform.h" />
+    <ClInclude Include="..\..\include\pbj\net\net_reliability.h" />
+    <ClInclude Include="..\..\include\pbj\net\net_sockets.h" />
+    <ClInclude Include="..\..\include\pbj\net\net_transport.h" />
+    <ClInclude Include="..\..\include\pbj\net\transportLAN.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\pbj\net\flow_control.cpp" />
+    <ClCompile Include="..\..\src\pbj\net\net_address.cpp" />
+    <ClCompile Include="..\..\src\pbj\net\net_beacon.cpp" />
+    <ClCompile Include="..\..\src\pbj\net\net_listener.cpp" />
+    <ClCompile Include="..\..\src\pbj\net\net_node_mesh.cpp" />
+    <ClCompile Include="..\..\src\pbj\net\net_sockets.cpp" />
+    <ClCompile Include="..\..\src\pbj\net\transport.cpp" />
+    <ClCompile Include="..\..\src\pbj\net\transportLAN.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{705FDD29-34CB-4CDF-A2D1-AF78601A5D0B}</ProjectGuid>
     <RootNamespace>server</RootNamespace>
