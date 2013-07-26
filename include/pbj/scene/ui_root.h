@@ -30,6 +30,8 @@
 #include <functional>
 #include <vector>
 
+#include "pbj/scene/ui_panel.h"
+
 #include "be/source_handle.h"
 
 #include "pbj/_gl.h"
@@ -44,7 +46,7 @@ public:
     UIRoot();
     ~UIRoot();
 
-    //UIPanel 
+    UIPanel panel;
 
     void draw();
 
@@ -52,10 +54,12 @@ private:
     void onMouseMove(const ivec2& position);
     void onMouseButton(I32 button, bool down);
 
+    UIElement* under_mouse_;
 
     be::SourceHandle<UIRoot> handle_;
 
     mat4 projection_;
+    mat4 view_;
 
     UIRoot(const UIRoot&);
     void operator=(const UIRoot&);

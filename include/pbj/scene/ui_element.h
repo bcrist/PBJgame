@@ -75,7 +75,7 @@ public:
     virtual void onKeyPressed(I32 keycode, I32 modifiers);  ///< Called when a key is pressed while this element is focused (ignores key-repeat events)
     virtual void onCharacter(I32 codepoint);            ///< Called when a character is input.  Not necessarily a 1:1 relationship with calls to onKeyPressed and provides a unicode codepoint rather than GLFW keycode.
    
-    virtual void draw(const mat4& view_projection) = 0;
+    virtual void draw() = 0;
 
 protected:
     virtual void onBoundsChange_();      ///< Called when the position or dimensions of the element changes.
@@ -83,10 +83,13 @@ protected:
     virtual void onFocusChange_(bool focused);      ///< Called when this element receives or loses keyboard focus
     virtual void onVisibilityChange_(bool visible); ///< Called when this element is shown or hidden
     
-    static UIElement* focused_element_;
+    UIElement** focused_element_;
 
     ivec2 position_;
     ivec2 dimensions_;
+
+    const mat4* projection_;
+    const mat4* view_;
 
     UIElement* next_focus_;
 

@@ -67,7 +67,7 @@ UIRoot::UIRoot()
             UIRoot* root = handle.get();
             if (root)
             {
-                root->projection = glm::ortho(0, width, height, 0);
+                root->projection_ = glm::ortho(0, width, height, 0);
             }
         }
     );
@@ -82,10 +82,18 @@ UIRoot::~UIRoot()
 void UIRoot::draw()
 {
     // TODO: draw root panel
+    panel.draw(projection_);
 }
 
 void UIRoot::onMouseMove(const ivec2& position)
 {
+    UIElement* under_mouse = panel.getElementAt(position);
+
+    if (under_mouse != under_mouse_)
+    {
+        if (under_mouse_)
+            under_mouse_->onMouseOut(position);
+    }
 }
 
 } // namespace pbj::scene
