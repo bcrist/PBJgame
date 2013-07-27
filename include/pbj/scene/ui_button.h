@@ -97,7 +97,7 @@ public:
     void setDisabledState(const Id& state);
     const Id& getDisabledState() const;
 
-    virtual void draw(const mat4& view_projection);
+    virtual void draw();
 
     void setDisabled(bool disabled);
     bool isDisabled() const;
@@ -116,7 +116,7 @@ public:
 private:
     virtual void onBoundsChange_();
 
-    virtual void onFocusChange_(bool focused);
+    virtual void onFocusChange_();
 
     const Id& getCurrentState_();
     void setState_(const Id& state);
@@ -146,7 +146,7 @@ private:
     Id focused_state_;
     Id focused_hovered_state_;
     Id focused_active_state_;
-    
+
     bool disabled_;
     bool active_;
     bool kbd_active_;

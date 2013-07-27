@@ -35,10 +35,14 @@
 namespace pbj {
 namespace scene {
 
+class UIButton;
+
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief  Text Label UI element.
 class UILabel : public UIElement
 {
+    friend class UIButton;
+
 public:
     enum Align
     {
@@ -65,7 +69,7 @@ public:
     void setAlign(Align align);
     Align getAlign() const;
 
-    virtual void draw(const mat4& view_projection);
+    virtual void draw();
 
 private:
     virtual void onBoundsChange_();

@@ -1,0 +1,10 @@
+0-999       3D geometry
+   0        Opaque depth-tested geometry
+   1-999    Semi-transparent/blended geometry
+   
+1000-1999   HUD/GUI elements
+   1000     Top level Frame/Panel Backgrounds
+   1100     Frame/Panel Backgrounds
+   1200     Control Backgrounds/borders
+   1204     UIImages
+   1209     UILabels

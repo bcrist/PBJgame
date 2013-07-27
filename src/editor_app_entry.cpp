@@ -50,11 +50,13 @@
 
 #include "pbj/engine.h"
 
+#include "pbj/input_controller.h"
 #include "pbj/gfx/built_ins.h"
 #include "pbj/gfx/texture_font_text.h"
 #include "pbj/gfx/shader_program.h"
 #include "pbj/scene/ui_label.h"
 #include "pbj/scene/ui_button.h"
+#include "pbj/scene/ui_root.h"
 
 #include <iostream>
 #include <fstream>
@@ -120,16 +122,19 @@ int main(int argc, char* argv[])
    
     be::ConstHandle<pbj::gfx::TextureFont> font = engine.getBuiltIns().getTextureFont(pbj::Id("TextureFont.default")).getHandle();
 
-    pbj::scene::UIButton btn;
-    pbj::scene::UIButton btn2;
-    pbj::scene::UILabel label2;
+    pbj::InputController::init(engine.getWindow()->getGlfwHandle());
+
+    pbj::scene::UIRoot ui;
+
+    pbj::scene::UIButton* btn = new pbj::scene::UIButton();
+    ui.panel.addElement(std::unique_ptr<pbj::scene::UIElement>(btn));
     
-    btn.setPosition(pbj::ivec2(100, 100));
-    btn2.setPosition(pbj::ivec2(400, 100));
-    btn.setDimensions(pbj::ivec2(200, 50));
-    btn2.setDimensions(pbj::ivec2(100, 50));
-    btn.setText("Hello");
-    btn2.setText("World");
+    pbj::scene::UILabel* label = new pbj::scene::UILabel();
+    ui.panel.addElement(std::unique_ptr<pbj::scene::UIElement>(label));
+
+    btn->setPosition(pbj::vec2(100, 100));
+    btn->setDimensions(pbj::vec2(200, 50));
+    btn->setText("Hello World");
 
     pbj::scene::UIButtonStateConfig config;
     config.button_state = pbj::Id("__normal__");
@@ -139,33 +144,29 @@ int main(int argc, char* argv[])
     config.font = font;
     config.text_color = pbj::color4(1,1,1,1);
     config.border_width_bottom = 5;
-    config.margin_left = 10;
-    config.margin_color = pbj::color4(0, 0.7, 1, 0.66);
-    btn.setStateConfig(config);
+    btn->setStateConfig(config);
 
-    config.border_width_left = 0.5;
-    config.border_width_top = 0.5;
-    config.border_width_right = 0.5;
-    btn2.setStateConfig(config);
+    config.button_state = pbj::Id("__hovered__");
+    config.border_width_left = 1;
+    config.border_width_top = 5;
+    config.border_width_right = 1;
+    btn->setStateConfig(config);
     
 
-    label2.setDimensions(pbj::ivec2(640, 480));
-    label2.setAlign(pbj::scene::UILabel::AlignRight);
-    label2.setTextScale(pbj::vec2(5.0f, 5.0f));
-    label2.setTextColor(pbj::color4(0, 0.6f, 1.0f, 1.0f));
-    label2.setFont(font);
-    label2.setText("Frame");
-        
+    label->setDimensions(pbj::vec2(640, 480));
+    label->setAlign(pbj::scene::UILabel::AlignRight);
+    label->setTextScale(pbj::vec2(5.0f, 5.0f));
+    label->setTextColor(pbj::color4(0, 0.6f, 1.0f, 1.0f));
+    label->setFont(font);
+    label->setText("Frame");
 
-   pbj::mat4 transform = glm::ortho(0.0f, 640.0f, 480.0f, 0.0f);
-
-   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-   glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
    
-   double current_time;
-   double last_time = current_time = glfwGetTime();
+    double current_time;
+    double last_time = current_time = glfwGetTime();
 
-   while (true)
+    while (true)
     {
         glfwPollEvents();
 
@@ -179,11 +180,9 @@ int main(int argc, char* argv[])
         last_time = current_time;
         current_time = glfwGetTime();
 
-        label2.setText(std::to_string(1000.0 * (current_time - last_time)) + " ms");
+        label->setText(std::to_string(1000.0 * (current_time - last_time)) + " ms");
 
-        btn.draw(transform);
-        btn2.draw(transform);
-        label2.draw(transform);
+        ui.draw();
 
         glfwSwapBuffers(wnd->getGlfwHandle());
 
@@ -195,6 +194,8 @@ int main(int argc, char* argv[])
                                    << "     Error: " << pbj::getGlErrorString(gl_error) << PBJ_LOG_END;
         }
     }
+
+    pbj::InputController::destroy();
 };
 
 #endif

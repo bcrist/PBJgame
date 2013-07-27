@@ -183,9 +183,9 @@ const Id& UIButton::getDisabledState() const
     return disabled_state_;
 }
 
-void UIButton::draw(const mat4& view_projection)
+void UIButton::draw()
 {
-    if (isVisible())
+    if (isVisible() && projection_ && view_)
     {
         if (!btn_transform_valid_)
             calculateTransforms_();
@@ -194,7 +194,7 @@ void UIButton::draw(const mat4& view_projection)
 
         if (cfg)
         {
-            const ivec2& dims(getDimensions());
+            const vec2& dims(getDimensions());
             vec2 inv_scale(1.0f / dims.x, 1.0f / dims.y);
             vec2 border_bounds[4];
 
@@ -206,7 +206,7 @@ void UIButton::draw(const mat4& view_projection)
 
             glUseProgram(shader_program_id_);   // set up shader program
 
-            glUniformMatrix4fv(transform_uniform_location_, 1, false, glm::value_ptr(view_projection * btn_transform_));
+            glUniformMatrix4fv(transform_uniform_location_, 1, false, glm::value_ptr(btn_transform_));
             glUniform2fv(border_bounds_uniform_location_, 4, glm::value_ptr(border_bounds[0]));
             glUniform4fv(border_color_uniform_location_, 1, glm::value_ptr(cfg->border_color));
             glUniform4fv(background_color_uniform_location_, 1, glm::value_ptr(cfg->background_color));
@@ -217,7 +217,7 @@ void UIButton::draw(const mat4& view_projection)
             glBindVertexArray(0);       // unbind VAO
             glUseProgram(0);            // unbind shader program
 
-            label_.draw(view_projection);
+            label_.draw();
         }
     }
 }
@@ -275,7 +275,6 @@ void UIButton::onMouseClick(I32 button)
         if (cfg && cfg->click_callback)
             cfg->click_callback();
     }
-
 }
 	
 void UIButton::onKeyUp(I32 keycode, I32 modifiers)
@@ -307,11 +306,16 @@ void UIButton::onKeyPressed(I32 keycode, I32 modifiers)
 void UIButton::onBoundsChange_()
 {
     btn_transform_valid_ = false;
+    label_.projection_ = projection_;
+    label_.view_ = view_;
+    label_.inv_view_ = inv_view_;
+    label_.focused_element_ = focused_element_;
+    label_.onBoundsChange_();
 }
 
-void UIButton::onFocusChange_(bool focused)
+void UIButton::onFocusChange_()
 {
-    if (!focused)
+    if (!isFocused())
         kbd_active_ = false;
 
     setState_(getCurrentState_());
@@ -354,17 +358,20 @@ void UIButton::setState_(const Id& state)
     label_.setTextScale(cfg.text_scale);
     label_.setTextColor(cfg.text_color);
 
-    label_.setPosition(getPosition() + ivec2(I32(cfg.margin_left + cfg.border_width_left), I32(cfg.margin_top + cfg.border_width_top)));
-    label_.setDimensions(getDimensions() - ivec2(I32(cfg.margin_left + cfg.border_width_left + cfg.border_width_right + cfg.margin_right),
-                                                 I32(cfg.margin_top + cfg.border_width_top + cfg.border_width_bottom + cfg.margin_bottom)));
+    label_.setPosition(getPosition() + vec2(I32(cfg.margin_left + cfg.border_width_left), I32(cfg.margin_top + cfg.border_width_top)));
+    label_.setDimensions(getDimensions() - vec2(I32(cfg.margin_left + cfg.border_width_left + cfg.border_width_right + cfg.margin_right),
+                                                I32(cfg.margin_top + cfg.border_width_top + cfg.border_width_bottom + cfg.margin_bottom)));
 }
 
 void UIButton::calculateTransforms_()
 {
+    if (!(projection_ && view_))
+        return;
+
     vec3 scale(getDimensions(), 1);
     vec3 translate(getPosition(), 0);
 
-    btn_transform_ = glm::scale(glm::translate(mat4(), translate), scale);
+    btn_transform_ = glm::scale(glm::translate(*projection_ * *view_, translate), scale);
     setState_(getCurrentState_());
     btn_transform_valid_ = true;
 }

@@ -25,18 +25,43 @@
 #ifndef PBJ_SCENE_UI_PANEL_H_
 #define PBJ_SCENE_UI_PANEL_H_
 
-#include "pbj/scene/ui_container.h"
+#include "pbj/scene/ui_element.h"
+
+#include <memory>
+#include <vector>
 
 namespace pbj {
 namespace scene {
 
-class UIPanel : public UIContainer
+class UIRoot;
+
+class UIPanel : public UIElement
 {
+    friend class UIRoot;
+
 public:
     UIPanel();
     virtual ~UIPanel();
 
+    void setScale(const vec2& scale);
+    const vec2& getScale() const;
+
+    void addElement(std::unique_ptr<UIElement>&& element);
+    
+    virtual UIElement* getElementAt(const ivec2& screen_position);
+
+    virtual void draw();
+
 private:
+    virtual void onBoundsChange_();
+
+    std::vector<std::unique_ptr<UIElement> > elements_;
+
+    vec2 scale_;
+
+    mat4 view_matrix_;
+    mat4 inv_view_matrix_;
+
     UIPanel(const UIPanel&);
     void operator=(const UIPanel&);
 };

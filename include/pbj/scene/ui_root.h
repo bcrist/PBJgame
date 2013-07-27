@@ -25,12 +25,10 @@
 #ifndef PBJ_SCENE_UI_ROOT_H_
 #define PBJ_SCENE_UI_ROOT_H_
 
-#include "pbj/scene/ui_container.h"
+#include "pbj/scene/ui_panel.h"
 
 #include <functional>
 #include <vector>
-
-#include "pbj/scene/ui_panel.h"
 
 #include "be/source_handle.h"
 
@@ -53,13 +51,23 @@ public:
 private:
     void onMouseMove(const ivec2& position);
     void onMouseButton(I32 button, bool down);
+    void onKey(I32 keycode, I32 action, I32 modifiers);
+    void onCharacter(I32 codepoint);
+
+    ivec2 mouse_position_;
 
     UIElement* under_mouse_;
 
+    UIElement* focused_element_;
+
+    UIElement* button1_down_over_;
+    UIElement* button2_down_over_;
+    UIElement* button3_down_over_;
+
     be::SourceHandle<UIRoot> handle_;
 
-    mat4 projection_;
-    mat4 view_;
+    mat4 projection_matrix_;
+    mat4 view_matrix_;
 
     UIRoot(const UIRoot&);
     void operator=(const UIRoot&);

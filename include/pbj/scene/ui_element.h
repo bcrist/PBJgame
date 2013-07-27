@@ -33,12 +33,18 @@
 namespace pbj {
 namespace scene {
 
+class UIPanel;
+class UIRoot;
+
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief  Abstract base class for UI elements.
 ///
 /// \details UI origin is in top left corner of screen.
 class UIElement
 {
+    friend class UIRoot;
+    friend class UIPanel;
+
 public:
     UIElement();
     virtual ~UIElement();
@@ -46,55 +52,54 @@ public:
     void setVisible(bool visible);
     bool isVisible() const;
 
-    void setFocused(bool focused);
+    void setFocused();
     bool isFocused() const;
 
-    void setPosition(const ivec2& position);        ///< Set top left position of element.
-    const ivec2& getPosition() const;               ///< Get top left position of element.
+    void setPosition(const vec2& position);
+    const vec2& getPosition() const;
 
-    void setDimensions(const ivec2& dimensions);    ///< Set width/height of element.
-    const ivec2& getDimensions() const;             ///< Get width/height of element.
+    void setDimensions(const vec2& dimensions);
+    const vec2& getDimensions() const;
 
-    // Retrieve the element at the given coordinates (check against element bounds)
-    virtual UIElement* getElementAt(const ivec2& position);
 
-    void setNextFocusableElement(UIElement* element);   ///< Set the element which should receive keyboard focus when this element is focused and Tab is pressed.
-    UIElement* getNextFocusableElement();               ///< Get the element which should receive keyboard focus when this element is focused and Tab is pressed.
+    virtual UIElement* getElementAt(const ivec2& screen_position);
 
-    virtual void onMouseIn(const ivec2& position);      ///< Called when the mouse moves into the element
-    virtual void onMouseMove(const ivec2& position);    ///< Called when the mouse moves while over the element
-    virtual void onMouseOut(const ivec2& position);     ///< Called when the mouse leaves the element
+    void setNextFocusableElement(UIElement* element);
+    UIElement* getNextFocusableElement();
 
-    virtual void onMouseDown(I32 button);               ///< Called when a mouse button is pressed while the mouse is over the element
-    virtual void onMouseUp(I32 button);                 ///< Called when a mouse button is released while the mouse is over the element
-    virtual void onMouseClick(I32 button);              ///< Called when a mouse button is pressed and released, both while the mouse is over the element
-    virtual void onMouseDblClick(I32 button);           ///< Called when a mouse button is pressed and released twice, all while the mouse is over the element
+    virtual void onMouseIn(const ivec2& screen_position);
+    virtual void onMouseMove(const ivec2& screen_position);
+    virtual void onMouseOut(const ivec2& screen_position);
 
-    virtual void onKeyDown(I32 keycode, I32 modifiers);     ///< Called when a key is pressed while this element is focused
-    virtual void onKeyUp(I32 keycode, I32 modifiers);       ///< Called when a key is released while this element is focused
-    virtual void onKeyPressed(I32 keycode, I32 modifiers);  ///< Called when a key is pressed while this element is focused (ignores key-repeat events)
-    virtual void onCharacter(I32 codepoint);            ///< Called when a character is input.  Not necessarily a 1:1 relationship with calls to onKeyPressed and provides a unicode codepoint rather than GLFW keycode.
+    virtual void onMouseDown(I32 button);
+    virtual void onMouseUp(I32 button);
+    virtual void onMouseClick(I32 button);
+    virtual void onMouseDblClick(I32 button);
+
+    virtual void onKeyDown(I32 keycode, I32 modifiers);
+    virtual void onKeyUp(I32 keycode, I32 modifiers);
+    virtual void onKeyPressed(I32 keycode, I32 modifiers);
+    virtual void onCharacter(I32 codepoint);
    
     virtual void draw() = 0;
 
 protected:
-    virtual void onBoundsChange_();      ///< Called when the position or dimensions of the element changes.
+    virtual void onBoundsChange_();
 
-    virtual void onFocusChange_(bool focused);      ///< Called when this element receives or loses keyboard focus
-    virtual void onVisibilityChange_(bool visible); ///< Called when this element is shown or hidden
+    virtual void onFocusChange_();
+    virtual void onVisibilityChange_();
     
-    UIElement** focused_element_;
-
-    ivec2 position_;
-    ivec2 dimensions_;
+    vec2 position_;
+    vec2 dimensions_;
 
     const mat4* projection_;
     const mat4* view_;
+    const mat4* inv_view_;
 
+    UIElement** focused_element_;
     UIElement* next_focus_;
 
     bool visible_;
-    bool focused_;
 
     UIElement(const UIElement&);
     void operator=(const UIElement&);

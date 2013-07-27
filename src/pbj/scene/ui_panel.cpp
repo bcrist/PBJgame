@@ -28,11 +28,83 @@ namespace pbj {
 namespace scene {
 
 UIPanel::UIPanel()
+    : scale_(1.0f, 1.0f)
 {
 }
 
 UIPanel::~UIPanel()
 {
+}
+
+void UIPanel::setScale(const vec2& scale)
+{
+    if (scale != scale_)
+    {
+        scale_ = scale;
+        onBoundsChange_();
+    }
+}
+
+const vec2& UIPanel::getScale() const
+{
+    return scale_;
+}
+
+void UIPanel::addElement(std::unique_ptr<UIElement>&& element)
+{
+    element->projection_ = projection_;
+    element->view_ = &view_matrix_;
+    element->inv_view_ = &inv_view_matrix_;
+    element->focused_element_ = focused_element_;
+    element->onBoundsChange_();
+
+    elements_.push_back(std::move(element));
+}
+
+UIElement* UIPanel::getElementAt(const ivec2& screen_position)
+{
+    if (!inv_view_ || !isVisible())
+        return nullptr;
+
+    for (std::unique_ptr<UIElement>& ptr : elements_)
+    {
+        UIElement* element = ptr->getElementAt(screen_position);
+        if (element)
+            return element;
+    }
+
+    vec2 pos = vec2(*inv_view_ * vec4(screen_position, 0, 1));
+
+    if (pos.x >= position_.x && pos.x < position_.x + dimensions_.x &&
+        pos.y >= position_.y && pos.y < position_.y + dimensions_.y)
+    {
+        return this;
+    }
+    return nullptr;
+}
+
+void UIPanel::draw()
+{
+    if (!isVisible())
+        return;
+    
+    for (std::unique_ptr<UIElement>& ptr : elements_)
+        ptr->draw();
+}
+
+void UIPanel::onBoundsChange_()
+{
+    view_matrix_ = glm::scale(glm::translate(*view_, vec3(getPosition(), 0)), vec3(scale_, 1)); 
+    inv_view_matrix_ = glm::inverse(view_matrix_);
+
+    for (std::unique_ptr<UIElement>& ptr : elements_)
+    {
+        ptr->projection_ = projection_;
+        ptr->view_ = &view_matrix_;
+        ptr->inv_view_ = &inv_view_matrix_;
+        ptr->focused_element_ = focused_element_;
+        ptr->onBoundsChange_();
+    }
 }
 
 } // namespace pbj::scene

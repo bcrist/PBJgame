@@ -105,14 +105,14 @@ UILabel::Align UILabel::getAlign() const
     return align_;
 }
 
-void UILabel::draw(const mat4& view_projection)
+void UILabel::draw()
 {
-    if (isVisible())
+    if (isVisible() && view_ && projection_)
     {
         if (!text_transform_valid_)
             calculateTextTransform_();
 
-        tf_text_.draw(view_projection * text_transform_);
+        tf_text_.draw(text_transform_);
     }
 }
 
@@ -123,6 +123,9 @@ void UILabel::onBoundsChange_()
 
 void UILabel::calculateTextTransform_()
 {
+    if (!(projection_ && view_))
+        return;
+
     const gfx::TextureFont* font = tf_text_.getFont().get();
 
     vec2 extra_space(getDimensions());
@@ -143,7 +146,8 @@ void UILabel::calculateTextTransform_()
     translation.y += getDimensions().y - bottom_spacing;
     translation.x += left_spacing;
 
-    text_transform_ = glm::scale(glm::translate(mat4(), vec3(translation, 0)), vec3(text_scale_.x, -text_scale_.y, 1));
+    text_transform_ = glm::scale(glm::translate(*projection_ * *view_, vec3(translation, 0)), vec3(text_scale_.x, -text_scale_.y, 1));
+    text_transform_valid_ = true;
 }
 
 } // namespace pbj::scene
