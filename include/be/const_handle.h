@@ -75,6 +75,8 @@ public:
    const T* operator->() const;
    const T& operator*() const;
 
+   uint32_t getInternalIndex() const;
+
    bool operator==(const ConstHandle<T>& other) const;
    bool operator!=(const ConstHandle<T>& other) const;
 

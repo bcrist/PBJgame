@@ -43,7 +43,7 @@ namespace gfx {
 struct SamplerConfig
 {
     GLint uniform_location;
-    be::ConstHandle<Texture> texture;
+    GLuint texture_id;
 };
 
 struct UniformConfig
@@ -76,7 +76,24 @@ struct UniformConfig
     GLint location;
     UniformType type;
     GLsizei array_size;
-    void* data;
+    const void* data;
+};
+
+struct BatcherTask
+{
+    I32 order_index;
+    GLuint program_id;
+    GLuint vao_id;
+    GLsizei n_indices;
+    GLenum index_data_type;
+    const SamplerConfig* samplers;
+    size_t n_samplers;
+    const UniformConfig* uniforms;
+    size_t n_uniforms;
+    bool depth_tested;
+    bool scissor_tested;
+    ivec2 scissor_position;
+    ivec2 scissor_dimensions;
 };
 
 class Batcher
@@ -85,22 +102,13 @@ public:
     Batcher();
     ~Batcher();
 
-    void submit(I32 order_index,
-                const be::ConstHandle<ShaderProgram>& shader,
-                GLuint vao_id,
-                GLsizei n_indices,
-                GLsizei first_index,
-                GLenum index_data_type,
-                const SamplerConfig* samplers, size_t n_samplers,
-                const UniformConfig* uniforms, size_t n_uniforms,
-                bool depth_tested,
-                bool scissor_tested,
-                ivec2 scissor_pos,
-                ivec2 scissor_dim);
+    void submit(const BatcherTask& task);
 
     void draw();
 
 private:
+    std::vector<BatcherTask> tasks_;
+    std::vector<BatcherTask*> task_ptrs_;
 
     Batcher(const Batcher&);
     void operator=(const Batcher&);

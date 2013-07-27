@@ -147,6 +147,7 @@
     <ClCompile Include="..\..\src\editor_app_entry.cpp" />
     <ClCompile Include="..\..\src\pbj\audio\audio_buffer.cpp" />
     <ClCompile Include="..\..\src\pbj\engine.cpp" />
+    <ClCompile Include="..\..\src\pbj\gfx\batcher.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\built_ins.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\mesh.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\shader.cpp" />
