@@ -29,6 +29,7 @@
 
 #include "pbj/scene/ui_label.h"
 #include "pbj/gfx/mesh.h"
+#include "pbj/gfx/batcher.h"
 
 #include <functional>
 
@@ -115,29 +116,30 @@ public:
 
 private:
     virtual void onBoundsChange_();
-
     virtual void onFocusChange_();
 
-    const Id& getCurrentState_();
-    void setState_(const Id& state);
-    void calculateTransforms_();
-    UIButtonStateConfig* getStateConfig_(const Id& id);
-
     static const UIButtonStateConfig& getDefaultStateConfig_();
+    const Id& getCurrentState_();
+    void refreshConfig_();
+    UIButtonStateConfig* getStateConfig_(const Id& id);
 
     UILabel label_;
 
     const gfx::Mesh& btn_mesh_;
-    GLuint shader_program_id_;
-    GLint transform_uniform_location_;
-    GLint border_bounds_uniform_location_;
-    GLint border_color_uniform_location_;
-    GLint background_color_uniform_location_;
-    GLint outside_color_uniform_location_;
-    mat4 btn_transform_;
-    bool btn_transform_valid_;
 
     std::vector<UIButtonStateConfig> state_configs_;
+    const UIButtonStateConfig* current_config_;
+    mat4 btn_transform_;
+    vec2 border_bounds_[4];
+
+    static const size_t u_transform_ = 0;
+    static const size_t u_border_bounds_ = 1;
+    static const size_t u_border_color_ = 2;
+    static const size_t u_background_color_ = 3;
+    static const size_t u_outside_color_ = 4;
+
+    gfx::UniformConfig uniforms_[5];
+    gfx::BatcherTask btask_;
 
     Id normal_state_;
     Id hovered_state_;

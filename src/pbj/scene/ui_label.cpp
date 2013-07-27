@@ -112,7 +112,7 @@ void UILabel::draw()
         if (!text_transform_valid_)
             calculateTextTransform_();
 
-        tf_text_.draw(text_transform_);
+        tf_text_.draw(&text_transform_);
     }
 }
 

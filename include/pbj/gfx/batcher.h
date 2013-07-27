@@ -79,6 +79,12 @@ struct UniformConfig
     const void* data;
 };
 
+struct ScissorConfig
+{
+    ivec2 position;
+    ivec2 dimensions;
+};
+
 struct BatcherTask
 {
     I32 order_index;
@@ -91,9 +97,7 @@ struct BatcherTask
     const UniformConfig* uniforms;
     size_t n_uniforms;
     bool depth_tested;
-    bool scissor_tested;
-    ivec2 scissor_position;
-    ivec2 scissor_dimensions;
+    const ScissorConfig* scissor;
 };
 
 class Batcher
@@ -108,7 +112,7 @@ public:
 
 private:
     std::vector<BatcherTask> tasks_;
-    std::vector<BatcherTask*> task_ptrs_;
+    std::vector<U16> task_ids_;
 
     Batcher(const Batcher&);
     void operator=(const Batcher&);

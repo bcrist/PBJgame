@@ -54,8 +54,8 @@ UIButtonStateConfig::UIButtonStateConfig()
 }
 
 UIButton::UIButton()
-    : btn_transform_valid_(false),
-      btn_mesh_(getEngine().getBuiltIns().getMesh(Id("Mesh.std_quad"))),
+    : btn_mesh_(getEngine().getBuiltIns().getMesh(Id("Mesh.std_quad"))),
+      current_config_(nullptr),
       normal_state_("__normal__"),
       hovered_state_("__hovered__"),
       active_state_("__active__"),
@@ -71,14 +71,45 @@ UIButton::UIButton()
 
     const gfx::BuiltIns& builtins = getEngine().getBuiltIns();
 
-    shader_program_id_ = builtins.getProgram(Id("ShaderProgram.UIButton")).getGlId();
-    transform_uniform_location_ = glGetUniformLocation(shader_program_id_, "transform");
-    border_bounds_uniform_location_ = glGetUniformLocation(shader_program_id_, "border_bounds");
-    border_color_uniform_location_ = glGetUniformLocation(shader_program_id_, "border_color");
-    background_color_uniform_location_ = glGetUniformLocation(shader_program_id_, "background_color");
-    outside_color_uniform_location_ = glGetUniformLocation(shader_program_id_, "outside_color");
+    btask_.order_index = 1200;
+    btask_.program_id = builtins.getProgram(Id("ShaderProgram.UIButton")).getGlId();
 
-    setState_(getCurrentState_());
+    btask_.vao_id = btn_mesh_.getVaoId();
+    btask_.n_indices = btn_mesh_.getIndexCount();
+    btask_.index_data_type = btn_mesh_.getIndexType();
+
+    btask_.samplers = nullptr;
+    btask_.n_samplers = 0;
+    btask_.uniforms = uniforms_;
+    btask_.n_uniforms = 5;
+
+    uniforms_[u_transform_].location = glGetUniformLocation(btask_.program_id, "transform");
+    uniforms_[u_transform_].type = gfx::UniformConfig::UM4f;
+    uniforms_[u_transform_].array_size = 1;
+    uniforms_[u_transform_].data = glm::value_ptr(btn_transform_);
+
+    uniforms_[u_border_bounds_].location = glGetUniformLocation(btask_.program_id, "border_bounds");
+    uniforms_[u_border_bounds_].type = gfx::UniformConfig::U2f;
+    uniforms_[u_border_bounds_].array_size = 4;
+    uniforms_[u_border_bounds_].data = glm::value_ptr(border_bounds_[0]);
+
+    uniforms_[u_border_color_].location = glGetUniformLocation(btask_.program_id, "border_color");
+    uniforms_[u_border_color_].type = gfx::UniformConfig::U4f;
+    uniforms_[u_border_color_].array_size = 1;
+    //uniforms_[u_border_color_].data = glm::value_ptr();
+
+    uniforms_[u_background_color_].location = glGetUniformLocation(btask_.program_id, "background_color");
+    uniforms_[u_background_color_].type = gfx::UniformConfig::U4f;
+    uniforms_[u_background_color_].array_size = 1;
+    //uniforms_[u_background_color_].data = glm::value_ptr();
+
+    uniforms_[u_outside_color_].location = glGetUniformLocation(btask_.program_id, "outside_color");
+    uniforms_[u_outside_color_].type = gfx::UniformConfig::U4f;
+    uniforms_[u_outside_color_].array_size = 1;
+    //uniforms_[u_outside_color_].data = glm::value_ptr();3
+
+    btask_.depth_tested = false;
+    btask_.scissor = nullptr;
 }
 
 UIButton::~UIButton()
@@ -102,7 +133,8 @@ void UIButton::setStateConfig(const UIButtonStateConfig& config)
         if (cfg.button_state == config.button_state)
         {
             cfg = config;
-            setState_(getCurrentState_());
+            if (&cfg == current_config_)
+                current_config_ = nullptr;
             return;
         }
     }
@@ -119,6 +151,8 @@ const UIButtonStateConfig& UIButton::getStateConfig(const Id& state) const
 
     return getDefaultStateConfig_();
 }
+
+#pragma region getter/setter functions for normal/active/focused/hovered/etc.
 
 void UIButton::setNormalState(const Id& state)
 {
@@ -183,42 +217,16 @@ const Id& UIButton::getDisabledState() const
     return disabled_state_;
 }
 
+#pragma endregion
+
 void UIButton::draw()
 {
     if (isVisible() && projection_ && view_)
     {
-        if (!btn_transform_valid_)
-            calculateTransforms_();
+        refreshConfig_();
 
-        auto cfg = getStateConfig_(getCurrentState_());
-
-        if (cfg)
-        {
-            const vec2& dims(getDimensions());
-            vec2 inv_scale(1.0f / dims.x, 1.0f / dims.y);
-            vec2 border_bounds[4];
-
-            border_bounds[0] = inv_scale * vec2(cfg->margin_left + cfg->border_width_left, cfg->margin_top + cfg->border_width_top);
-            border_bounds[1] = vec2(1, 1) - inv_scale * vec2(cfg->margin_right + cfg->border_width_right, cfg->margin_bottom + cfg->border_width_bottom);
-
-            border_bounds[2] = inv_scale * vec2(cfg->margin_left - cfg->border_width_left, cfg->margin_top - cfg->border_width_top);
-            border_bounds[3] = vec2(1, 1) - inv_scale * vec2(cfg->margin_right - cfg->border_width_right, cfg->margin_bottom - cfg->border_width_bottom);
-
-            glUseProgram(shader_program_id_);   // set up shader program
-
-            glUniformMatrix4fv(transform_uniform_location_, 1, false, glm::value_ptr(btn_transform_));
-            glUniform2fv(border_bounds_uniform_location_, 4, glm::value_ptr(border_bounds[0]));
-            glUniform4fv(border_color_uniform_location_, 1, glm::value_ptr(cfg->border_color));
-            glUniform4fv(background_color_uniform_location_, 1, glm::value_ptr(cfg->background_color));
-            glUniform4fv(outside_color_uniform_location_, 1, glm::value_ptr(cfg->margin_color));
-
-            glBindVertexArray(btn_mesh_.getVaoId()); // bind VAO
-            glDrawElements(GL_TRIANGLES, btn_mesh_.getIndexCount(), btn_mesh_.getIndexType(), 0);
-            glBindVertexArray(0);       // unbind VAO
-            glUseProgram(0);            // unbind shader program
-
-            label_.draw();
-        }
+        getEngine().getBatcher().submit(btask_);
+        label_.draw();
     }
 }
 
@@ -245,12 +253,11 @@ bool UIButton::isHovered() const
 void UIButton::onMouseIn(const ivec2& position)
 {
     hovered_ = true;
-    setState_(getCurrentState_());}	
+}	
 	
 void UIButton::onMouseOut(const ivec2& position)
 {
     hovered_ = false;
-    setState_(getCurrentState_());
 }
 	
 void UIButton::onMouseDown(I32 button)
@@ -285,7 +292,6 @@ void UIButton::onKeyUp(I32 keycode, I32 modifiers)
         {
             onMouseClick(GLFW_MOUSE_BUTTON_1);
             kbd_active_ = false;
-            setState_(getCurrentState_());
         }
     }
 }
@@ -298,14 +304,13 @@ void UIButton::onKeyPressed(I32 keycode, I32 modifiers)
         if (keycode == GLFW_KEY_SPACE || keycode == GLFW_KEY_ENTER || keycode == GLFW_KEY_KP_ENTER)
         {
             kbd_active_ = true;
-            setState_(getCurrentState_());
         }
     }
 }
 	
 void UIButton::onBoundsChange_()
 {
-    btn_transform_valid_ = false;
+    current_config_ = nullptr;
     label_.projection_ = projection_;
     label_.view_ = view_;
     label_.inv_view_ = inv_view_;
@@ -317,8 +322,6 @@ void UIButton::onFocusChange_()
 {
     if (!isFocused())
         kbd_active_ = false;
-
-    setState_(getCurrentState_());
 }
 
 const Id& UIButton::getCurrentState_()
@@ -350,30 +353,41 @@ const Id& UIButton::getCurrentState_()
     }
 }
 
-void UIButton::setState_(const Id& state)
+void UIButton::refreshConfig_()
 {
-    auto cfg = getStateConfig(state);
+    const UIButtonStateConfig& cfg = getStateConfig(getCurrentState_());
 
-    label_.setFont(cfg.font);
-    label_.setTextScale(cfg.text_scale);
-    label_.setTextColor(cfg.text_color);
+    if (current_config_ != &cfg)
+    {
+        if (!(projection_ && view_))
+            return;
 
-    label_.setPosition(getPosition() + vec2(I32(cfg.margin_left + cfg.border_width_left), I32(cfg.margin_top + cfg.border_width_top)));
-    label_.setDimensions(getDimensions() - vec2(I32(cfg.margin_left + cfg.border_width_left + cfg.border_width_right + cfg.margin_right),
-                                                I32(cfg.margin_top + cfg.border_width_top + cfg.border_width_bottom + cfg.margin_bottom)));
-}
+        current_config_ = &cfg;
 
-void UIButton::calculateTransforms_()
-{
-    if (!(projection_ && view_))
-        return;
+        label_.setFont(cfg.font);
+        label_.setTextScale(cfg.text_scale);
+        label_.setTextColor(cfg.text_color);
 
-    vec3 scale(getDimensions(), 1);
-    vec3 translate(getPosition(), 0);
+        label_.setPosition(getPosition() + vec2(I32(cfg.margin_left + cfg.border_width_left), I32(cfg.margin_top + cfg.border_width_top)));
+        label_.setDimensions(getDimensions() - vec2(I32(cfg.margin_left + cfg.border_width_left + cfg.border_width_right + cfg.margin_right),
+                                                    I32(cfg.margin_top + cfg.border_width_top + cfg.border_width_bottom + cfg.margin_bottom)));
 
-    btn_transform_ = glm::scale(glm::translate(*projection_ * *view_, translate), scale);
-    setState_(getCurrentState_());
-    btn_transform_valid_ = true;
+        uniforms_[u_background_color_].data = glm::value_ptr(cfg.background_color);
+        uniforms_[u_border_color_].data = glm::value_ptr(cfg.border_color);
+        uniforms_[u_outside_color_].data = glm::value_ptr(cfg.margin_color);
+
+        vec3 scale(getDimensions(), 1);
+        vec3 translate(getPosition(), 0);
+        btn_transform_ = glm::scale(glm::translate(*projection_ * *view_, translate), scale);
+
+        vec2 inv_scale(1.0f / scale.x, 1.0f / scale.y);
+
+        border_bounds_[0] = inv_scale * vec2(cfg.margin_left + cfg.border_width_left, cfg.margin_top + cfg.border_width_top);
+        border_bounds_[1] = vec2(1, 1) - inv_scale * vec2(cfg.margin_right + cfg.border_width_right, cfg.margin_bottom + cfg.border_width_bottom);
+
+        border_bounds_[2] = inv_scale * vec2(cfg.margin_left - cfg.border_width_left, cfg.margin_top - cfg.border_width_top);
+        border_bounds_[3] = vec2(1, 1) - inv_scale * vec2(cfg.margin_right - cfg.border_width_right, cfg.margin_bottom - cfg.border_width_bottom);        
+    }
 }
 
 UIButtonStateConfig* UIButton::getStateConfig_(const Id& id)

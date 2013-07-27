@@ -29,6 +29,8 @@
 
 #include "pbj/gfx/texture_font.h"
 
+#include "pbj/gfx/batcher.h"
+
 namespace pbj {
 namespace gfx {
 
@@ -57,7 +59,7 @@ public:
     void prepare();
     bool isPrepared() const;
 
-    void draw(const mat4& transform);
+    void draw(const mat4* transform);
 
 private:
     vec4 color_;
@@ -69,17 +71,14 @@ private:
     be::ConstHandle<Texture> texture_;
     be::ConstHandle<TextureFont> font_;
 
-    GLuint vao_id_; ///< OpenGL Vertex array object id
+    SamplerConfig sampler_;
+    UniformConfig uniforms_[2];
+    BatcherTask btask_;
     GLuint ibo_id_; ///< OpenGL Vertex Index buffer object id
     GLuint vbo_id_; ///< OpenGL Vertex buffer object id
-    GLsizei ibo_size_; ///< Size of IBO
+
     bool buffers_valid_;
     F32 text_width_;
-
-    GLuint shader_program_id_;
-    GLint color_uniform_location_;
-    GLint texture_uniform_location_;
-    GLint transform_uniform_location_;
 
     TextureFontText(const TextureFontText&);
     void operator=(const TextureFontText&);

@@ -184,6 +184,8 @@ int main(int argc, char* argv[])
 
         ui.draw();
 
+        engine.getBatcher().draw();
+
         glfwSwapBuffers(wnd->getGlfwHandle());
 
         GLenum gl_error;

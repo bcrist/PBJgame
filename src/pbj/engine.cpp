@@ -118,6 +118,11 @@ Window* Engine::getWindow() const
     return window_.get();
 }
 
+gfx::Batcher& Engine::getBatcher()
+{
+    return batcher_;
+}
+
 const gfx::BuiltIns& Engine::getBuiltIns() const
 {
     return *built_ins_;

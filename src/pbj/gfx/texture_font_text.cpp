@@ -37,22 +37,40 @@ TextureFontText::TextureFontText()
       buffer_mode_(GL_STATIC_DRAW),
       buffers_valid_(false)
 {
-    glGenVertexArrays(1, &vao_id_);
-    glGenBuffers(1, &ibo_id_);
-    glGenBuffers(1, &vbo_id_);
-    
     Engine& engine = getEngine();
     const BuiltIns& built_ins = engine.getBuiltIns();
 
-    shader_program_id_ = built_ins.getProgram(Id("ShaderProgram.TextureFontText")).getGlId();
-    color_uniform_location_ = glGetUniformLocation(shader_program_id_, "color");
-    texture_uniform_location_ = glGetUniformLocation(shader_program_id_, "texsampler");
-    transform_uniform_location_ = glGetUniformLocation(shader_program_id_, "transform");
+    btask_.order_index = 1209;
+    btask_.program_id = built_ins.getProgram(Id("ShaderProgram.TextureFontText")).getGlId();
+    
+    glGenVertexArrays(1, &btask_.vao_id);
+    glGenBuffers(1, &ibo_id_);
+    glGenBuffers(1, &vbo_id_);
+
+    btask_.index_data_type = GL_UNSIGNED_SHORT;
+
+    btask_.samplers = &sampler_;
+    btask_.n_samplers = 1;
+    sampler_.uniform_location = glGetUniformLocation(btask_.program_id, "texsampler");
+
+    btask_.uniforms = uniforms_;
+    btask_.n_uniforms = 2;
+    uniforms_[0].location = glGetUniformLocation(btask_.program_id, "color");
+    uniforms_[0].type = UniformConfig::U4f;
+    uniforms_[0].array_size = 1;
+    uniforms_[0].data = glm::value_ptr(color_);
+
+    uniforms_[1].location = glGetUniformLocation(btask_.program_id, "transform");
+    uniforms_[1].type = UniformConfig::UM4f;
+    uniforms_[1].array_size = 1;
+
+    btask_.depth_tested = false;
+    btask_.scissor = nullptr;    
 }
 
 TextureFontText::~TextureFontText()
 {
-    glDeleteVertexArrays(1, &vao_id_);
+    glDeleteVertexArrays(1, &btask_.vao_id);
     glDeleteBuffers(1, &ibo_id_);
     glDeleteBuffers(1, &vbo_id_);
 }
@@ -189,12 +207,12 @@ void TextureFontText::prepare()
 
     text_width_ = cursor.x;
 
-    ibo_size_ = vert_indices.size();
+    btask_.n_indices = vert_indices.size();
 
-    glBindVertexArray(vao_id_); // bind VAO
+    glBindVertexArray(btask_.vao_id); // bind VAO
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_id_); // set VAO's bound IBO
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, ibo_size_ * sizeof(U16), vert_indices.data(), buffer_mode_);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, btask_.n_indices * sizeof(U16), vert_indices.data(), buffer_mode_);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo_id_);  // bind VBO
     glBufferData(GL_ARRAY_BUFFER, verts.size() * sizeof(vec2), verts.data(), buffer_mode_);
@@ -206,6 +224,8 @@ void TextureFontText::prepare()
     glEnableVertexAttribArray(1); // texture coords at shader index 1
 
     glBindVertexArray(0);   // unbind VAO
+
+    buffers_valid_ = true;
 }
 
 bool TextureFontText::isPrepared() const
@@ -213,11 +233,18 @@ bool TextureFontText::isPrepared() const
     return buffers_valid_;
 }
 
-void TextureFontText::draw(const mat4& transform)
+void TextureFontText::draw(const mat4* transform)
 {
     if (!isPrepared())
         prepare();
 
+    const Texture* tex = texture_.get();
+    sampler_.texture_id = tex ? tex->getGlId() : 0;
+
+    uniforms_[1].data = &transform;
+
+    getEngine().getBatcher().submit(btask_);
+    /*
     glUseProgram(shader_program_id_); // bind program
     glUniform1i(texture_uniform_location_, 0);
     glActiveTexture(GL_TEXTURE0);
@@ -236,6 +263,7 @@ void TextureFontText::draw(const mat4& transform)
     glBindVertexArray(0); // unbind VAO
 
     glUseProgram(0); // unbind program
+    */
 }
     
 } // namespace pbj::gfx
