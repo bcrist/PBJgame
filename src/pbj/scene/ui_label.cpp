@@ -28,6 +28,8 @@
 
 #include "pbj/_math.h"
 
+#include <iostream>
+
 namespace pbj {
 namespace scene {
 
@@ -142,11 +144,11 @@ void UILabel::calculateTextTransform_()
     if (align_ == AlignRight)
         left_spacing *= 2;
 
-    vec2 translation(getPosition());
+    vec3 translation(getPosition(), 0);
     translation.y += getDimensions().y - bottom_spacing;
     translation.x += left_spacing;
 
-    text_transform_ = glm::scale(glm::translate(*projection_ * *view_, vec3(translation, 0)), vec3(text_scale_.x, -text_scale_.y, 1));
+    text_transform_ = glm::scale(glm::translate(*projection_ * *view_, translation), vec3(text_scale_.x, -text_scale_.y, 1));
     text_transform_valid_ = true;
 }
 

@@ -29,6 +29,7 @@
 #include "pbj/input_controller.h"
 
 #include <cassert>
+#include <iostream>
 
 namespace pbj {
 namespace scene {
@@ -117,6 +118,8 @@ void UIRoot::onMouseMove(const ivec2& position)
 {
     mouse_position_ = position;
     UIElement* under_mouse = panel.getElementAt(position);
+
+    //PBJ_LOG(VInfo) << "Under Mouse: " << std::hex << under_mouse << std::dec << PBJ_LOG_END;
 
     if (under_mouse != under_mouse_)
     {

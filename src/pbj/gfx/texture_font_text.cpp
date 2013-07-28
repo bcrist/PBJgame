@@ -29,6 +29,8 @@
 #include "pbj/engine.h"
 #include "pbj/gfx/shader_program.h"
 
+#include <iostream>
+
 namespace pbj {
 namespace gfx {
 
@@ -142,14 +144,16 @@ void TextureFontText::prepare()
     const Texture* tex = texture_.get();
     if (!tex)
     {
-        // TODO: log warning
+        // TODO: better warning
+        PBJ_LOG(VWarning) << "Could not prepare TextureFont text for drawing: invalid texture!" << PBJ_LOG_END;
         font_data_valid = false;
     }
 
     const TextureFont* font = font_.get();
     if (!font)
     {
-        // TODO: log warning
+        // TODO: better warning
+        PBJ_LOG(VWarning) << "Could not prepare TextureFont text for drawing: invalid font!" << PBJ_LOG_END;
         font_data_valid = false;
     }
 
@@ -241,7 +245,7 @@ void TextureFontText::draw(const mat4* transform)
     const Texture* tex = texture_.get();
     sampler_.texture_id = tex ? tex->getGlId() : 0;
 
-    uniforms_[1].data = &transform;
+    uniforms_[1].data = transform;
 
     getEngine().getBatcher().submit(btask_);
     /*

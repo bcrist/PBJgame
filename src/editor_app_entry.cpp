@@ -129,12 +129,21 @@ int main(int argc, char* argv[])
     pbj::scene::UIButton* btn = new pbj::scene::UIButton();
     ui.panel.addElement(std::unique_ptr<pbj::scene::UIElement>(btn));
     
+        pbj::scene::UIButton* btn2 = new pbj::scene::UIButton();
+    ui.panel.addElement(std::unique_ptr<pbj::scene::UIElement>(btn2));
+
     pbj::scene::UILabel* label = new pbj::scene::UILabel();
     ui.panel.addElement(std::unique_ptr<pbj::scene::UIElement>(label));
+
+
 
     btn->setPosition(pbj::vec2(100, 100));
     btn->setDimensions(pbj::vec2(200, 50));
     btn->setText("Hello World");
+
+    btn2->setPosition(pbj::vec2(100, 160));
+    btn2->setDimensions(pbj::vec2(200, 50));
+    btn2->setText("Click Here!");
 
     pbj::scene::UIButtonStateConfig config;
     config.button_state = pbj::Id("__normal__");
@@ -142,15 +151,32 @@ int main(int argc, char* argv[])
     config.border_color = pbj::color4(1,0,1,1);
     config.click_callback = []() { PBJ_LOG(pbj::VInfo) << "Button Pressed!" << PBJ_LOG_END; };
     config.font = font;
-    config.text_color = pbj::color4(1,1,1,1);
-    config.border_width_bottom = 5;
+    config.text_color = pbj::color4(1,1,0,1);
+    config.text_scale = pbj::vec2(2.0f, 2.0f);
+    config.border_width_left = 0.5f;
+    config.border_width_right = 0.5f;
+    config.border_width_top = 0.5f;
+    config.border_width_bottom = 0.5f;
+    config.margin_left = 0.5f;
+    config.margin_right = 1.5f;
+    config.margin_top = 0.5f;
+    config.margin_bottom = 2.5f;
     btn->setStateConfig(config);
+    btn2->setStateConfig(config);
 
     config.button_state = pbj::Id("__hovered__");
-    config.border_width_left = 1;
-    config.border_width_top = 5;
-    config.border_width_right = 1;
+    config.border_color = pbj::color4(1,1,1,1);
     btn->setStateConfig(config);
+    btn2->setStateConfig(config);
+
+    config.button_state = pbj::Id("__active__");
+    config.background_color = pbj::color4(1, 0, 0, 0.4f);
+    config.margin_left = 1.5f;
+    config.margin_right = 0.5f;
+    config.margin_top = 2.5f;
+    config.margin_bottom = 0.5f;
+    btn->setStateConfig(config);
+    btn2->setStateConfig(config);
     
 
     label->setDimensions(pbj::vec2(640, 480));

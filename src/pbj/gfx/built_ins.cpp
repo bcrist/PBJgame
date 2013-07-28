@@ -270,6 +270,7 @@ BuiltIns::BuiltIns()
             "void main()\n"
             "{\n"
             "   out_fragcolor = vec4(color.rgb, color.a * texture(texsampler, texcoord).r);\n"
+            //"   out_fragcolor = color;\n"
             "}\n");
         shaders_.insert(std::make_pair(shader->getId().resource, std::unique_ptr<Shader>(shader)));
     }
