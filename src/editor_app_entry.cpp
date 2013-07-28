@@ -49,14 +49,7 @@
 #else
 
 #include "pbj/engine.h"
-
-#include "pbj/input_controller.h"
-#include "pbj/gfx/built_ins.h"
-#include "pbj/gfx/texture_font_text.h"
-#include "pbj/gfx/shader_program.h"
-#include "pbj/scene/ui_label.h"
-#include "pbj/scene/ui_button.h"
-#include "pbj/scene/ui_root.h"
+#include "pbj/editor.h"
 
 #include <iostream>
 #include <fstream>
@@ -78,7 +71,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, INT)
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief  Application entry point
+///
 /// \details Parses any command line arguments, then initializes game engine.
+///
+/// \param  argc The number of command line arguments.
+/// \param  argv The command line arguments.
+/// \return A status code indicating to the OS that the program was successful.
 int main(int argc, char* argv[])
 {
 #ifdef BE_CRT_BUILD
@@ -119,111 +117,8 @@ int main(int argc, char* argv[])
 
     // Initialize game engine
     pbj::Engine engine;
-   
-    be::ConstHandle<pbj::gfx::TextureFont> font = engine.getBuiltIns().getTextureFont(pbj::Id("TextureFont.default")).getHandle();
-
-    pbj::InputController::init(engine.getWindow()->getGlfwHandle());
-
-    pbj::scene::UIRoot ui;
-
-    pbj::scene::UIButton* btn = new pbj::scene::UIButton();
-    ui.panel.addElement(std::unique_ptr<pbj::scene::UIElement>(btn));
-    
-        pbj::scene::UIButton* btn2 = new pbj::scene::UIButton();
-    ui.panel.addElement(std::unique_ptr<pbj::scene::UIElement>(btn2));
-
-    pbj::scene::UILabel* label = new pbj::scene::UILabel();
-    ui.panel.addElement(std::unique_ptr<pbj::scene::UIElement>(label));
-
-
-
-    btn->setPosition(pbj::vec2(100, 100));
-    btn->setDimensions(pbj::vec2(200, 50));
-    btn->setText("Hello World");
-
-    btn2->setPosition(pbj::vec2(100, 160));
-    btn2->setDimensions(pbj::vec2(200, 50));
-    btn2->setText("Click Here!");
-
-    pbj::scene::UIButtonStateConfig config;
-    config.button_state = pbj::Id("__normal__");
-    config.background_color = pbj::color4(1, 0,1, 0.33f);
-    config.border_color = pbj::color4(1,0,1,1);
-    config.click_callback = []() { PBJ_LOG(pbj::VInfo) << "Button Pressed!" << PBJ_LOG_END; };
-    config.font = font;
-    config.text_color = pbj::color4(1,1,0,1);
-    config.text_scale = pbj::vec2(2.0f, 2.0f);
-    config.border_width_left = 0.5f;
-    config.border_width_right = 0.5f;
-    config.border_width_top = 0.5f;
-    config.border_width_bottom = 0.5f;
-    config.margin_left = 0.5f;
-    config.margin_right = 1.5f;
-    config.margin_top = 0.5f;
-    config.margin_bottom = 2.5f;
-    btn->setStateConfig(config);
-    btn2->setStateConfig(config);
-
-    config.button_state = pbj::Id("__hovered__");
-    config.border_color = pbj::color4(1,1,1,1);
-    btn->setStateConfig(config);
-    btn2->setStateConfig(config);
-
-    config.button_state = pbj::Id("__active__");
-    config.background_color = pbj::color4(1, 0, 0, 0.4f);
-    config.margin_left = 1.5f;
-    config.margin_right = 0.5f;
-    config.margin_top = 2.5f;
-    config.margin_bottom = 0.5f;
-    btn->setStateConfig(config);
-    btn2->setStateConfig(config);
-    
-
-    label->setDimensions(pbj::vec2(640, 480));
-    label->setAlign(pbj::scene::UILabel::AlignRight);
-    label->setTextScale(pbj::vec2(5.0f, 5.0f));
-    label->setTextColor(pbj::color4(0, 0.6f, 1.0f, 1.0f));
-    label->setFont(font);
-    label->setText("Frame");
-
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_BLEND);
-   
-    double current_time;
-    double last_time = current_time = glfwGetTime();
-
-    while (true)
-    {
-        glfwPollEvents();
-
-        pbj::Window* wnd = engine.getWindow();
-
-        if (!wnd || wnd->isClosePending())
-            break;
-
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        last_time = current_time;
-        current_time = glfwGetTime();
-
-        label->setText(std::to_string(1000.0 * (current_time - last_time)) + " ms");
-
-        ui.draw();
-
-        engine.getBatcher().draw();
-
-        glfwSwapBuffers(wnd->getGlfwHandle());
-
-        GLenum gl_error;
-        while ((gl_error = glGetError()) != GL_NO_ERROR)
-        {
-            PBJ_LOG(pbj::VWarning) << "OpenGL error while rendering frame!" << PBJ_LOG_NL
-                                   << "Error Code: " << gl_error << PBJ_LOG_NL
-                                   << "     Error: " << pbj::getGlErrorString(gl_error) << PBJ_LOG_END;
-        }
-    }
-
-    pbj::InputController::destroy();
-};
+    pbj::Editor editor;
+    editor.run();
+}
 
 #endif

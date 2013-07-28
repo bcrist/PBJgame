@@ -702,7 +702,7 @@ Window::Window(const WindowSettings& window_settings)
     if (vsync < 0)
     {
         if (!(glfwExtensionSupported("WGL_EXT_swap_control_tear") ||
-                glfwExtensionSupported("GLX_EXT_swap_control_tear")))
+              glfwExtensionSupported("GLX_EXT_swap_control_tear")))
         {
             vsync = abs(vsync);
         }

@@ -46,6 +46,8 @@ class Engine;
 ///
 /// \brief  Represents a window or fullscreen exclusive mode which can be used
 ///         to display OpenGL graphics.
+///
+/// \todo   Add support for creating maximized windows (non-fullscreen)
 class Window
 {
    friend class Engine;

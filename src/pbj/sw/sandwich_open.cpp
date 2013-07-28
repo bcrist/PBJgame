@@ -122,6 +122,16 @@ void readDirectory(const std::string& path)
     }
 }
 
+std::vector<Id> getSandwichIds()
+{
+    std::vector<Id> ids;
+
+    for (auto& swi : sandwiches)
+        ids.push_back(swi.first);
+
+    return std::move(ids);
+}
+
 std::shared_ptr<Sandwich> open(const Id& id)
 {
     SandwichInfo* swi = getSWI(id);

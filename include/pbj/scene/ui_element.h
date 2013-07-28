@@ -54,6 +54,7 @@ public:
 
     void setFocused();
     bool isFocused() const;
+    virtual bool isFocusable() const;
 
     void setPosition(const vec2& position);
     const vec2& getPosition() const;
@@ -64,8 +65,9 @@ public:
 
     virtual UIElement* getElementAt(const ivec2& screen_position);
 
-    void setNextFocusableElement(UIElement* element);
+    void setNextFocusElement(UIElement* element);
     UIElement* getNextFocusableElement();
+    UIElement* getPreviousFocusableElement();
 
     virtual void onMouseIn(const ivec2& screen_position);
     virtual void onMouseMove(const ivec2& screen_position);

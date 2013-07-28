@@ -146,6 +146,7 @@
     <ClCompile Include="..\..\src\be\verbosity.cpp" />
     <ClCompile Include="..\..\src\editor_app_entry.cpp" />
     <ClCompile Include="..\..\src\pbj\audio\audio_buffer.cpp" />
+    <ClCompile Include="..\..\src\pbj\editor.cpp" />
     <ClCompile Include="..\..\src\pbj\engine.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\batcher.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\built_ins.cpp" />
@@ -157,6 +158,7 @@
     <ClCompile Include="..\..\src\pbj\gfx\texture_font_character.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\texture_font_text.cpp" />
     <ClCompile Include="..\..\src\pbj\input_controller.cpp" />
+    <ClCompile Include="..\..\src\pbj\scene\scene.cpp" />
     <ClCompile Include="..\..\src\pbj\scene\ui_button.cpp" />
     <ClCompile Include="..\..\src\pbj\scene\ui_element.cpp" />
     <ClCompile Include="..\..\src\pbj\scene\ui_image.cpp" />
@@ -188,6 +190,7 @@
     <ClInclude Include="..\..\include\be\util\nconvert.h" />
     <ClInclude Include="..\..\include\be\_be.h" />
     <ClInclude Include="..\..\include\pbj\audio\audio_buffer.h" />
+    <ClInclude Include="..\..\include\pbj\editor.h" />
     <ClInclude Include="..\..\include\pbj\engine.h" />
     <ClInclude Include="..\..\include\pbj\gfx\batcher.h" />
     <ClInclude Include="..\..\include\pbj\gfx\built_ins.h" />

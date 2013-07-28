@@ -68,6 +68,7 @@
       "history_index INTEGER NOT NULL, " \
       "window_mode INTEGER NOT NULL, " \
       "system_positioned INTEGER NOT NULL, " \
+      "maximized INTEGER NOT NULL, " \
       "save_pos_on_close INTEGER NOT NULL, " \
       "position_x INTEGER NOT NULL, " \
       "position_y INTEGER NOT NULL, " \

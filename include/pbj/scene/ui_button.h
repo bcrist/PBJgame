@@ -106,13 +106,15 @@ public:
     bool isActive() const;
     bool isHovered() const;
 
-    void onMouseIn(const ivec2& position);
-    void onMouseOut(const ivec2& position);
-    void onMouseDown(I32 button);
-    void onMouseUp(I32 button);
-    void onMouseClick(I32 button);
-    void onKeyUp(I32 keycode, I32 modifiers);
-    void onKeyPressed(I32 keycode, I32 modifiers);
+    virtual bool isFocusable() const;
+
+    virtual void onMouseIn(const ivec2& position);
+    virtual void onMouseOut(const ivec2& position);
+    virtual void onMouseDown(I32 button);
+    virtual void onMouseUp(I32 button);
+    virtual void onMouseClick(I32 button);
+    virtual void onKeyUp(I32 keycode, I32 modifiers);
+    virtual void onKeyPressed(I32 keycode, I32 modifiers);
 
 private:
     virtual void onBoundsChange_();

@@ -36,63 +36,54 @@ namespace scene {
 
 UIRoot::UIRoot()
     : under_mouse_(nullptr),
-      focused_element_(nullptr),
+      focused_element_(&panel),
       button1_down_over_(nullptr),
       button2_down_over_(nullptr),
-      button3_down_over_(nullptr)
+      button3_down_over_(nullptr),
+      input_handlers_active_(true)
 {
     handle_.associate(this);
-    be::Handle<UIRoot> handle = handle_;
 
-    InputController::registerMouseMotionListener(
-        [=](F64 x, F64 y)
+    mouse_motion_listener_id_ = InputController::registerMouseMotionListener(
+        [&](F64 x, F64 y)
         {
-            UIRoot* root = handle.get();
-            if (root)
-                root->onMouseMove(ivec2(x, y));
+            if (input_handlers_active_)
+                onMouseMove(ivec2(x, y));
         }
     );
 
-    InputController::registerMouseButtonAnyListener(
-        [=](I32 button, I32 action, I32 mods)
+    mouse_button_any_listener_id_ = InputController::registerMouseButtonAnyListener(
+        [&](I32 button, I32 action, I32 mods)
         {
-            UIRoot* root = handle.get();
-            if (root)
-                root->onMouseButton(button, action == GLFW_PRESS);
+            if (input_handlers_active_)
+                onMouseButton(button, action == GLFW_PRESS);
         }
     );
 
-    InputController::registerKeyAllListener(
-        [=](I32 keycode, I32 scancode, I32 action, I32 modifiers)
+    key_all_listener_id_ = InputController::registerKeyAllListener(
+        [&](I32 keycode, I32 scancode, I32 action, I32 modifiers)
         {
-            UIRoot* root = handle.get();
-            if (root)
-                root->onKey(keycode, action, modifiers);
+            if (input_handlers_active_)
+                onKey(keycode, action, modifiers);
         }
     );
 
-    InputController::registerCharInputListener(
-        [=](U32 codepoint)
+    char_input_listener_id_ = InputController::registerCharInputListener(
+        [&](U32 codepoint)
         {
-            UIRoot* root = handle.get();
-            if (root)
-                root->onCharacter(codepoint);
+            if (input_handlers_active_)
+                onCharacter(codepoint);
         }
     );
 
     Window* window = getEngine().getWindow();
-
     assert(window);
 
-    window->registerContextResizeListener(
-        [=](I32 width, I32 height)
+    context_resize_listener_id_ = window->registerContextResizeListener(
+        [&](I32 width, I32 height)
         {
-            UIRoot* root = handle.get();
-            if (root)
-            {
-                root->projection_matrix_ = glm::ortho(0.0f, F32(width), F32(height), 0.0f);
-                root->panel.onBoundsChange_();
-            }
+            projection_matrix_ = glm::ortho(0.0f, F32(width), F32(height), 0.0f);
+            panel.onBoundsChange_();
         }
     );
 
@@ -107,6 +98,11 @@ UIRoot::UIRoot()
 
 UIRoot::~UIRoot()
 {
+    InputController::cancelMouseMotionListener(mouse_motion_listener_id_);
+    InputController::cancelMouseButtonAnyListener(mouse_button_any_listener_id_);
+    InputController::cancelKeyAllListener(key_all_listener_id_);
+    InputController::cancelCharInputListener(char_input_listener_id_);
+    getEngine().getWindow()->cancelContextResizeListener(context_resize_listener_id_);
 }
 
 void UIRoot::draw()
@@ -114,12 +110,35 @@ void UIRoot::draw()
     panel.draw();
 }
 
+void UIRoot::clearFocus()
+{
+    panel.setFocused();
+}
+
+UIElement* UIRoot::getFocus()
+{
+    return focused_element_;
+}
+
+UIElement* UIRoot::getElementUnderMouse()
+{
+    return under_mouse_;
+}
+
+void UIRoot::setInputEnabled(bool enabled)
+{
+    input_handlers_active_ = enabled;
+}
+
+bool UIRoot::isInputEnabled() const
+{
+    return input_handlers_active_;
+}
+
 void UIRoot::onMouseMove(const ivec2& position)
 {
     mouse_position_ = position;
     UIElement* under_mouse = panel.getElementAt(position);
-
-    //PBJ_LOG(VInfo) << "Under Mouse: " << std::hex << under_mouse << std::dec << PBJ_LOG_END;
 
     if (under_mouse != under_mouse_)
     {
@@ -170,21 +189,27 @@ void UIRoot::onMouseButton(I32 button, bool down)
         if (down)
         {
             *down_over = under_mouse;
+
+            if (!under_mouse)
+                clearFocus();
         }
         else
         {
             // mouse up event for one of first 3 buttons
 
-            if (*down_over && *down_over != under_mouse)
-                (*down_over)->onMouseUp(button);
-            else
+            if (*down_over)
             {
-                under_mouse->onMouseClick(button);
+                if (*down_over != under_mouse)
+                    (*down_over)->onMouseUp(button);
+                else
+                {
+                    under_mouse->onMouseClick(button);
 
-                // TODO: dispatch double click event if 2 mouse clicks happen (same button) within ~350 ms.
+                    // TODO: dispatch double click event if 2 mouse clicks happen (same button) within ~350 ms.
+                }
+
+                *down_over = nullptr;
             }
-
-            *down_over = nullptr;
         }
     }
 }

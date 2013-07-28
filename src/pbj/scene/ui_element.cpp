@@ -28,6 +28,8 @@
 
 #include "pbj/_gl.h"
 
+#include <vector>
+
 namespace pbj {
 namespace scene {
 
@@ -105,18 +107,11 @@ void UIElement::setFocused()
 {
     if (focused_element_ && *focused_element_ != this)
     {
-        if (isVisible())
-        {
-            UIElement* old_focus = *focused_element_;
-            *focused_element_ = this;
-            if (old_focus)
-                old_focus->onFocusChange_();
-            onFocusChange_();
-        }
-        else if (next_focus_)
-        {
-            next_focus_->setFocused();
-        }
+        UIElement* old_focus = *focused_element_;
+        *focused_element_ = this;
+        if (old_focus)
+            old_focus->onFocusChange_();
+        onFocusChange_();
     }
 }
 
@@ -127,6 +122,18 @@ void UIElement::setFocused()
 bool UIElement::isFocused() const
 {
     return focused_element_ && *focused_element_ == this;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Determines whether this element can be focused at this time.
+///
+/// \details Elements which are not visible, or are disabled in some way
+///         probably should not be focusable.
+///
+/// \return true if the element can receive keyboard focus now.
+bool UIElement::isFocusable() const
+{
+    return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -196,18 +203,64 @@ UIElement* UIElement::getElementAt(const ivec2& screen_position)
 /// \brief  Sets the next element in the focus chain.
 ///
 /// \param  element The next element.
-void UIElement::setNextFocusableElement(UIElement* element)
+void UIElement::setNextFocusElement(UIElement* element)
 {
     next_focus_ = element;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief  Retrieves the next element in the focus chain.
+/// \brief  Retrieves the next focusable element in the focus chain.
 ///
 /// \return The next element in the focus chain.
 UIElement* UIElement::getNextFocusableElement()
 {
-    return next_focus_;
+    std::vector<UIElement*> visited;
+    visited.push_back(this);
+    UIElement* cur = next_focus_;
+
+    while (cur && !cur->isFocusable() &&
+           std::find(visited.begin(),
+                     visited.end(),
+                     cur) == visited.end())
+    {
+        visited.push_back(cur);
+        cur = cur->next_focus_;
+    }
+
+    if (cur && cur->isFocusable())
+        return cur;
+
+    return nullptr;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Retrieves the previous focusable element in the focus chain.
+///
+/// \details Since the focus chain is singly-linked, it must be circular to
+///         find the previous element.
+///
+/// \return The previous element in the focus chain.
+UIElement* UIElement::getPreviousFocusableElement()
+{
+    std::vector<UIElement*> visited;
+    UIElement* cur = this;
+    UIElement* prev_focus = cur->isFocusable() ? cur : nullptr;;
+
+    while (cur->next_focus_ && (
+           std::find(visited.begin(),
+                     visited.end(),
+                     cur->next_focus_) == visited.end()))
+    {
+        visited.push_back(cur);
+        cur = cur->next_focus_;
+        if (cur->isFocusable())
+            prev_focus = cur;
+    }
+
+    if (cur->next_focus_ == this)
+        return prev_focus;
+
+    return nullptr;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -256,6 +309,8 @@ void UIElement::onMouseOut(const ivec2& screen_position)
 ///         pressed.
 void UIElement::onMouseDown(I32 button)
 {
+    if (next_focus_)
+        setFocused();
 }
 	
 ///////////////////////////////////////////////////////////////////////////////
@@ -282,8 +337,6 @@ void UIElement::onMouseUp(I32 button)
 ///         clicked.
 void UIElement::onMouseClick(I32 button)
 {
-    if (next_focus_)
-        setFocused();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -337,17 +390,15 @@ void UIElement::onKeyPressed(I32 keycode, I32 modifiers)
     {
         if (modifiers & GLFW_MOD_SHIFT)
         {
-            // if the focus chain is circular, switch the focus to the element before this one.
-            UIElement* prev = next_focus_;
-            while (prev->next_focus_ && prev->next_focus_ != this)
-                prev = prev->next_focus_;
-
-            if (prev->next_focus_ == this)
+            UIElement* prev = getPreviousFocusableElement();
+            if (prev)
                 prev->setFocused();
         }
         else
         {
-            next_focus_->setFocused();
+            UIElement* next = getNextFocusableElement();
+            if (next)
+                next->setFocused();
         }
     }
 }

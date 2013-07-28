@@ -73,13 +73,13 @@ UIElement* UIPanel::getElementAt(const ivec2& screen_position)
             return element;
     }
 
-    vec2 pos = vec2(*inv_view_ * vec4(screen_position, 0, 1));
+    /*vec2 pos = vec2(*inv_view_ * vec4(screen_position, 0, 1));
 
     if (pos.x >= position_.x && pos.x < position_.x + dimensions_.x &&
         pos.y >= position_.y && pos.y < position_.y + dimensions_.y)
     {
         return this;
-    }
+    }*/
     return nullptr;
 }
 

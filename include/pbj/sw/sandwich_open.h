@@ -36,6 +36,8 @@ namespace sw {
 
 void readDirectory(const std::string& path);
 
+std::vector<Id> getSandwichIds();
+
 std::shared_ptr<Sandwich> open(const Id& id);
 std::shared_ptr<Sandwich> openWritable(const Id& id);
 

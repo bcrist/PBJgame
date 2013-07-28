@@ -30,7 +30,7 @@
 /// \brief  SQL statement to get the Id of a DbFile.
 /// \details The Id is stored in the 'id' property of the
 ///         'pbj_sandwich_properties' table.
-#define PBJ_SW_SANDWICH_SQL_GET_ID "SELECT value FROM pbj_sandwich_properties WHERE property = 'id' LIMIT 1"
+#define PBJ_SW_SANDWICH_SQL_GET_ID "SELECT value FROM sw_sandwich_properties WHERE property = 'id' LIMIT 1"
 
 #ifdef BE_ID_NAMES_ENABLED
 #define PBJ_SW_SANDWICH_SQLID_GET_ID     PBJ_SW_SANDWICH_SQL_GET_ID

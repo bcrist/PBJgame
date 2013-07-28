@@ -48,26 +48,39 @@ public:
 
     void draw();
 
+    void clearFocus();
+
+    UIElement* getFocus();
+    UIElement* getElementUnderMouse();
+
+    void setInputEnabled(bool enabled);
+    bool isInputEnabled() const;
+
 private:
     void onMouseMove(const ivec2& position);
     void onMouseButton(I32 button, bool down);
     void onKey(I32 keycode, I32 action, I32 modifiers);
     void onCharacter(I32 codepoint);
 
+    be::SourceHandle<UIRoot> handle_;
+
     ivec2 mouse_position_;
-
     UIElement* under_mouse_;
-
     UIElement* focused_element_;
-
     UIElement* button1_down_over_;
     UIElement* button2_down_over_;
     UIElement* button3_down_over_;
 
-    be::SourceHandle<UIRoot> handle_;
-
     mat4 projection_matrix_;
     mat4 view_matrix_;
+
+    U32 mouse_motion_listener_id_;
+    U32 mouse_button_any_listener_id_;
+    U32 key_all_listener_id_;
+    U32 char_input_listener_id_;
+    U32 context_resize_listener_id_;
+
+    bool input_handlers_active_;
 
     UIRoot(const UIRoot&);
     void operator=(const UIRoot&);

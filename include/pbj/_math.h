@@ -43,7 +43,7 @@ typedef glm::ivec3 ivec3;  ///< 3-component integer-valued vector type.
 typedef glm::vec2 vec2;    ///< 2-component float-valued vector type.
 typedef glm::vec3 vec3;    ///< 3-component float-valued vector type.
 typedef glm::vec4 vec4;    ///< 4-component float-valued vector type.
-typedef glm::vec4 color3;  ///< 3-component float-valued vector type.  Used to represent an RGB color.
+typedef glm::vec3 color3;  ///< 3-component float-valued vector type.  Used to represent an RGB color.
 typedef glm::vec4 color4;  ///< 4-component float-valued vector type.  Used to represent an RGBA color.
 
 typedef glm::quat quat;    ///< Quaternion type.  Used to represent an arbitrary 3D rotation.

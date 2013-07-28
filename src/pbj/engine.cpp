@@ -27,8 +27,8 @@
 #include "pbj/engine.h"
 #include "pbj/_gl.h"
 #include "pbj/sw/sandwich_open.h"
+#include "pbj/input_controller.h"
 
-#include <thread>
 #include <cassert>
 #include <iostream>
 
@@ -85,12 +85,8 @@ Engine::Engine()
 
     WindowSettings window_settings;
 
-    window_settings.msaa_level = 4;
-
     if (config_sandwich)
         window_settings = loadWindowSettings(*config_sandwich, window_settings_id);
-
-    
 
     Window* wnd = new Window(window_settings);
     window_.reset(wnd);
@@ -99,7 +95,16 @@ Engine::Engine()
 
     wnd->setTitle(window_title);
     
+    wnd->registerContextResizeListener(
+        [](I32 width, I32 height)
+        {
+            glViewport(0, 0, width, height);
+        }
+    );
+
     PBJ_LOG(VInfo) << glGetString(GL_VERSION) << PBJ_LOG_END;
+
+    InputController::init(wnd->getGlfwHandle());
 
     wnd->show();
 }
@@ -108,21 +113,35 @@ Engine::Engine()
 /// \brief  Destructor.
 Engine::~Engine()
 {
+    pbj::InputController::destroy();
+
     window_.reset();
     built_ins_.reset();
     glfwTerminate();
 }
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Retrieves the engine's window object.
+///
+/// \return The Window object.
 Window* Engine::getWindow() const
 {
     return window_.get();
 }
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Retrieves the engine's graphics Batcher object.
+///
+/// \return The gfx::Batcher object.
 gfx::Batcher& Engine::getBatcher()
 {
     return batcher_;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Retrieves the engine's graphics BuiltIns object.
+///
+/// \return The gfx::BuiltIns object.
 const gfx::BuiltIns& Engine::getBuiltIns() const
 {
     return *built_ins_;

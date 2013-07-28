@@ -65,6 +65,7 @@ UIButton::UIButton()
       focused_active_state_("__active__"),
       disabled_(false),
       active_(false),
+      kbd_active_(false),
       hovered_(false)
 {
     label_.setAlign(UILabel::AlignCenter);
@@ -250,6 +251,11 @@ bool UIButton::isHovered() const
     return hovered_;
 }
 
+bool UIButton::isFocusable() const
+{
+    return isVisible() && !isDisabled();
+}
+
 void UIButton::onMouseIn(const ivec2& position)
 {
     hovered_ = true;
@@ -322,6 +328,12 @@ void UIButton::onFocusChange_()
 {
     if (!isFocused())
         kbd_active_ = false;
+    else
+    {
+        if (disabled_ && next_focus_)
+            next_focus_->setFocused();
+    }
+
 }
 
 const Id& UIButton::getCurrentState_()

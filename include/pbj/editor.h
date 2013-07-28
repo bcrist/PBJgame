@@ -19,34 +19,62 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   pbj/scene.h
+/// \file   pbj/editor.h
 /// \author Benjamin Crist
 ///
-/// \brief  pbj::scene::Scene class header.
+/// \brief  pbj::Editor class header.
 
-#ifndef PBJ_SCENE_SCENE_H_
-#define PBJ_SCENE_SCENE_H_
+#ifndef PBJ_EDITOR_H_
+#define PBJ_EDITOR_H_
 
+#include "be/id.h"
 #include "pbj/_pbj.h"
-#include "pbj/scene/ui_root.h"
+#include "pbj/window.h"
+#include "pbj/engine.h"
+#include "pbj/gfx/built_ins.h"
+#include "pbj/gfx/batcher.h"
+
+#include "pbj/scene/scene.h"
+#include "pbj/scene/ui_button.h"
+
+#include <memory>
 
 namespace pbj {
-namespace scene {
 
-class Scene
+class Editor
 {
 public:
-    Scene();
+    Editor();
+    ~Editor();
 
-    UIRoot ui;
+    void initUI();
+
+    void run();
 
 private:
+    void onContextResized_(I32 width, I32 height);
 
-    Scene(const Scene&);
-    void operator=(const Scene&);
+
+    Engine& engine_;
+    gfx::Batcher& batcher_;
+    const gfx::BuiltIns& builtins_;
+    Window& window_;
+
+    scene::Scene scene_;
+
+    std::unordered_map<Id, scene::UIElement*> ui_elements_;
+
+    scene::UIElement* last_created_focusable_element_;
+    scene::UIButtonStateConfig bsc_[7];
+    std::unique_ptr<scene::UIElement> newButton_(const Id& id,
+        const std::string& text,
+        const vec2& position, const vec2& dimensions,
+        const std::function<void()>& callback);
+
+    Editor(const Editor&);
+    void operator=(const Editor&);
 };
 
-} // namespace pbj::scene
 } // namespace pbj
 
 #endif
