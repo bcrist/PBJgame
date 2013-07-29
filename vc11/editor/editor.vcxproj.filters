@@ -207,6 +207,9 @@
     <ClCompile Include="..\..\src\pbj\scene\scene.cpp">
       <Filter>Source Files\pbj\pbj::scene</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\pbj\scene\ui_listbox.cpp">
+      <Filter>Source Files\pbj\pbj::scene\%28ui%29</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\be\const_handle.h">
@@ -355,6 +358,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\pbj\editor.h">
       <Filter>Header Files\pbj\pbj::gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\scene\ui_listbox.h">
+      <Filter>Header Files\pbj\pbj::scene\%28ui%29</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

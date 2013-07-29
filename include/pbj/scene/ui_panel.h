@@ -37,6 +37,7 @@ namespace pbj {
 namespace scene {
 
 class UIRoot;
+class UIListbox;
 
 struct UIPanelAppearance
 {
@@ -62,6 +63,7 @@ struct UIPanelAppearance
 class UIPanel : public UIElement
 {
     friend class UIRoot;
+    friend class UIListbox;
 
 public:
     UIPanel();

@@ -78,6 +78,7 @@ private:
     scene::Scene scene_;
 
     scene::UIPanel* menu_;
+    scene::UILabel* frame_time_label_;
     scene::UIPanel* panels_[6];
 
     std::unordered_map<Id, scene::UIElement*> ui_elements_;
@@ -86,11 +87,14 @@ private:
     scene::UIButtonStateConfig bsc_a_[7];
     scene::UIButtonStateConfig bsc_b_[7];
     
-    scene::UIPanel* newRootPanel(U32 index, const Id& id, const color3& color);
+    scene::UIListbox* newListbox_(const Id& id, const color3& color,
+        const vec2& position, const vec2& dimensions, scene::UIPanel* parent);
 
-    void useButtonConfigs(scene::UIButton* btn, const std::string& affix);
+    scene::UIPanel* newRootPanel_(U32 index, const Id& id, const color3& color);
 
-    void generateButtonStateConfigs(const color3& color,
+    void useButtonConfigs_(scene::UIButton* btn, const std::string& affix);
+
+    void generateButtonStateConfigs_(const color3& color,
         scene::UIButtonStateConfig* configs,
         const std::string& affix);
 

@@ -54,6 +54,8 @@ public:
     UILabel();
     virtual ~UILabel();
 
+    virtual UIElement* getElementAt(const ivec2& screen_position);
+
     void setText(const std::string& text);
     const std::string& getText() const;
 

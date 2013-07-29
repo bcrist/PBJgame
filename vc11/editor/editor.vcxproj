@@ -163,6 +163,7 @@
     <ClCompile Include="..\..\src\pbj\scene\ui_element.cpp" />
     <ClCompile Include="..\..\src\pbj\scene\ui_image.cpp" />
     <ClCompile Include="..\..\src\pbj\scene\ui_label.cpp" />
+    <ClCompile Include="..\..\src\pbj\scene\ui_listbox.cpp" />
     <ClCompile Include="..\..\src\pbj\scene\ui_panel.cpp" />
     <ClCompile Include="..\..\src\pbj\scene\ui_root.cpp" />
     <ClCompile Include="..\..\src\pbj\sw\import.cpp" />
@@ -210,6 +211,7 @@
     <ClInclude Include="..\..\include\pbj\scene\ui_element.h" />
     <ClInclude Include="..\..\include\pbj\scene\ui_image.h" />
     <ClInclude Include="..\..\include\pbj\scene\ui_label.h" />
+    <ClInclude Include="..\..\include\pbj\scene\ui_listbox.h" />
     <ClInclude Include="..\..\include\pbj\scene\ui_panel.h" />
     <ClInclude Include="..\..\include\pbj\scene\ui_root.h" />
     <ClInclude Include="..\..\include\pbj\sw\import.h" />

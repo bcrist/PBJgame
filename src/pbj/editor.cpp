@@ -29,7 +29,10 @@
 #include "pbj/gfx/texture_font.h"
 #include "pbj/scene/ui_root.h"
 #include "pbj/scene/ui_button.h"
+#include "pbj/scene/ui_listbox.h"
 #include "pbj/input_controller.h"
+
+#include "pbj/sw/sandwich_open.h"
 
 #include <iostream>
 #include <thread>
@@ -51,12 +54,12 @@ Editor::Editor()
 
     InputController::registerKeyAllListener([&](I32 keycode, I32 scancode, I32 action, I32 modifiers)
     {
-        if (keycode == GLFW_KEY_SPACE)
+        if (keycode == GLFW_KEY_SPACE && action == GLFW_RELEASE && scene_.ui.getFocus() == &scene_.ui.panel)
         {
-            if (action == GLFW_PRESS)
-                menu_->setVisible(true);
-            else if (action == GLFW_RELEASE)
+            if (menu_->isVisible())
                 menu_->setVisible(false);
+            else if (action == GLFW_RELEASE)
+                menu_->setVisible(true);
         }
     });
 
@@ -69,11 +72,40 @@ Editor::~Editor()
 {
 }
 
+class DbListboxModel : public scene::UIListboxModel
+{
+public:
+    DbListboxModel()
+    {
+        sandwiches = sw::getSandwichIds();
+    }
+
+    virtual ~DbListboxModel() {}
+
+    virtual std::string operator[](size_t index)
+    {
+        return sandwiches[index].to_string();
+    }
+
+    virtual size_t size() const
+    {
+        return sandwiches.size();
+    }
+
+    virtual bool isDirty()
+    {
+        return false;
+    }
+
+private:
+    std::vector<Id> sandwiches;
+};
+
 ///////////////////////////////////////////////////////////////////////////////
 void Editor::initUI()
 {
-    generateButtonStateConfigs(color3(0.5f, 0.6f, 0.65f), bsc_a_, "a");
-    generateButtonStateConfigs(color3(0.6f, 0.5f, 0.45f), bsc_b_, "b");
+    generateButtonStateConfigs_(color3(0.5f, 0.6f, 0.65f), bsc_a_, "a");
+    generateButtonStateConfigs_(color3(0.6f, 0.5f, 0.45f), bsc_b_, "b");
 
     last_created_focusable_element_ = &scene_.ui.panel;
 
@@ -92,15 +124,36 @@ void Editor::initUI()
         *menu_b_settings  = newButton_(Id("menu_b_settings"),  "Settings",  vec2(0, 13 * 30), vec2(100, 22), [=]() { setMode(MSettings); },     menu_),
         *menu_b_exit      = newButton_(Id("menu_b_exit"),      "Exit",      vec2(0, 14 * 30), vec2(100, 22), [&]() { window_.requestClose(); }, menu_);
 
+    frame_time_label_ = new scene::UILabel();
+    menu_->addElement(std::unique_ptr<scene::UIElement>(frame_time_label_));
+    frame_time_label_->setAlign(scene::UILabel::AlignRight);
+    frame_time_label_->setDimensions(vec2(200, 22));
+    frame_time_label_->setPosition(vec2(590, 420));
+    frame_time_label_->setFont(builtins_.getTextureFont(Id("TextureFont.default")).getHandle());
+    frame_time_label_->setTextColor(color4(0.5f, 0.6f, 0.65f, 1.0f));
+
+    menu_b_levels->setDisabled(true);
+    menu_b_textures->setDisabled(true);
     menu_b_settings->setDisabled(true);
     menu_b_exit->setNextFocusElement(menu_b_databases);
     
-    newRootPanel(MDatabases, Id("p_databases"), color3(0.1f, 0.12f, 0.13f));
-    newRootPanel(MLevels,    Id("p_levels"),    color3(0.2f, 0.12f, 0.13f));
-    newRootPanel(MWorld,     Id("p_world"),     color3(0.1f, 0.22f, 0.13f));
-    newRootPanel(MObjects,   Id("p_objects"),   color3(0.1f, 0.12f, 0.23f));
-    newRootPanel(MTextures,  Id("p_textures"),  color3(0.1f, 0.12f, 0.03f));
-    newRootPanel(MSettings,  Id("p_settings"),  color3(0.1f, 0.02f, 0.13f));
+    newRootPanel_(MDatabases, Id("p_databases"), color3(0.1f, 0.12f, 0.13f));
+    newRootPanel_(MLevels,    Id("p_levels"),    color3(0.1f, 0.12f, 0.13f));
+    newRootPanel_(MObjects,   Id("p_objects"),   color3(0.1f, 0.12f, 0.13f));
+    newRootPanel_(MTextures,  Id("p_textures"),  color3(0.1f, 0.12f, 0.13f));
+    newRootPanel_(MSettings,  Id("p_settings"),  color3(0.1f, 0.12f, 0.13f));
+
+
+    //scene::UIListbox
+    //    *lb_databases = newListbox_(Id("lb_databases"), color3(0.5f, 0.6f, 0.65f), vec2(50, 50), vec2(300, 500), panels_[MDatabases]);
+
+    //lb_databases->model = std::unique_ptr<DbListboxModel>(new DbListboxModel());
+
+    scene::UIPanel* p_world = new scene::UIPanel();
+    menu_->addElement(std::unique_ptr<scene::UIElement>(p_world));
+    panels_[MWorld] = p_world;
+    ui_elements_[Id("p_world")] = p_world;
+    p_world->setVisible(false);
 
     ivec2 wnd_size(window_.getSize());
     onContextResized_(wnd_size.x, wnd_size.y);
@@ -122,6 +175,11 @@ void Editor::run()
             break;
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        if (menu_->isVisible())
+        {
+            frame_time_label_->setText(std::to_string(1000.0f * last_frame_time) + " ms");
+        }
 
         scene_.ui.draw();
         batcher_.draw();
@@ -156,32 +214,32 @@ void Editor::setMode(Mode mode)
         switch (mode_)
         {
             case MDatabases:
-                useButtonConfigs(static_cast<scene::UIButton*>(ui_elements_[Id("menu_b_databases")]), "a");
+                useButtonConfigs_(static_cast<scene::UIButton*>(ui_elements_[Id("menu_b_databases")]), "a");
                 panels_[MDatabases]->setVisible(false);
                 break;
 
             case MLevels:
-                useButtonConfigs(static_cast<scene::UIButton*>(ui_elements_[Id("menu_b_levels")]), "a");
+                useButtonConfigs_(static_cast<scene::UIButton*>(ui_elements_[Id("menu_b_levels")]), "a");
                 panels_[MLevels]->setVisible(false);
                 break;
 
             case MWorld:
-                useButtonConfigs(static_cast<scene::UIButton*>(ui_elements_[Id("menu_b_world")]), "a");
+                useButtonConfigs_(static_cast<scene::UIButton*>(ui_elements_[Id("menu_b_world")]), "a");
                 panels_[MWorld]->setVisible(false);
                 break;
 
             case MObjects:
-                useButtonConfigs(static_cast<scene::UIButton*>(ui_elements_[Id("menu_b_objects")]), "a");
+                useButtonConfigs_(static_cast<scene::UIButton*>(ui_elements_[Id("menu_b_objects")]), "a");
                 panels_[MObjects]->setVisible(false);
                 break;
 
             case MTextures:
-                useButtonConfigs(static_cast<scene::UIButton*>(ui_elements_[Id("menu_b_textures")]), "a");
+                useButtonConfigs_(static_cast<scene::UIButton*>(ui_elements_[Id("menu_b_textures")]), "a");
                 panels_[MTextures]->setVisible(false);
                 break;
 
             case MSettings:
-                useButtonConfigs(static_cast<scene::UIButton*>(ui_elements_[Id("menu_b_settings")]), "a");
+                useButtonConfigs_(static_cast<scene::UIButton*>(ui_elements_[Id("menu_b_settings")]), "a");
                 panels_[MSettings]->setVisible(false);
                 break;
 
@@ -196,32 +254,32 @@ void Editor::setMode(Mode mode)
         switch (mode_)
         {
             case MDatabases:
-                useButtonConfigs(static_cast<scene::UIButton*>(ui_elements_[Id("menu_b_databases")]), "b");
+                useButtonConfigs_(static_cast<scene::UIButton*>(ui_elements_[Id("menu_b_databases")]), "b");
                 panels_[MDatabases]->setVisible(true);
                 break;
 
             case MLevels:
-                useButtonConfigs(static_cast<scene::UIButton*>(ui_elements_[Id("menu_b_levels")]), "b");
+                useButtonConfigs_(static_cast<scene::UIButton*>(ui_elements_[Id("menu_b_levels")]), "b");
                 panels_[MLevels]->setVisible(true);
                 break;
 
             case MWorld:
-                useButtonConfigs(static_cast<scene::UIButton*>(ui_elements_[Id("menu_b_world")]), "b");
+                useButtonConfigs_(static_cast<scene::UIButton*>(ui_elements_[Id("menu_b_world")]), "b");
                 panels_[MWorld]->setVisible(true);
                 break;
 
             case MObjects:
-                useButtonConfigs(static_cast<scene::UIButton*>(ui_elements_[Id("menu_b_objects")]), "b");
+                useButtonConfigs_(static_cast<scene::UIButton*>(ui_elements_[Id("menu_b_objects")]), "b");
                 panels_[MObjects]->setVisible(true);
                 break;
 
             case MTextures:
-                useButtonConfigs(static_cast<scene::UIButton*>(ui_elements_[Id("menu_b_textures")]), "b");
+                useButtonConfigs_(static_cast<scene::UIButton*>(ui_elements_[Id("menu_b_textures")]), "b");
                 panels_[MTextures]->setVisible(true);
                 break;
 
             case MSettings:
-                useButtonConfigs(static_cast<scene::UIButton*>(ui_elements_[Id("menu_b_settings")]), "b");
+                useButtonConfigs_(static_cast<scene::UIButton*>(ui_elements_[Id("menu_b_settings")]), "b");
                 panels_[MSettings]->setVisible(true);
                 break;
 
@@ -238,6 +296,8 @@ Editor::Mode Editor::getMode() const
 {
     return mode_;
 }
+
+
 
 ///////////////////////////////////////////////////////////////////////////////
 void Editor::onContextResized_(I32 width, I32 height)
@@ -262,8 +322,37 @@ void Editor::onContextResized_(I32 width, I32 height)
     menu_->setScale(vec2(menu_scale, menu_scale));
 }
 
+
+
 ///////////////////////////////////////////////////////////////////////////////
-scene::UIPanel* Editor::newRootPanel(U32 index, const Id& id, const color3& color)
+scene::UIListbox* Editor::newListbox_(const Id& id, const color3& color,
+        const vec2& position, const vec2& dimensions, scene::UIPanel* parent)
+{
+    scene::UIPanelAppearance pa;
+    pa.solid = true;
+    pa.background_color = color4(color * 0.66f, 0.4f);
+    pa.border_color = color4(color, 1.0f);
+    pa.border_width_left = 0.5f;
+    pa.border_width_right = 0.5f;
+    pa.border_width_top = 0.5f;
+    pa.border_width_bottom = 0.5f;
+    pa.margin_left = 0.5f;
+    pa.margin_right = 0.5f;
+    pa.margin_top = 0.5f;
+    pa.margin_bottom = 0.5f;
+
+    scene::UIListbox* listbox = new scene::UIListbox();
+    parent->addElement(std::unique_ptr<scene::UIElement>(listbox));
+    ui_elements_[id] = listbox;
+
+    listbox->panel.setAppearance(pa);
+    
+
+    return listbox;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+scene::UIPanel* Editor::newRootPanel_(U32 index, const Id& id, const color3& color)
 {
     scene::UIPanelAppearance pa;
     pa.solid = true;
@@ -288,7 +377,7 @@ scene::UIPanel* Editor::newRootPanel(U32 index, const Id& id, const color3& colo
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void Editor::useButtonConfigs(scene::UIButton* btn, const std::string& affix)
+void Editor::useButtonConfigs_(scene::UIButton* btn, const std::string& affix)
 {
     assert(btn);
 
@@ -302,7 +391,7 @@ void Editor::useButtonConfigs(scene::UIButton* btn, const std::string& affix)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void Editor::generateButtonStateConfigs(const color3& color, scene::UIButtonStateConfig* configs, const std::string& affix)
+void Editor::generateButtonStateConfigs_(const color3& color, scene::UIButtonStateConfig* configs, const std::string& affix)
 {
     const gfx::TextureFont& font = builtins_.getTextureFont(Id("TextureFont.default"));
     
@@ -326,12 +415,12 @@ void Editor::generateButtonStateConfigs(const color3& color, scene::UIButtonStat
     configs[1].button_state = Id("__hovered_" + affix + "__");
     configs[1].background_color.a = 0.7f;
     configs[1].text_color = color4(color * 1.4f, 1.0f);
-    configs[1].border_color.a = 1.0f;
+    configs[1].border_color = color4(color * 1.2f, 1.0f);
 
     configs[2] = configs[1];
     configs[2].button_state = Id("__active_" + affix + "__");
     configs[2].background_color.a = 0.6f;
-    configs[1].text_color = color4(color * 1.3f, 1.0f);
+    configs[2].text_color = color4(color * 1.3f, 1.0f);
 
     configs[2].border_width_left = 0.0f;
     configs[2].border_width_right = 0.0f;
@@ -358,7 +447,7 @@ void Editor::generateButtonStateConfigs(const color3& color, scene::UIButtonStat
 
     configs[4] = configs[0];
     configs[4].button_state = Id("__focused_" + affix + "__");
-    configs[4].border_color.a = 0.9f;
+    configs[4].border_color = color4(color * 1.2f, 1.0f);
 
     configs[5] = configs[1];
     configs[5].button_state = Id("__focused_hovered_" + affix + "__");
@@ -388,7 +477,7 @@ scene::UIButton* Editor::newButton_(const Id& id,
     btn->setPosition(position);
     btn->setDimensions(dimensions);
     
-    useButtonConfigs(btn, "a");
+    useButtonConfigs_(btn, "a");
 
     for (int i = 0; i < 7; ++i)
     {

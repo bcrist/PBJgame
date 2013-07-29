@@ -44,6 +44,18 @@ UILabel::~UILabel()
 {
 }
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Determines if the point at the specified position resides within
+///         this element (or one of its children).
+///
+/// \param  position The screen coordinates of the point in question.
+/// \return A pointer to an element at these coordinates, or nullptr if there
+///         is no such element.
+UIElement* UILabel::getElementAt(const ivec2& screen_position)
+{
+    return nullptr;
+}
+
 void UILabel::setText(const std::string& text)
 {
     tf_text_.setText(text);
