@@ -111,8 +111,9 @@ void Editor::initUI()
     bsc_[3].margin_top = 0.0f;
     bsc_[3].margin_bottom = 0.0f;
 
-    bsc_[4] = bsc_[1];
+    bsc_[4] = bsc_[0];
     bsc_[4].button_state = Id("__focused__");
+    bsc_[4].border_color.a = 0.9f;
 
     bsc_[5] = bsc_[1];
     bsc_[5].button_state = Id("__focused_hovered__");
