@@ -56,7 +56,6 @@ namespace net
 			Connected
 		};
 		void clearData();
-
 	};
 }
 }

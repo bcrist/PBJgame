@@ -11,7 +11,7 @@ namespace net
 	class Beacon
 	{
 	public:
-		Beacon(const char*, U32, U32, U32);
+		Beacon(const U8* const, U32, U32, U32);
 		~Beacon();
 
 		bool start(I32);

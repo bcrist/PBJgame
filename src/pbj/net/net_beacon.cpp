@@ -5,10 +5,10 @@
 using namespace pbj;
 using namespace net;
 
-Beacon::Beacon(const char* name, U32 protoId, U32 listenerPort, U32 serverPort)
+Beacon::Beacon(const U8* const name, U32 protoId, U32 listenerPort, U32 serverPort)
 	: _socket(Socket::Broadcast | Socket::NonBlocking)
 {
-	std::strncpy((char*)_name, name, 64);
+	std::strncpy((char*)_name, (const char*)name, 64);
 	_name[64] = '\0';
 	_protoId = protoId;
 	_listenerPort = listenerPort;
