@@ -36,6 +36,8 @@
 #include "be/source_handle.h"
 #include "pbj/sw/resource_id.h"
 
+#include "pbj/sw/sandwich.h"
+
 namespace pbj {
 namespace gfx {
 
@@ -83,7 +85,7 @@ public:
     const std::map<std::string, std::string>& getMetadata() const;
 
     void setData(const GLubyte* data, size_t size);
-    size_t getData(const GLubyte*& data) const;
+    size_t getData(const GLubyte** data) const;
 
     void setInternalFormat(InternalFormat format);
     InternalFormat getInternalFormat() const;
@@ -128,6 +130,10 @@ private:
     Texture(const Texture&);
     void operator=(const Texture&);
 };
+
+std::unique_ptr<Texture> loadTexture(sw::Sandwich& sandwich, const Id& texture_id);
+
+
 
 } // namespace pbj::gfx
 } // namespace pbj

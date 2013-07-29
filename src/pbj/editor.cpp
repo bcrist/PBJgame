@@ -144,10 +144,10 @@ void Editor::initUI()
     newRootPanel_(MSettings,  Id("p_settings"),  color3(0.1f, 0.12f, 0.13f));
 
 
-    //scene::UIListbox
-    //    *lb_databases = newListbox_(Id("lb_databases"), color3(0.5f, 0.6f, 0.65f), vec2(50, 50), vec2(300, 500), panels_[MDatabases]);
+    scene::UIListbox
+        *lb_databases = newListbox_(Id("lb_databases"), color3(0.5f, 0.6f, 0.65f), vec2(50, 50), vec2(300, 500), panels_[MDatabases]);
 
-    //lb_databases->model = std::unique_ptr<DbListboxModel>(new DbListboxModel());
+    lb_databases->model = std::unique_ptr<scene::UIListboxModel>(new DbListboxModel());
 
     scene::UIPanel* p_world = new scene::UIPanel();
     menu_->addElement(std::unique_ptr<scene::UIElement>(p_world));
@@ -328,9 +328,11 @@ void Editor::onContextResized_(I32 width, I32 height)
 scene::UIListbox* Editor::newListbox_(const Id& id, const color3& color,
         const vec2& position, const vec2& dimensions, scene::UIPanel* parent)
 {
+    const gfx::TextureFont& font = builtins_.getTextureFont(Id("TextureFont.default"));
+
     scene::UIPanelAppearance pa;
     pa.solid = true;
-    pa.background_color = color4(color * 0.66f, 0.4f);
+    pa.background_color = color4(color * 0.6f, 0.4f);
     pa.border_color = color4(color, 1.0f);
     pa.border_width_left = 0.5f;
     pa.border_width_right = 0.5f;
@@ -345,7 +347,27 @@ scene::UIListbox* Editor::newListbox_(const Id& id, const color3& color,
     parent->addElement(std::unique_ptr<scene::UIElement>(listbox));
     ui_elements_[id] = listbox;
 
+    listbox->setPosition(position);
+    listbox->setDimensions(dimensions);
     listbox->panel.setAppearance(pa);
+
+    scene::UIButtonStateConfig bsc;
+    bsc.button_state = Id("__normal__");
+    bsc.font        = font.getHandle();
+    bsc.text_scale  = vec2(1.0f, 1.0f);
+    bsc.text_color       = color4(color * 1.3f, 1.0f);
+    bsc.background_color = color4(color * 0.66f, 0.0f);
+    bsc.border_color     = color4(color * 1.1f, 0.0f);
+    bsc.border_width_left   = 0.5f;
+    bsc.border_width_right  = 0.5f;
+    bsc.border_width_top    = 0.5f;
+    bsc.border_width_bottom = 0.5f;
+    bsc.margin_left   = 0.5f;
+    bsc.margin_right  = 1.5f;
+    bsc.margin_top    = 0.5f;
+    bsc.margin_bottom = 1.5f;
+    listbox->scroll_up->setStateConfig(bsc);
+    listbox->scroll_down->setStateConfig(bsc);
     
 
     return listbox;

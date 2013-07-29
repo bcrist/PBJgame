@@ -206,6 +206,8 @@
     <ClInclude Include="..\..\include\pbj\gfx\texture_font_character.h" />
     <ClInclude Include="..\..\include\pbj\gfx\texture_font_text.h" />
     <ClInclude Include="..\..\include\pbj\input_controller.h" />
+    <ClInclude Include="..\..\include\pbj\scene\camera.h" />
+    <ClInclude Include="..\..\include\pbj\scene\entity.h" />
     <ClInclude Include="..\..\include\pbj\scene\scene.h" />
     <ClInclude Include="..\..\include\pbj\scene\ui_button.h" />
     <ClInclude Include="..\..\include\pbj\scene\ui_element.h" />

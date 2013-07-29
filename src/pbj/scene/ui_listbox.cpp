@@ -30,7 +30,6 @@ namespace scene {
 UIListbox::UIListbox()
     : bounds_valid_(false)
 {
-
     scroll_up = new UIButton();
     panel.addElement(std::unique_ptr<UIElement>(scroll_up));
 
@@ -122,7 +121,7 @@ void UIListbox::calculateBounds_()
     panel.setPosition(top_left);
     panel.setDimensions(size);
 
-    top_left += vec2(2.0f, 2.0f);
+    top_left = vec2(2.0f, 2.0f);
     size = vec2(size.x - 4.0f, btn_size);
     
     scroll_up->setPosition(top_left);

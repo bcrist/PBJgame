@@ -356,11 +356,17 @@
     <ClInclude Include="..\..\include\pbj\gfx\batcher.h">
       <Filter>Header Files\pbj\pbj::gfx</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\pbj\editor.h">
-      <Filter>Header Files\pbj\pbj::gfx</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\pbj\scene\ui_listbox.h">
       <Filter>Header Files\pbj\pbj::scene\%28ui%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\editor.h">
+      <Filter>Header Files\pbj</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\scene\camera.h">
+      <Filter>Header Files\pbj\pbj::scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\scene\entity.h">
+      <Filter>Header Files\pbj\pbj::scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
