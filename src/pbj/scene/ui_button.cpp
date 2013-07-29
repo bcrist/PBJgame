@@ -37,19 +37,19 @@ namespace scene {
 
 UIButtonStateConfig::UIButtonStateConfig()
     : button_state("__unknown__"),
-      text_scale(2.0f, 2.0f),
+      text_scale(1.0f, 1.0f),
       background_color(0.5f, 0.5f, 0.5f, 0.5f),
       border_color(1.0f, 1.0f, 1.0f, 1.0f),
       text_color(1.0f, 1.0f, 1.0f, 1.0f),
       margin_color(0.0f, 0.0f, 0.0f, 0.0f),
-      margin_left(1.0f),
-      margin_right(1.0f),
-      margin_top(1.0f),
-      margin_bottom(1.0f),
-      border_width_left(1.0f),
-      border_width_right(1.0f),
-      border_width_top(1.0f),
-      border_width_bottom(1.0f)
+      margin_left(0.5f),
+      margin_right(0.5f),
+      margin_top(0.5f),
+      margin_bottom(0.5f),
+      border_width_left(0.5f),
+      border_width_right(0.5f),
+      border_width_top(0.5f),
+      border_width_bottom(0.5f)
 {
 }
 
@@ -72,8 +72,7 @@ UIButton::UIButton()
 
     const gfx::BuiltIns& builtins = getEngine().getBuiltIns();
 
-    btask_.order_index = 1200;
-    btask_.program_id = builtins.getProgram(Id("ShaderProgram.UIButton")).getGlId();
+    btask_.program_id = builtins.getProgram(Id("ShaderProgram.UIBox")).getGlId();
 
     btask_.vao_id = btn_mesh_.getVaoId();
     btask_.n_indices = btn_mesh_.getIndexCount();
@@ -97,20 +96,16 @@ UIButton::UIButton()
     uniforms_[u_border_color_].location = glGetUniformLocation(btask_.program_id, "border_color");
     uniforms_[u_border_color_].type = gfx::UniformConfig::U4f;
     uniforms_[u_border_color_].array_size = 1;
-    //uniforms_[u_border_color_].data = glm::value_ptr();
 
     uniforms_[u_background_color_].location = glGetUniformLocation(btask_.program_id, "background_color");
     uniforms_[u_background_color_].type = gfx::UniformConfig::U4f;
     uniforms_[u_background_color_].array_size = 1;
-    //uniforms_[u_background_color_].data = glm::value_ptr();
 
     uniforms_[u_outside_color_].location = glGetUniformLocation(btask_.program_id, "outside_color");
     uniforms_[u_outside_color_].type = gfx::UniformConfig::U4f;
     uniforms_[u_outside_color_].array_size = 1;
-    //uniforms_[u_outside_color_].data = glm::value_ptr();3
 
     btask_.depth_tested = false;
-    btask_.scissor = nullptr;
 }
 
 UIButton::~UIButton()
@@ -317,6 +312,11 @@ void UIButton::onKeyPressed(I32 keycode, I32 modifiers)
 void UIButton::onBoundsChange_()
 {
     current_config_ = nullptr;
+    btask_.order_index = *order_index_offset_;
+    btask_.scissor = scissor_;
+
+    label_.order_index_offset_ = order_index_offset_;
+    label_.scissor_ = scissor_;
     label_.projection_ = projection_;
     label_.view_ = view_;
     label_.inv_view_ = inv_view_;
@@ -328,12 +328,6 @@ void UIButton::onFocusChange_()
 {
     if (!isFocused())
         kbd_active_ = false;
-    else
-    {
-        if (disabled_ && next_focus_)
-            next_focus_->setFocused();
-    }
-
 }
 
 const Id& UIButton::getCurrentState_()

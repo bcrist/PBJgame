@@ -40,6 +40,7 @@ UIRoot::UIRoot()
       button1_down_over_(nullptr),
       button2_down_over_(nullptr),
       button3_down_over_(nullptr),
+      order_index_offset_(1000),
       input_handlers_active_(true)
 {
     handle_.associate(this);
@@ -89,6 +90,8 @@ UIRoot::UIRoot()
 
     projection_matrix_ = glm::ortho(0.0f, F32(window->getContextSize().x), F32(window->getContextSize().y), 0.0f);
 
+    panel.scissor_ = nullptr;
+    panel.order_index_offset_ = &order_index_offset_;
     panel.projection_ = &projection_matrix_;
     panel.view_ = &view_matrix_;
     panel.inv_view_ = &view_matrix_;

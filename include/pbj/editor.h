@@ -44,6 +44,16 @@ namespace pbj {
 class Editor
 {
 public:
+    enum Mode
+    {
+        MDatabases = 0,
+        MLevels = 1,
+        MWorld = 2,
+        MObjects = 3,
+        MTextures = 4,
+        MSettings = 5,
+    };
+
     Editor();
     ~Editor();
 
@@ -51,25 +61,44 @@ public:
 
     void run();
 
+
+    void setMode(Mode mode);
+    Mode getMode() const;
+
 private:
     void onContextResized_(I32 width, I32 height);
-
 
     Engine& engine_;
     gfx::Batcher& batcher_;
     const gfx::BuiltIns& builtins_;
     Window& window_;
 
+    Mode mode_;
+
     scene::Scene scene_;
+
+    scene::UIPanel* menu_;
+    scene::UIPanel* panels_[6];
 
     std::unordered_map<Id, scene::UIElement*> ui_elements_;
 
     scene::UIElement* last_created_focusable_element_;
-    scene::UIButtonStateConfig bsc_[7];
-    std::unique_ptr<scene::UIElement> newButton_(const Id& id,
+    scene::UIButtonStateConfig bsc_a_[7];
+    scene::UIButtonStateConfig bsc_b_[7];
+    
+    scene::UIPanel* newRootPanel(U32 index, const Id& id, const color3& color);
+
+    void useButtonConfigs(scene::UIButton* btn, const std::string& affix);
+
+    void generateButtonStateConfigs(const color3& color,
+        scene::UIButtonStateConfig* configs,
+        const std::string& affix);
+
+    scene::UIButton* newButton_(const Id& id,
         const std::string& text,
         const vec2& position, const vec2& dimensions,
-        const std::function<void()>& callback);
+        const std::function<void()>& callback,
+        scene::UIPanel* parent);
 
     Editor(const Editor&);
     void operator=(const Editor&);

@@ -34,6 +34,7 @@
 namespace pbj {
 namespace gfx {
 
+///////////////////////////////////////////////////////////////////////////////
 TextureFontText::TextureFontText()
     : color_(1.0f, 1.0f, 1.0f, 1.0f),
       buffer_mode_(GL_STATIC_DRAW),
@@ -42,7 +43,7 @@ TextureFontText::TextureFontText()
     Engine& engine = getEngine();
     const BuiltIns& built_ins = engine.getBuiltIns();
 
-    btask_.order_index = 1209;
+    btask_.order_index = 999;
     btask_.program_id = built_ins.getProgram(Id("ShaderProgram.TextureFontText")).getGlId();
     
     glGenVertexArrays(1, &btask_.vao_id);
@@ -70,6 +71,7 @@ TextureFontText::TextureFontText()
     btask_.scissor = nullptr;    
 }
 
+///////////////////////////////////////////////////////////////////////////////
 TextureFontText::~TextureFontText()
 {
     glDeleteVertexArrays(1, &btask_.vao_id);
@@ -77,6 +79,7 @@ TextureFontText::~TextureFontText()
     glDeleteBuffers(1, &vbo_id_);
 }
 
+///////////////////////////////////////////////////////////////////////////////
 void TextureFontText::setBufferMode(GLenum buffer_mode)
 {
     if (buffer_mode_ != buffer_mode)
@@ -86,21 +89,25 @@ void TextureFontText::setBufferMode(GLenum buffer_mode)
     }
 }
 
+///////////////////////////////////////////////////////////////////////////////
 GLenum TextureFontText::getBufferMode() const
 {
     return buffer_mode_;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 void TextureFontText::setColor(const vec4& color)
 {
     color_ = color;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 const vec4& TextureFontText::getColor() const
 {
     return color_;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 void TextureFontText::setFont(const be::ConstHandle<TextureFont>& font)
 {
     if (font != font_)
@@ -113,22 +120,26 @@ void TextureFontText::setFont(const be::ConstHandle<TextureFont>& font)
     }
 }
 
+///////////////////////////////////////////////////////////////////////////////
 const be::ConstHandle<TextureFont>& TextureFontText::getFont() const
 {
     return font_;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 void TextureFontText::setText(const std::string& text)
 {
     text_ = text;
     buffers_valid_ = false;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 const std::string& TextureFontText::getText() const
 {
     return text_;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 F32 TextureFontText::getTextWidth()
 {
     if (!isPrepared())
@@ -137,6 +148,19 @@ F32 TextureFontText::getTextWidth()
     return text_width_;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+void TextureFontText::setOrderIndex(U32 order_index)
+{
+    btask_.order_index = order_index;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+U32 TextureFontText::getOrderIndex() const
+{
+    return btask_.order_index;
+}
+
+///////////////////////////////////////////////////////////////////////////////
 void TextureFontText::prepare()
 {
     bool font_data_valid = true;
@@ -232,12 +256,14 @@ void TextureFontText::prepare()
     buffers_valid_ = true;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 bool TextureFontText::isPrepared() const
 {
     return buffers_valid_;
 }
 
-void TextureFontText::draw(const mat4* transform)
+///////////////////////////////////////////////////////////////////////////////
+void TextureFontText::draw(const mat4* transform, const ScissorConfig* scissor)
 {
     if (!isPrepared())
         prepare();
@@ -246,28 +272,9 @@ void TextureFontText::draw(const mat4* transform)
     sampler_.texture_id = tex ? tex->getGlId() : 0;
 
     uniforms_[1].data = transform;
+    btask_.scissor = scissor;
 
     getEngine().getBatcher().submit(btask_);
-    /*
-    glUseProgram(shader_program_id_); // bind program
-    glUniform1i(texture_uniform_location_, 0);
-    glActiveTexture(GL_TEXTURE0);
-
-    const Texture* tex = texture_.get();
-    glBindTexture(GL_TEXTURE_2D, tex ? tex->getGlId() : 0);
-
-    glBindVertexArray(vao_id_); // bind VAO
-
-    glUniform4fv(color_uniform_location_, 1, glm::value_ptr(color_));
-    glUniformMatrix4fv(transform_uniform_location_, 1, false, glm::value_ptr(transform));
-
-    // draw text
-    glDrawElements(GL_TRIANGLES, ibo_size_, GL_UNSIGNED_SHORT, 0);
-
-    glBindVertexArray(0); // unbind VAO
-
-    glUseProgram(0); // unbind program
-    */
 }
     
 } // namespace pbj::gfx

@@ -30,6 +30,8 @@
 #include "pbj/_pbj.h"
 #include "pbj/_math.h"
 
+#include "pbj/gfx/batcher.h"
+
 namespace pbj {
 namespace scene {
 
@@ -62,7 +64,6 @@ public:
     void setDimensions(const vec2& dimensions);
     const vec2& getDimensions() const;
 
-
     virtual UIElement* getElementAt(const ivec2& screen_position);
 
     void setNextFocusElement(UIElement* element);
@@ -94,9 +95,12 @@ protected:
     vec2 position_;
     vec2 dimensions_;
 
+    const U32* order_index_offset_;
+    const gfx::ScissorConfig* scissor_;
     const mat4* projection_;
     const mat4* view_;
     const mat4* inv_view_;
+    
 
     UIElement** focused_element_;
     UIElement* next_focus_;

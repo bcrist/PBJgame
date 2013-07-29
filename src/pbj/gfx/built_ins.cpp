@@ -42,6 +42,7 @@
 namespace pbj {
 namespace gfx {
 
+///////////////////////////////////////////////////////////////////////////////
 const TextureFont& BuiltIns::getTextureFont(const Id& id) const
 {
     auto i = texture_fonts_.find(id);
@@ -52,7 +53,7 @@ const TextureFont& BuiltIns::getTextureFont(const Id& id) const
     throw std::invalid_argument("TextureFont not found!");
 }
 
-
+///////////////////////////////////////////////////////////////////////////////
 const Mesh& BuiltIns::getMesh(const Id& id) const
 {
     auto i = meshes_.find(id);
@@ -63,6 +64,7 @@ const Mesh& BuiltIns::getMesh(const Id& id) const
     throw std::invalid_argument("Mesh not found!");
 }
     
+///////////////////////////////////////////////////////////////////////////////
 const Texture& BuiltIns::getTexture(const Id& id) const
 {
     auto i = textures_.find(id);
@@ -73,6 +75,7 @@ const Texture& BuiltIns::getTexture(const Id& id) const
     throw std::invalid_argument("Texture not found!");
 }
 
+///////////////////////////////////////////////////////////////////////////////
 const Shader& BuiltIns::getShader(const Id& id) const
 {
     auto i = shaders_.find(id);
@@ -83,6 +86,7 @@ const Shader& BuiltIns::getShader(const Id& id) const
     throw std::invalid_argument("Shader not found!");
 }
 
+///////////////////////////////////////////////////////////////////////////////
 const ShaderProgram& BuiltIns::getProgram(const Id& id) const
 {
     auto i = programs_.find(id);
@@ -93,6 +97,7 @@ const ShaderProgram& BuiltIns::getProgram(const Id& id) const
     throw std::invalid_argument("Program not found!");
 }
 
+///////////////////////////////////////////////////////////////////////////////
 BuiltIns::BuiltIns()
 {
     GLenum err;
@@ -155,7 +160,7 @@ BuiltIns::BuiltIns()
                                << "     Error: " << pbj::getGlErrorString(err) << PBJ_LOG_END;
     }
 
-    id.resource = Id("Shader.UIButton.vertex");
+    id.resource = Id("Shader.UIBox.vertex");
     try
     {
         Shader* shader = new Shader(id, Shader::TVertex,
@@ -182,7 +187,7 @@ BuiltIns::BuiltIns()
                                << "     Error: " << pbj::getGlErrorString(err) << PBJ_LOG_END;
     }
 
-    id.resource = Id("Shader.UIButton.fragment");
+    id.resource = Id("Shader.UIBox.fragment");
     try
     {
         Shader* shader = new Shader(id, Shader::TFragment,
@@ -224,12 +229,12 @@ BuiltIns::BuiltIns()
                                << "     Error: " << pbj::getGlErrorString(err) << PBJ_LOG_END;
     }
 
-    id.resource = Id("ShaderProgram.UIButton");
+    id.resource = Id("ShaderProgram.UIBox");
     try
     {
         ShaderProgram* program = new ShaderProgram(id,
-            getShader(Id("Shader.UIButton.vertex")), 
-            getShader(Id("Shader.UIButton.fragment")));
+            getShader(Id("Shader.UIBox.vertex")), 
+            getShader(Id("Shader.UIBox.fragment")));
         programs_.insert(std::make_pair(program->getId().resource, std::unique_ptr<ShaderProgram>(program)));
     }
     catch (const std::exception& err)
@@ -672,10 +677,12 @@ BuiltIns::BuiltIns()
     }
 }
 
+///////////////////////////////////////////////////////////////////////////////
 BuiltIns::~BuiltIns()
 {
 }
 
+///////////////////////////////////////////////////////////////////////////////
 void BuiltIns::logWarning(const char* type, const sw::ResourceId id, const std::string& what_arg) const
 {
     PBJ_LOG(VWarning) << "Exception while initializing built-in resource!" << PBJ_LOG_NL

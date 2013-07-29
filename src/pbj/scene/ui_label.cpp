@@ -114,12 +114,13 @@ void UILabel::draw()
         if (!text_transform_valid_)
             calculateTextTransform_();
 
-        tf_text_.draw(&text_transform_);
+        tf_text_.draw(&text_transform_, scissor_);
     }
 }
 
 void UILabel::onBoundsChange_()
 {
+    tf_text_.setOrderIndex(*order_index_offset_ + 8);
     text_transform_valid_ = false;
 }
 

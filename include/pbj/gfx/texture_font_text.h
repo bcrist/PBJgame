@@ -56,10 +56,13 @@ public:
     const std::string& getText() const;
     F32 getTextWidth();
 
+    void setOrderIndex(U32 order_index);
+    U32 getOrderIndex() const;
+
     void prepare();
     bool isPrepared() const;
 
-    void draw(const mat4* transform);
+    void draw(const mat4* transform, const ScissorConfig* scissor);
 
 private:
     vec4 color_;

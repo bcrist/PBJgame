@@ -71,6 +71,7 @@ private:
     UIElement* button2_down_over_;
     UIElement* button3_down_over_;
 
+    U32 order_index_offset_;
     mat4 projection_matrix_;
     mat4 view_matrix_;
 

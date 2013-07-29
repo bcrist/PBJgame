@@ -41,8 +41,11 @@ namespace scene {
 ///         which has been added to it before the element can be drawn or
 ///         receive input events.
 UIElement::UIElement()
-    : projection_(nullptr),
+    : order_index_offset_(nullptr),
+      scissor_(nullptr),
+      projection_(nullptr),
       view_(nullptr),
+      inv_view_(nullptr),
       focused_element_(nullptr),
       next_focus_(nullptr),
       visible_(true)
