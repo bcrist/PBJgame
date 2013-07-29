@@ -171,6 +171,8 @@ void UIRoot::onMouseButton(I32 button, bool down)
 {
     UIElement* under_mouse = panel.getElementAt(mouse_position_);
 
+    //PBJ_LOG(VInfo) << "under mouse: " << under_mouse << PBJ_LOG_END;
+
     if (under_mouse)
     {
         if (down)

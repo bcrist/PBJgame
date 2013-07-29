@@ -121,19 +121,19 @@ void Editor::initUI()
         *menu_b_world     = newButton_(Id("menu_b_world"),     "World",     vec2(0, 2 * 30),  vec2(100, 22), [=]() { setMode(MWorld); },        menu_),
         *menu_b_objects   = newButton_(Id("menu_b_objects"),   "Objects",   vec2(0, 3 * 30),  vec2(100, 22), [=]() { setMode(MObjects); },      menu_),
         *menu_b_textures  = newButton_(Id("menu_b_textures"),  "Textures",  vec2(0, 4 * 30),  vec2(100, 22), [=]() { setMode(MTextures); },     menu_),
-        *menu_b_settings  = newButton_(Id("menu_b_settings"),  "Settings",  vec2(0, 13 * 30), vec2(100, 22), [=]() { setMode(MSettings); },     menu_),
-        *menu_b_exit      = newButton_(Id("menu_b_exit"),      "Exit",      vec2(0, 14 * 30), vec2(100, 22), [&]() { window_.requestClose(); }, menu_);
+        *menu_b_settings  = newButton_(Id("menu_b_settings"),  "Settings",  vec2(0, 11 * 30), vec2(100, 22), [=]() { setMode(MSettings); },     menu_),
+        *menu_b_exit      = newButton_(Id("menu_b_exit"),      "Exit",      vec2(0, 12 * 30), vec2(100, 22), [&]() { window_.requestClose(); }, menu_);
 
     frame_time_label_ = new scene::UILabel();
     menu_->addElement(std::unique_ptr<scene::UIElement>(frame_time_label_));
     frame_time_label_->setAlign(scene::UILabel::AlignRight);
     frame_time_label_->setDimensions(vec2(200, 22));
-    frame_time_label_->setPosition(vec2(590, 420));
+    frame_time_label_->setPosition(vec2(550, 375));
     frame_time_label_->setFont(builtins_.getTextureFont(Id("TextureFont.default")).getHandle());
     frame_time_label_->setTextColor(color4(0.5f, 0.6f, 0.65f, 1.0f));
 
-    menu_b_levels->setDisabled(true);
-    menu_b_textures->setDisabled(true);
+    //menu_b_levels->setDisabled(true);
+    //menu_b_textures->setDisabled(true);
     menu_b_settings->setDisabled(true);
     menu_b_exit->setNextFocusElement(menu_b_databases);
     
@@ -309,7 +309,7 @@ void Editor::onContextResized_(I32 width, I32 height)
 
 
     // Place/scale menu panel correctly
-    const ivec2 min_menu_size(800, 450);
+    const ivec2 min_menu_size(760, 400);
     int menu_scale = std::max(1, std::min(width / min_menu_size.x, height / min_menu_size.y));
     vec2 menu_offset = vec2(I32(0.5 * (width - menu_scale * min_menu_size.x)),
                             I32(0.5 * (height - menu_scale * min_menu_size.y)));
