@@ -10,10 +10,17 @@
 #include <functional>
 #include "pbj/_pbj.h"
 
+using std::vector;
+
 namespace pbj
 {
 namespace net
 {
+	inline bool sequence_more_recent(U32 s1, U32 s2, U32 max)
+	{
+		return (s1>s2) && (s1-s2<=max/2) || (s2>s1) && (s2-s1>max/2);
+	}
+
 	struct PacketData
 	{
 		U32 seq;
@@ -23,6 +30,7 @@ namespace net
 
 	class PacketQueue : public std::list<PacketData>
 	{
+	public:
 		bool exists(U32);
 		void insert_sorted(const PacketData&, U32);
 		void verify_sorted(U32);
@@ -34,8 +42,11 @@ namespace net
 		static bool moreRecentSeq(U32, U32, U32);
 		static I32 bitIndexForSeq(U32, U32, U32);
 		static U32 generateAckBits(U32, const PacketQueue&, U32);
-		static void procAck(U32, U32, PacketQueue&, PacketQueue&,
+		static void sProccessAck(U32, U32, PacketQueue&, PacketQueue&,
 							std::vector<U32>&, U32&, F32&, U32);
+
+		ReliabilitySystem(F32, U32);
+		~ReliabilitySystem();
 
 		void reset();
 		void packetSent(I32);
@@ -45,7 +56,7 @@ namespace net
 		void update(F32);
 		void validate();
 		U32 getLocalSequence() const;
-		U32 getRemoteSeuquence() const;
+		U32 getRemoteSequence() const;
 		U32 getmaxSequence() const;
 		void getAcks(U32**, I32&);
 		U32 getSentPackets() const;
@@ -74,7 +85,7 @@ namespace net
 		F32 _ackedBandwidth;
 		F32 _rtt;
 		F32 _rttMax;
-		std::vector<U32> _acks;
+		vector<U32> _acks;
 		PacketQueue _sentQueue;
 		PacketQueue _receivedQueue;
 		PacketQueue _ackedQueue;

@@ -13,21 +13,21 @@ namespace net
 	class ReliableConnection : public Connection
 	{
 	public:
-		ReliableConnection(U32, F32, U32)
-		~ReliableConnection()
+		ReliableConnection(U32, F32, U32);
+		~ReliableConnection();
 
 		// overriden functions from "Connection"
-		bool SendPacket(const U8* const, I32);
-		I32 ReceivePacket(U8*, I32);
-		void Update(F32);
-		I32 GetHeaderSize() const;
-		ReliabilitySystem& GetReliabilitySystem();
+		bool sendPacket(const U8* const, I32);
+		I32 receivePacket(U8*, I32);
+		void update(F32);
+		I32 getHeaderSize() const;
+		ReliabilitySystem& getReliabilitySystem();
 
 	protected:
-		void WriteHeader(U8*, U32, U32, U32);
-		void ReadHeader(const U8*, U32&, U32&, U32&);
-		virtual void OnStop();
-		virtual void OnDisconnect();
+		void writeHeader(U8*, U32, U32, U32);
+		void readHeader(const U8*, U32&, U32&, U32&);
+		virtual void onStop();
+		virtual void onDisconnect();
 
 	private:
 		void clearData();

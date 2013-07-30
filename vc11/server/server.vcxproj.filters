@@ -45,7 +45,10 @@
     <ClInclude Include="..\..\include\pbj\net\net_transport.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\pbj\net\transportLAN.h">
+    <ClInclude Include="..\..\include\pbj\net\net_node.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\net\net_reliable_connection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -68,10 +71,16 @@
     <ClCompile Include="..\..\src\pbj\net\transport.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\pbj\net\transportLAN.cpp">
+    <ClCompile Include="..\..\src\pbj\net\net_node_mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\pbj\net\net_node_mesh.cpp">
+    <ClCompile Include="..\..\src\pbj\net\net_node.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\net\net_reliable_connection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\net\net_reliability.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
