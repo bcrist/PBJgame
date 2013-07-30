@@ -5,9 +5,10 @@
 using namespace pbj;
 using namespace pbj::net;
 
-ReliableConnection::ReliableConnection(U32 protocolId, F32 timeout, U32 max_sequence = 0xFFFFFFFF)
-	: Connection(protocolId, timeout), _reliabilitySystem(max_sequence)
+ReliableConnection::ReliableConnection(U32 protocolId, F32 timeout, U32 max_sequence)
+	: Connection(protocolId, timeout)
 {
+	_reliabilitySystem = ReliabilitySystem(1.0f, max_sequence);
 	clearData();
 }
 

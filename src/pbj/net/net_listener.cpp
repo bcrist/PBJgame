@@ -30,7 +30,7 @@ Listener::~Listener()
 bool Listener::start(I32 port)
 {
 	assert(!_running);
-	PBJ_LOG(Verbosity::VInfo) << "Starting listener on port " << port << PBJ_LOG_NL;
+	PBJ_LOG(pbj::VInfo) << "Starting listener on port " << port << PBJ_LOG_NL;
 	if(!_socket.open(port))
 		return false;
 	_running = true;
@@ -40,7 +40,7 @@ bool Listener::start(I32 port)
 void Listener::stop()
 {
 	assert(_running);
-	PBJ_LOG(Verbosity::VInfo) << "Stopping listener" << PBJ_LOG_NL;
+	PBJ_LOG(pbj::VInfo) << "Stopping listener" << PBJ_LOG_NL;
 	_socket.close();
 	_running = false;
 	clearData();

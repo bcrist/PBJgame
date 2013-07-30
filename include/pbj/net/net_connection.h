@@ -36,7 +36,7 @@ namespace net
 		Connection::Mode getMode() const;
 		
 		virtual void update(F32);
-		virtual bool sendPacket(const U8*, I32);
+		virtual bool sendPacket(const U8* const, I32);
 		virtual I32 receivePacket(U8*, I32);
 		I32 getHeaderSize() const;
 
@@ -55,7 +55,17 @@ namespace net
 			ConnectFail,
 			Connected
 		};
+
 		void clearData();
+
+		U32 _protoId;
+		F32 _timeout;
+		bool _running;
+		Mode _mode;
+		State _state;
+		Socket _socket;
+		F32 _timeoutAccumulator;
+		Address _address;
 	};
 }
 }

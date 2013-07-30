@@ -5,7 +5,41 @@
 using namespace pbj;
 using namespace pbj::net;
 
-Node::Node(U32 protocolId, F32 sendRate = 0.25f, F32 timeout = 10.0f, I32 maxPacketSize = 1024)
+Node::Node(U32 protocolId)
+{
+	_protoId = protocolId;
+	_sendRate = 0.25f;
+	_timeout = 10.0f;
+	_maxPacketSize = 1024;
+	_state = Disconnected;
+	_running = false;
+	clearData();
+}
+
+Node::Node(U32 protocolId, F32 sendRate)
+{
+	_protoId = protocolId;
+	_sendRate = sendRate;
+	_timeout = 10.0f;
+	_maxPacketSize = 1024;
+	_state = Disconnected;
+	_running = false;
+	clearData();
+}
+
+Node::Node(U32 protocolId, F32 sendRate, F32 timeout)
+{
+	_protoId = protocolId;
+	_sendRate = sendRate;
+	_timeout = timeout;
+	_maxPacketSize = 1024;
+	_state = Disconnected;
+	_running = false;
+	clearData();
+
+}
+
+Node::Node(U32 protocolId, F32 sendRate, F32 timeout, I32 maxPacketSize)
 {
 	_protoId = protocolId;
 	_sendRate = sendRate;
@@ -15,7 +49,6 @@ Node::Node(U32 protocolId, F32 sendRate = 0.25f, F32 timeout = 10.0f, I32 maxPac
 	_running = false;
 	clearData();
 }
-
 Node::~Node()
 {
 	if(_running)
@@ -25,7 +58,7 @@ Node::~Node()
 bool Node::start(I32 port)
 {
 	assert(!_running);
-	printf("start node on port %d\n", port);
+	PBJ_LOG(pbj::VInfo) << "Start node on port " << port << PBJ_LOG_END;
 	if(!_socket.open(port))
 		return false;
 	_running = true;
@@ -41,10 +74,14 @@ void Node::stop()
 	_running = false;
 }	
 
-void Node::join(const Address & address)
+void Node::join(const Address& address)
 {
-	printf("node join %d.%d.%d.%d:%d\n", 
-		address.getA(), address.getB(), address.getC(), address.getD(), address.getPort());
+	PBJ_LOG(pbj::VInfo) << "Node join "
+						<< (U32) address.getA() << "."
+						<< (U32) address.getB() << "."
+						<< (U32) address.getC() << "."
+						<< (U32) address.getD() << ":"
+						<< (U32) address.getPort() << PBJ_LOG_END;
 	clearData();
 	_state = Joining;
 	_meshAddress = address;
@@ -141,15 +178,16 @@ I32 Node::receivePacket(I32& nodeId, U8* data, I32 size)
 
 void Node::receivePackets()
 {
+	U8* data = new U8[_maxPacketSize];
 	while (true)
 	{
 		Address sender;
-		U8 data[_maxPacketSize];
 		int size = _socket.receive(sender, data, sizeof(data));
 		if (!size)
 			break;
 		processPacket(sender, data, size);
 	}
+	delete[] data;
 }
 
 void Node::processPacket(const Address& sender, U8* data, int size)
@@ -188,7 +226,7 @@ void Node::processPacket(const Address& sender, U8* data, int size)
 					_localNodeId = data[5];
 					_nodes.resize(data[6]);
 					printf("node accepts join as node %d of %d\n",_localNodeId, (int)_nodes.size());
-					state = Joined;
+					_state = Joined;
 				}
 				_timeoutAccumulator = 0.0f;
 			}

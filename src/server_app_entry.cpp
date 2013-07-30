@@ -47,6 +47,8 @@
 #else
 
 #include "pbj/engine.h"
+#include "pbj/net/net_platform.h"
+#include "pbj/net/net_transport.h"
 
 #include <iostream>
 #include <fstream>
@@ -54,6 +56,7 @@
 
 #if defined(_WIN32) && !defined(DEBUG)
 #include <windows.h>
+
 int main(int argc, char* argv[]);
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -65,6 +68,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, INT)
 
 #endif // defined(_WIN32) && !defined(DEBUG)
 
+using namespace pbj;
+using pbj::net::Transport;
+
+void runServer(Transport*);
+Transport* initServer();
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief  Application entry point
@@ -104,9 +112,48 @@ int main(int argc, char* argv[])
 #endif
 
    // Initialize game engine
-   pbj::Engine engine;
-
-   // TODO: start editor
+   //pbj::Engine engine;
+   runServer(initServer());
+   // TODO: start server
+   return 0;
 };
 
+Transport* initServer()
+{
+	if(!Transport::init())
+	{
+		PBJ_LOG(pbj::VError) << "Failed to initialize transport layer" << PBJ_LOG_END;
+		return 0;
+	}
+
+	Transport* ret = 0;
+	ret = Transport::create();
+	if(ret == 0)
+	{
+		PBJ_LOG(pbj::VError) << "Failed to create transport object" << PBJ_LOG_END;
+		delete ret;
+		return 0;
+	}
+
+	U8 hostname[64+1] = "hostname";
+	ret->getHostName(hostname, sizeof(hostname));
+	ret->startServer(hostname);
+
+	return ret;
+}
+
+void runServer(Transport* transport)
+{ 
+	if(transport==0)
+		return;
+	
+	const F32 dt = 1.0f/30.0f;
+	while(true)
+	{
+		transport->update(dt);
+		pbj::net::waitSeconds(dt);
+	}
+	Transport::destroy(transport);
+	Transport::shutdown();
+}
 #endif

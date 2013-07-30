@@ -30,7 +30,7 @@ bool Socket::open(U16 port)
 	_socket = ::socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 	if(_socket <= 0)
 	{
-		PBJ_LOG(Verbosity::VError) << "Failed to create socket" << PBJ_LOG_END;
+		PBJ_LOG(pbj::VError) << "Failed to create socket" << PBJ_LOG_END;
 		_socket = 0;
 		return false;
 	}
@@ -42,7 +42,7 @@ bool Socket::open(U16 port)
 	address.sin_port = htons(port);
 	if(bind(_socket, (const sockaddr*)&address, sizeof(sockaddr_in)) < 0)
 	{
-		PBJ_LOG(Verbosity::VError) << "Failed to bind socket" << PBJ_LOG_END;
+		PBJ_LOG(pbj::VError) << "Failed to bind socket" << PBJ_LOG_END;
 		close();
 		return false;
 	}
@@ -53,7 +53,7 @@ bool Socket::open(U16 port)
 		DWORD nonBlocking = 1;
 		if(ioctlsocket(_socket, FIONBIO, &nonBlocking) != 0)
 		{
-			PBJ_LOG(Verbosity::VError) << "Failed to set non-blocking socket" << PBJ_LOG_END;
+			PBJ_LOG(pbj::VError) << "Failed to set non-blocking socket" << PBJ_LOG_END;
 			close();
 			return false;
 		}
@@ -65,7 +65,7 @@ bool Socket::open(U16 port)
 		I32 enable = 1;
 		if(setsockopt(_socket, SOL_SOCKET, SO_BROADCAST, (const char*)&enable, sizeof(enable)) < 0)
 		{
-			PBJ_LOG(Verbosity::VError) << "Failed set socket to broadcast" << PBJ_LOG_END;
+			PBJ_LOG(pbj::VError) << "Failed set socket to broadcast" << PBJ_LOG_END;
 			close();
 			return false;
 		}
@@ -121,7 +121,7 @@ int Socket::receive(Address& sender, void* data, int size)
 		return 0;
 
 	U32 address = ntohl(from.sin_addr.s_addr);
-	U8 port = ntohs(from.sin_port);
+	U8 port = (U8)ntohs(from.sin_port);
 
 	sender = Address(address, port);
 	

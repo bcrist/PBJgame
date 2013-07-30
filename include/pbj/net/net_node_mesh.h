@@ -1,5 +1,5 @@
 #ifndef NET_NODE_MESH_H_
-#define NET_NODE_MESH_H
+#define NET_NODE_MESH_H_
 
 #include <assert.h>
 #include <vector>

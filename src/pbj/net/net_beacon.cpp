@@ -8,7 +8,7 @@ using namespace net;
 Beacon::Beacon(const U8* const name, U32 protoId, U32 listenerPort, U32 serverPort)
 	: _socket(Socket::Broadcast | Socket::NonBlocking)
 {
-	std::strncpy((char*)_name, (const char*)name, 64);
+	strncpy_s((char*)_name, 65, (const char*)name, 64);
 	_name[64] = '\0';
 	_protoId = protoId;
 	_listenerPort = listenerPort;
@@ -25,7 +25,7 @@ Beacon::~Beacon()
 bool Beacon::start(I32 port)
 {
 	assert(!_running);
-	PBJ_LOG(Verbosity::VInfo) << "Starting beacon on port " << port << PBJ_LOG_END;
+	PBJ_LOG(pbj::VInfo) << "Starting beacon on port " << port << PBJ_LOG_END;
 	if(!_socket.open(port))
 		return false;
 	_running = true;
@@ -35,7 +35,7 @@ bool Beacon::start(I32 port)
 void Beacon::stop()
 {
 	assert(_running);
-	PBJ_LOG(Verbosity::VInfo) << "Stopping beacon" << PBJ_LOG_END;
+	PBJ_LOG(pbj::VInfo) << "Stopping beacon" << PBJ_LOG_END;
 	_socket.close();
 	_running = false;
 }
@@ -51,7 +51,7 @@ void Beacon::update(F32 dt)
 	assert(packet[12]<63);
 	memcpy(packet+13, _name, strlen((const char*)_name));
 	if(!_socket.send(Address(255,255,255,255,_listenerPort), packet, 12+1+packet[12]))
-		PBJ_LOG(Verbosity::VError) << "Failed to send broadcast packet" << PBJ_LOG_END;
+		PBJ_LOG(pbj::VError) << "Failed to send broadcast packet" << PBJ_LOG_END;
 	Address sender;
 	while(_socket.receive(sender, packet, 256));
 }

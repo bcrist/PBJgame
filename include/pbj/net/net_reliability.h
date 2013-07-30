@@ -45,6 +45,7 @@ namespace net
 		static void sProccessAck(U32, U32, PacketQueue&, PacketQueue&,
 							std::vector<U32>&, U32&, F32&, U32);
 
+		ReliabilitySystem();
 		ReliabilitySystem(F32, U32);
 		~ReliabilitySystem();
 
@@ -54,7 +55,6 @@ namespace net
 		U32 generateAckBits();
 		void processAck(U32, U32);
 		void update(F32);
-		void validate();
 		U32 getLocalSequence() const;
 		U32 getRemoteSequence() const;
 		U32 getmaxSequence() const;
@@ -86,6 +86,7 @@ namespace net
 		F32 _rtt;
 		F32 _rttMax;
 		vector<U32> _acks;
+		PacketQueue _pendingAckQueue;
 		PacketQueue _sentQueue;
 		PacketQueue _receivedQueue;
 		PacketQueue _ackedQueue;

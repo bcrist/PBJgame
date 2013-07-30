@@ -1,5 +1,5 @@
-#ifndef RELIABLE_CONNECTION_H_
-#define RELIABLE_CONNECTION_H_
+#ifndef NET_RELIABLE_CONNECTION_H_
+#define NET_RELIABLE_CONNECTION_H_
 
 #include "pbj/_pbj.h"
 #include "pbj/net/net_sockets.h"
@@ -17,11 +17,11 @@ namespace net
 		~ReliableConnection();
 
 		// overriden functions from "Connection"
-		bool sendPacket(const U8* const, I32);
-		I32 receivePacket(U8*, I32);
-		void update(F32);
-		I32 getHeaderSize() const;
-		ReliabilitySystem& getReliabilitySystem();
+		virtual bool sendPacket(const U8* const, I32);
+		virtual I32 receivePacket(U8*, I32);
+		virtual void update(F32);
+		virtual I32 getHeaderSize() const;
+		virtual ReliabilitySystem& getReliabilitySystem();
 
 	protected:
 		void writeHeader(U8*, U32, U32, U32);
