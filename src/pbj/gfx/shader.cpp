@@ -32,6 +32,7 @@
 namespace pbj {
 namespace gfx {
 
+///////////////////////////////////////////////////////////////////////////////
 Shader::Shader(const sw::ResourceId& id, Type type, const std::string& source)
     : type_(type),
       resource_id_(id),
@@ -46,37 +47,44 @@ Shader::Shader(const sw::ResourceId& id, Type type, const std::string& source)
     compile_(source);
 }
 
+///////////////////////////////////////////////////////////////////////////////
 Shader::~Shader()
 {
     invalidate_();
 }
 
+///////////////////////////////////////////////////////////////////////////////
 be::Handle<Shader> Shader::getHandle()
 {
     return handle_;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 const be::ConstHandle<Shader> Shader::getHandle() const
 {
     return handle_;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 const sw::ResourceId& Shader::getId() const
 {
     return resource_id_;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 Shader::Type Shader::getType() const
 {
     return type_;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 GLuint Shader::getGlId() const
 {
     return gl_id_;
 }
 
 #ifdef PBJ_EDITOR
+///////////////////////////////////////////////////////////////////////////////
 Shader::Shader()
     : type_(TFragment),
       gl_id_(0)
@@ -84,22 +92,26 @@ Shader::Shader()
     handle_.associate(this);
 }
 
+///////////////////////////////////////////////////////////////////////////////
 void Shader::setName(const std::string& name)
 {
     metadata_["__name__"] = name;
     resource_id_.resource = Id(name);
 }
 
+///////////////////////////////////////////////////////////////////////////////
 const std::string& Shader::getName() const
 {
     return getMetadata("__name__");
 }
 
+///////////////////////////////////////////////////////////////////////////////
 void Shader::setSandwich(const Id& id)
 {
     resource_id_.sandwich = id;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 void Shader::setMetadata(const std::string& key, const std::string& value)
 {
     if (key[0] == '_' && key[1] == '_')
@@ -119,6 +131,7 @@ void Shader::setMetadata(const std::string& key, const std::string& value)
         metadata_[key] = value;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 const std::string& Shader::getMetadata(const std::string& key) const
 {
     auto i = metadata_.find(key);
@@ -128,11 +141,13 @@ const std::string& Shader::getMetadata(const std::string& key) const
     return nullString_();
 }
 
+///////////////////////////////////////////////////////////////////////////////
 const std::map<std::string, std::string>& Shader::getMetadata() const
 {
     return metadata_;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 void Shader::setSource(const std::string& source)
 {
     metadata_["__source__"] = source;
@@ -140,11 +155,13 @@ void Shader::setSource(const std::string& source)
     invalidate_();
 }
 
+///////////////////////////////////////////////////////////////////////////////
 const std::string& Shader::getSource() const
 {
     return getMetadata("__source__");
 }
 
+///////////////////////////////////////////////////////////////////////////////
 void Shader::setType(Type type)
 {
     if (type != type_)
@@ -154,21 +171,25 @@ void Shader::setType(Type type)
     }
 }
 
+///////////////////////////////////////////////////////////////////////////////
 bool Shader::isValid() const
 {
     return gl_id_ != 0;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 const std::string& Shader::getInfoLog() const
 {
     return getMetadata("__infolog__");
 }
 
+///////////////////////////////////////////////////////////////////////////////
 void Shader::compile()
 {
     compile_(getSource());
 }
 
+///////////////////////////////////////////////////////////////////////////////
 std::string& Shader::nullString_() const
 {
     static std::string null_str;
@@ -177,6 +198,7 @@ std::string& Shader::nullString_() const
 
 #endif
 
+///////////////////////////////////////////////////////////////////////////////
 void Shader::compile_(const std::string& source)
 {
     invalidate_();
@@ -243,6 +265,7 @@ void Shader::compile_(const std::string& source)
 #endif
 }
 
+///////////////////////////////////////////////////////////////////////////////
 void Shader::invalidate_()
 {
     if (gl_id_ != 0)

@@ -331,10 +331,11 @@ int Window::getContextRevision() const
 /// \param  listener The event listener to register.
 /// \return An ID value which allows the listener to be removed/canceled before
 ///         the window is destroyed.
-size_t Window::registerMoveListener(const MoveListener& listener)
+U32 Window::registerMoveListener(const MoveListener& listener)
 {
-    move_listeners_.push_back(listener);
-    return move_listeners_.size() - 1;
+    U32 id = next_listener_id_++;
+    move_listeners_.push_back(std::make_pair(id, listener));
+    return id;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -346,10 +347,11 @@ size_t Window::registerMoveListener(const MoveListener& listener)
 /// \param  listener The event listener to register.
 /// \return An ID value which allows the listener to be removed/canceled before
 ///         the window is destroyed.
-size_t Window::registerResizeListener(const ResizeListener& listener)
+U32 Window::registerResizeListener(const ResizeListener& listener)
 {
-    resize_listeners_.push_back(listener);
-    return resize_listeners_.size() - 1;
+    U32 id = next_listener_id_++;
+    resize_listeners_.push_back(std::make_pair(id, listener));
+    return id;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -361,10 +363,11 @@ size_t Window::registerResizeListener(const ResizeListener& listener)
 /// \param  listener The event listener to register.
 /// \return An ID value which allows the listener to be removed/canceled before
 ///         the window is destroyed.
-size_t Window::registerContextResizeListener(const ContextResizeListener& listener)
+U32 Window::registerContextResizeListener(const ContextResizeListener& listener)
 {
-    context_resize_listeners_.push_back(listener);
-    return context_resize_listeners_.size() - 1;
+    U32 id = next_listener_id_++;
+    context_resize_listeners_.push_back(std::make_pair(id, listener));
+    return id;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -376,10 +379,11 @@ size_t Window::registerContextResizeListener(const ContextResizeListener& listen
 /// \param  listener The event listener to register.
 /// \return An ID value which allows the listener to be removed/canceled before
 ///         the window is destroyed.
-size_t Window::registerCloseRequestListener(const CloseRequestListener& listener)
+U32 Window::registerCloseRequestListener(const CloseRequestListener& listener)
 {
-    close_request_listeners_.push_back(listener);
-    return close_request_listeners_.size() - 1;
+    U32 id = next_listener_id_++;
+    close_request_listeners_.push_back(std::make_pair(id, listener));
+    return id;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -391,10 +395,11 @@ size_t Window::registerCloseRequestListener(const CloseRequestListener& listener
 /// \param  listener The event listener to register.
 /// \return An ID value which allows the listener to be removed/canceled before
 ///         the window is destroyed.
-size_t Window::registerRepaintRequestListener(const RepaintRequestListener& listener)
+U32 Window::registerRepaintRequestListener(const RepaintRequestListener& listener)
 {
-    repaint_request_listeners_.push_back(listener);
-    return repaint_request_listeners_.size() - 1;
+    U32 id = next_listener_id_++;
+    repaint_request_listeners_.push_back(std::make_pair(id, listener));
+    return id;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -406,10 +411,11 @@ size_t Window::registerRepaintRequestListener(const RepaintRequestListener& list
 /// \param  listener The event listener to register.
 /// \return An ID value which allows the listener to be removed/canceled before
 ///         the window is destroyed.
-size_t Window::registerFocusChangeListener(const FocusChangeListener& listener)
+U32 Window::registerFocusChangeListener(const FocusChangeListener& listener)
 {
-    focus_change_listeners_.push_back(listener);
-    return focus_change_listeners_.size() - 1;
+    U32 id = next_listener_id_++;
+    focus_change_listeners_.push_back(std::make_pair(id, listener));
+    return id;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -421,10 +427,11 @@ size_t Window::registerFocusChangeListener(const FocusChangeListener& listener)
 /// \param  listener The event listener to register.
 /// \return An ID value which allows the listener to be removed/canceled before
 ///         the window is destroyed.
-size_t Window::registerStateChangeListener(const StateChangeListener& listener)
+U32 Window::registerStateChangeListener(const StateChangeListener& listener)
 {
-    state_change_listeners_.push_back(listener);
-    return state_change_listeners_.size() - 1;
+    U32 id = next_listener_id_++;
+    state_change_listeners_.push_back(std::make_pair(id, listener));
+    return id;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -434,10 +441,17 @@ size_t Window::registerStateChangeListener(const StateChangeListener& listener)
 ///         canceled) then nothing happens.
 ///
 /// \param  id The ID value returned by the register function.
-void Window::cancelMoveListener(size_t id)
+void Window::cancelMoveListener(U32 id)
 {
-    if (id < move_listeners_.size())
-        move_listeners_[id] = nullptr;
+    auto& vec = move_listeners_;
+    for (auto i = vec.begin(), end = vec.end(); i != end; ++i)
+    {
+        if (i->first == id)
+        {
+            vec.erase(i);
+            break;
+        }
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -447,10 +461,17 @@ void Window::cancelMoveListener(size_t id)
 ///         canceled) then nothing happens.
 ///
 /// \param  id The ID value returned by the register function.
-void Window::cancelResizeListener(size_t id)
+void Window::cancelResizeListener(U32 id)
 {
-    if (id < resize_listeners_.size())
-        resize_listeners_[id] = nullptr;
+    auto& vec = resize_listeners_;
+    for (auto i = vec.begin(), end = vec.end(); i != end; ++i)
+    {
+        if (i->first == id)
+        {
+            vec.erase(i);
+            break;
+        }
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -460,10 +481,17 @@ void Window::cancelResizeListener(size_t id)
 ///         canceled) then nothing happens.
 ///
 /// \param  id The ID value returned by the register function.
-void Window::cancelContextResizeListener(size_t id)
+void Window::cancelContextResizeListener(U32 id)
 {
-    if (id < context_resize_listeners_.size())
-        context_resize_listeners_[id] = nullptr;
+    auto& vec = context_resize_listeners_;
+    for (auto i = vec.begin(), end = vec.end(); i != end; ++i)
+    {
+        if (i->first == id)
+        {
+            vec.erase(i);
+            break;
+        }
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -473,10 +501,17 @@ void Window::cancelContextResizeListener(size_t id)
 ///         canceled) then nothing happens.
 ///
 /// \param  id The ID value returned by the register function.
-void Window::cancelCloseRequestListener(size_t id)
+void Window::cancelCloseRequestListener(U32 id)
 {
-    if (id < close_request_listeners_.size())
-        close_request_listeners_[id] = nullptr;
+    auto& vec = close_request_listeners_;
+    for (auto i = vec.begin(), end = vec.end(); i != end; ++i)
+    {
+        if (i->first == id)
+        {
+            vec.erase(i);
+            break;
+        }
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -486,10 +521,17 @@ void Window::cancelCloseRequestListener(size_t id)
 ///         canceled) then nothing happens.
 ///
 /// \param  id The ID value returned by the register function.
-void Window::cancelRepaintRequestListener(size_t id)
+void Window::cancelRepaintRequestListener(U32 id)
 {
-    if (id < repaint_request_listeners_.size())
-        repaint_request_listeners_[id] = nullptr;
+    auto& vec = repaint_request_listeners_;
+    for (auto i = vec.begin(), end = vec.end(); i != end; ++i)
+    {
+        if (i->first == id)
+        {
+            vec.erase(i);
+            break;
+        }
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -499,10 +541,17 @@ void Window::cancelRepaintRequestListener(size_t id)
 ///         canceled) then nothing happens.
 ///
 /// \param  id The ID value returned by the register function.
-void Window::cancelFocusChangeListener(size_t id)
+void Window::cancelFocusChangeListener(U32 id)
 {
-    if (id < focus_change_listeners_.size())
-        focus_change_listeners_[id] = nullptr;
+    auto& vec = focus_change_listeners_;
+    for (auto i = vec.begin(), end = vec.end(); i != end; ++i)
+    {
+        if (i->first == id)
+        {
+            vec.erase(i);
+            break;
+        }
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -512,14 +561,22 @@ void Window::cancelFocusChangeListener(size_t id)
 ///         canceled) then nothing happens.
 ///
 /// \param  id The ID value returned by the register function.
-void Window::cancelStateChangeListener(size_t id)
+void Window::cancelStateChangeListener(U32 id)
 {
-    if (id < state_change_listeners_.size())
-        state_change_listeners_[id] = nullptr;
+    auto& vec = state_change_listeners_;
+    for (auto i = vec.begin(), end = vec.end(); i != end; ++i)
+    {
+        if (i->first == id)
+        {
+            vec.erase(i);
+            break;
+        }
+    }
 }
 
 Window::Window(const WindowSettings& window_settings)
-    : window_settings_(window_settings)
+    : next_listener_id_(0),
+      window_settings_(window_settings)
 {
     int width, height;
     int refresh_rate;
@@ -645,7 +702,7 @@ Window::Window(const WindowSettings& window_settings)
     if (vsync < 0)
     {
         if (!(glfwExtensionSupported("WGL_EXT_swap_control_tear") ||
-                glfwExtensionSupported("GLX_EXT_swap_control_tear")))
+              glfwExtensionSupported("GLX_EXT_swap_control_tear")))
         {
             vsync = abs(vsync);
         }
@@ -685,51 +742,79 @@ Window::~Window()
 
 void Window::fireMoved_(I32 x, I32 y)
 {
-    for (const MoveListener& listener : move_listeners_)
+    auto& c = move_listeners_;
+    for (auto& p : c)
+    {
+        auto& listener = p.second;
         if (listener)
             listener(x, y);
+    }
 }
 
 void Window::fireResized_(I32 width, I32 height)
 {
-    for (const ResizeListener& listener : resize_listeners_)
+    auto& c = resize_listeners_;
+    for (auto& p : c)
+    {
+        auto& listener = p.second;
         if (listener)
             listener(width, height);
+    }
 }
 
 void Window::fireContextResized_(I32 width, I32 height)
 {
-    for (const ContextResizeListener& listener : context_resize_listeners_)
+    auto& c = context_resize_listeners_;
+    for (auto& p : c)
+    {
+        auto& listener = p.second;
         if (listener)
             listener(width, height);
+    }
 }
 
 void Window::fireCloseRequested_()
 {
-    for (const CloseRequestListener& listener : close_request_listeners_)
+    auto& c = close_request_listeners_;
+    for (auto& p : c)
+    {
+        auto& listener = p.second;
         if (listener)
             listener();
+    }
 }
 
 void Window::fireRepaintRequested_()
 {
-    for (const RepaintRequestListener& listener : repaint_request_listeners_)
+    auto& c = repaint_request_listeners_;
+    for (auto& p : c)
+    {
+        auto& listener = p.second;
         if (listener)
             listener();
+    }
 }
 
 void Window::fireFocusChanged_(bool focused)
 {
-    for (const FocusChangeListener& listener : focus_change_listeners_)
+    auto& c = focus_change_listeners_;
+    for (auto& p : c)
+    {
+        auto& listener = p.second;
         if (listener)
             listener(focused);
+    }
 }
 
 void Window::fireStateChanged_(bool iconified)
 {
-     for (const StateChangeListener& listener : state_change_listeners_)
-         if (listener)
-             listener(iconified);
+    auto& c = state_change_listeners_;
+    for (auto& p : c)
+    {
+        auto& listener = p.second;
+        if (listener)
+            listener(iconified);
+    }
 }
 
 void Window::glfwMoved_(GLFWwindow* window, int x, int y)

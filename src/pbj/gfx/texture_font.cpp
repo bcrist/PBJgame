@@ -29,30 +29,36 @@
 namespace pbj {
 namespace gfx {
 
+///////////////////////////////////////////////////////////////////////////////
 TextureFont::~TextureFont()
 {
 }
 
+///////////////////////////////////////////////////////////////////////////////
 const be::Handle<TextureFont>& TextureFont::getHandle()
 {
     return handle_;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 const be::ConstHandle<TextureFont>& TextureFont::getHandle() const
 {
     return handle_;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 const sw::ResourceId& TextureFont::getId() const
 {
     return resource_id_;
 }
 
-const ivec2& TextureFont::getTextureSize() const
+///////////////////////////////////////////////////////////////////////////////
+F32 TextureFont::getCapHeight() const
 {
-    return texture_size_;
+    return cap_height_;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 const TextureFontCharacter& TextureFont::operator[](U32 codepoint) const
 {
     const TextureFontCharacter* ch(nullptr);
@@ -82,12 +88,14 @@ const TextureFontCharacter& TextureFont::operator[](U32 codepoint) const
     return *ch;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 F32 TextureFont::getTextWidth(const std::string& text)
 {
     // TODO: implement if necessary.
     throw std::exception("Not yet implemented!");
 }
 
+///////////////////////////////////////////////////////////////////////////////
 F32 TextureFont::print(const mat4& transform, const std::string& text, const vec4& color)
 {
     // use TextureFontText instead 
