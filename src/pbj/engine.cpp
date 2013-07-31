@@ -90,6 +90,8 @@ Engine::Engine()
     Window* wnd = new Window(window_settings);
     window_.reset(wnd);
 
+    built_ins_.reset(new gfx::BuiltIns());
+
     wnd->setTitle(window_title);
     
     PBJ_LOG(VInfo) << glGetString(GL_VERSION) << PBJ_LOG_END;
@@ -102,12 +104,18 @@ Engine::Engine()
 Engine::~Engine()
 {
     window_.reset();
+    built_ins_.reset();
     glfwTerminate();
 }
 
 Window* Engine::getWindow() const
 {
     return window_.get();
+}
+
+const gfx::BuiltIns& Engine::getBuiltIns() const
+{
+    return *built_ins_;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

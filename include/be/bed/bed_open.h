@@ -1,4 +1,4 @@
-// Copyright (c) 2013 PBJ^2 Productions
+// Copyright (c) 2013 Benjamin Crist
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -19,47 +19,38 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   pbj/engine.h
+/// \file   be/bed/bed_open.h
 /// \author Benjamin Crist
 ///
-/// \brief  pbj::Engine class header.
+/// \brief  be::bed::Bed non-member functions.
+/// \details These are separated from bed.h to reduce compile time since many
+/// utilize \c boost::filesystem headers and they are not needed for most usage
+/// of beds (after they are opened).
 
-#ifndef PBJ_ENGINE_H_
-#define PBJ_ENGINE_H_
+#ifndef BE_BED_BED_OPEN_H_
+#define BE_BED_BED_OPEN_H_
 
-#include "be/id.h"
-#include "pbj/_pbj.h"
-#include "pbj/window.h"
-#include "pbj/gfx/built_ins.h"
+#include "be/bed/bed.h"
 
-#include <memory>
+#include <boost/filesystem.hpp>
 
-namespace pbj {
+#include <unordered_map>
 
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Manages global engine objects.
-/// \details Only one engine should be created per process.  Attempts to create
-///        multiple engines will result in an exception.
-class Engine
-{
-public:
-   Engine();
-   ~Engine();
+namespace be {
+namespace bed {
 
-   Window* getWindow() const;
+bool specify(const Id& bed_id, const boost::filesystem::path& path);
+Id specify(const boost::filesystem::path& path);
+void directory(const boost::filesystem::path& path);
 
-   const gfx::BuiltIns& getBuiltIns() const;
+const boost::filesystem::path& getPath(const Id& bed_id);
 
-private:
-    std::unique_ptr<Window> window_;
-    std::unique_ptr<gfx::BuiltIns> built_ins_;
+std::unordered_map<Id, boost::filesystem::path> getPaths();
 
-   Engine(const Engine&);
-   void operator=(const Engine&);
-};
+std::shared_ptr<Bed> open(const Id& bed_id);
+std::shared_ptr<Bed> openWritable(const Id& bed_id);
 
-Engine& getEngine();
-
-} // namespace pbj
+} // namespace bed
+} // namespace be
 
 #endif

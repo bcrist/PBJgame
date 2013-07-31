@@ -19,47 +19,46 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   pbj/engine.h
+/// \file   pbj/gfx/shader_program.inl
 /// \author Benjamin Crist
 ///
-/// \brief  pbj::Engine class header.
+/// \brief  Implementations of pbj::gfx::ShaderProgram template functions.
 
-#ifndef PBJ_ENGINE_H_
-#define PBJ_ENGINE_H_
+#if !defined(PBJ_GFX_SHADER_PROGRAM_H_) && !defined(DOXYGEN)
+#include "pbj/gfx/shader_program.h"
+#elif !defined(PBJ_GFX_SHADER_PROGRAM_INL_)
+#define PBJ_GFX_SHADER_PROGRAM_INL_
 
-#include "be/id.h"
-#include "pbj/_pbj.h"
-#include "pbj/window.h"
-#include "pbj/gfx/built_ins.h"
-
-#include <memory>
+#include <algorithm>
 
 namespace pbj {
+namespace gfx {
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief Manages global engine objects.
-/// \details Only one engine should be created per process.  Attempts to create
-///        multiple engines will result in an exception.
-class Engine
+template <typename Iterator>
+ShaderProgram::ShaderProgram(const sw::ResourceId& id,
+                             const Iterator& begin,
+                             const Iterator& end)
+    : resource_id_(id),
+      gl_id_(0)
 {
-public:
-   Engine();
-   ~Engine();
+    static_assert(std::is_same<std::iterator_traits<Iterator>::value_type, Shader>::value,
+        "begin and end must be iterators over Shader objects.");
 
-   Window* getWindow() const;
+    handle_.associate(this);
 
-   const gfx::BuiltIns& getBuiltIns() const;
+    gl_id_ = glCreateProgram();
 
-private:
-    std::unique_ptr<Window> window_;
-    std::unique_ptr<gfx::BuiltIns> built_ins_;
 
-   Engine(const Engine&);
-   void operator=(const Engine&);
-};
+    for (Iterator i = begin; i != end; ++i)
+        glAttachShader(gl_id_, i->getGlId());
 
-Engine& getEngine();
+    glLinkProgram(gl_id_);
 
+    checkLinkResult_();
+}
+
+} // namespace pbj::gfx
 } // namespace pbj
 
 #endif

@@ -19,47 +19,50 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   pbj/engine.h
+/// \file   pbj/gfx/texture_font_character.cpp
 /// \author Benjamin Crist
 ///
-/// \brief  pbj::Engine class header.
+/// \brief  Implementations of pbj::gfx::TextureFontCharacter functions.
 
-#ifndef PBJ_ENGINE_H_
-#define PBJ_ENGINE_H_
-
-#include "be/id.h"
-#include "pbj/_pbj.h"
-#include "pbj/window.h"
-#include "pbj/gfx/built_ins.h"
-
-#include <memory>
+#include "pbj/gfx/texture_font_character.h"
 
 namespace pbj {
+namespace gfx {
 
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Manages global engine objects.
-/// \details Only one engine should be created per process.  Attempts to create
-///        multiple engines will result in an exception.
-class Engine
+TextureFontCharacter::TextureFontCharacter()
+    : codepoint(cp_invalid),
+      advance(0)
+{}
+
+bool TextureFontCharacter::operator==(const TextureFontCharacter& other) const
 {
-public:
-   Engine();
-   ~Engine();
+    return codepoint == other.codepoint;
+}
 
-   Window* getWindow() const;
+bool TextureFontCharacter::operator!=(const TextureFontCharacter& other) const
+{
+    return codepoint != other.codepoint;
+}
 
-   const gfx::BuiltIns& getBuiltIns() const;
+bool TextureFontCharacter::operator<(const TextureFontCharacter& other) const
+{
+    return codepoint < other.codepoint;
+}
 
-private:
-    std::unique_ptr<Window> window_;
-    std::unique_ptr<gfx::BuiltIns> built_ins_;
+bool TextureFontCharacter::operator<=(const TextureFontCharacter& other) const
+{
+    return codepoint <= other.codepoint;
+}
 
-   Engine(const Engine&);
-   void operator=(const Engine&);
-};
+bool TextureFontCharacter::operator>(const TextureFontCharacter& other) const
+{
+    return codepoint > other.codepoint;
+}
 
-Engine& getEngine();
+bool TextureFontCharacter::operator>=(const TextureFontCharacter& other) const
+{
+    return codepoint >= other.codepoint;
+}
 
+} // namespace pbj::gfx
 } // namespace pbj
-
-#endif
