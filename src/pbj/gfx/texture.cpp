@@ -34,6 +34,7 @@
 namespace pbj {
 namespace gfx {
 
+///////////////////////////////////////////////////////////////////////////////
 Texture::Texture(const sw::ResourceId& id, const GLubyte* data, size_t size, InternalFormat format, bool srgb_color, FilterMode mag_mode, FilterMode min_mode)
     : resource_id_(id),
       gl_id_(0)
@@ -51,52 +52,68 @@ Texture::Texture(const sw::ResourceId& id, const GLubyte* data, size_t size, Int
     upload_(data, size, format, srgb_color, mag_mode, min_mode);
 }
 
+///////////////////////////////////////////////////////////////////////////////
 Texture::~Texture()
 {
     invalidate_();
 }
 
+///////////////////////////////////////////////////////////////////////////////
 be::Handle<Texture> Texture::getHandle()
 {
     return handle_;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 const be::ConstHandle<Texture> Texture::getHandle() const
 {
     return handle_;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 const sw::ResourceId& Texture::getId() const
 {
     return resource_id_;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 GLuint Texture::getGlId() const
 {
     return gl_id_;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+const ivec2& Texture::getDimensions() const
+{
+    return dimensions_;
+}
+
 #ifdef PBJ_EDITOR
+///////////////////////////////////////////////////////////////////////////////
 Texture::Texture()
 {
 }
 
+///////////////////////////////////////////////////////////////////////////////
 void Texture::setName(const std::string& name)
 {
     metadata_["__name__"] = name;
     resource_id_.resource = Id(name);
 }
 
+///////////////////////////////////////////////////////////////////////////////
 const std::string& Texture::getName() const
 {
     return getMetadata("__name__");
 }
 
+///////////////////////////////////////////////////////////////////////////////
 void Texture::setSandwich(const Id& id)
 {
     resource_id_.sandwich = id;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 void Texture::setMetadata(const std::string& key, const std::string& value)
 {
     if (key[0] == '_' && key[1] == '_')
@@ -116,6 +133,7 @@ void Texture::setMetadata(const std::string& key, const std::string& value)
         metadata_[key] = value;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 const std::string& Texture::getMetadata(const std::string& key) const
 {
     auto i = metadata_.find(key);
@@ -125,11 +143,13 @@ const std::string& Texture::getMetadata(const std::string& key) const
     return nullString_();
 }
 
+///////////////////////////////////////////////////////////////////////////////
 const std::map<std::string, std::string>& Texture::getMetadata() const
 {
     return metadata_;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 void Texture::setData(const GLubyte* data, size_t size)
 {
     data_.clear();
@@ -139,12 +159,14 @@ void Texture::setData(const GLubyte* data, size_t size)
     invalidate_();
 }
 
+///////////////////////////////////////////////////////////////////////////////
 size_t Texture::getData(const GLubyte*& data) const
 {
     data = data_.data();
     return data_.size();
 }
 
+///////////////////////////////////////////////////////////////////////////////
 void Texture::setInternalFormat(InternalFormat format)
 {
     metadata_["__internalformat__"] = std::to_string(format);
@@ -152,11 +174,13 @@ void Texture::setInternalFormat(InternalFormat format)
     invalidate_();
 }
 
+///////////////////////////////////////////////////////////////////////////////
 Texture::InternalFormat Texture::getInternalFormat() const
 {
     return static_cast<InternalFormat>(std::stoi(getMetadata("__internalformat__")));
 }
 
+///////////////////////////////////////////////////////////////////////////////
 void Texture::setSrgbColorspace(bool srgb_color)
 {
     metadata_["__srgb__"] = srgb_color ? "1" : "0";
@@ -164,11 +188,13 @@ void Texture::setSrgbColorspace(bool srgb_color)
     invalidate_();
 }
 
+///////////////////////////////////////////////////////////////////////////////
 bool Texture::isSrgbColorspace() const
 {
     return std::stoi(getMetadata("__srgb__")) != 0;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 void Texture::setMagFilterMode(FilterMode mode)
 {
     metadata_["__minfilter__"] = std::to_string(mode);
@@ -176,11 +202,13 @@ void Texture::setMagFilterMode(FilterMode mode)
     invalidate_();
 }
 
+///////////////////////////////////////////////////////////////////////////////
 Texture::FilterMode Texture::getMagFilterMode() const
 {
     return static_cast<FilterMode>(std::stoi(getMetadata("__magfilter__")));
 }
 
+///////////////////////////////////////////////////////////////////////////////
 void Texture::setMinFilterMode(FilterMode mode)
 {
     metadata_["__minfilter__"] = std::to_string(mode);
@@ -188,21 +216,25 @@ void Texture::setMinFilterMode(FilterMode mode)
     invalidate_();
 }
 
+///////////////////////////////////////////////////////////////////////////////
 Texture::FilterMode Texture::getMinFilterMode() const
 {
     return static_cast<FilterMode>(std::stoi(getMetadata("__minfilter__")));
 }
 
+///////////////////////////////////////////////////////////////////////////////
 bool Texture::isValid() const
 {
     return gl_id_ != 0;
 }   
 
+///////////////////////////////////////////////////////////////////////////////
 void Texture::upload()
 {   
     upload_(data_.data(), data_.size(), getInternalFormat(), isSrgbColorspace(), getMagFilterMode(), getMinFilterMode());
 }
 
+///////////////////////////////////////////////////////////////////////////////
 std::string& Texture::nullString_() const
 {
     static std::string null_str;
@@ -211,6 +243,7 @@ std::string& Texture::nullString_() const
 
 #endif
 
+///////////////////////////////////////////////////////////////////////////////
 void Texture::upload_(const GLubyte* data, size_t size, InternalFormat format, bool srgb_color, FilterMode mag_mode, FilterMode min_mode)
 {
     invalidate_();
@@ -317,6 +350,7 @@ void Texture::upload_(const GLubyte* data, size_t size, InternalFormat format, b
     }
 }
 
+///////////////////////////////////////////////////////////////////////////////
 void Texture::invalidate_()
 {
     if (gl_id_ != 0)

@@ -29,6 +29,8 @@
 
 #include "pbj/gfx/texture_font.h"
 
+#include "pbj/gfx/batcher.h"
+
 namespace pbj {
 namespace gfx {
 
@@ -38,28 +40,48 @@ namespace gfx {
 class TextureFontText
 {
 public:
-    TextureFontText(const TextureFont& font, const std::string& text, GLenum buffer_mode = GL_STATIC_DRAW);
+    TextureFontText();
     ~TextureFontText();
+
+    void setBufferMode(GLenum buffer_mode);
+    GLenum getBufferMode() const;
 
     void setColor(const vec4& color);
     const vec4& getColor() const;
 
-    void draw(const mat4& transform);
+    void setFont(const be::ConstHandle<TextureFont>& font);
+    const be::ConstHandle<TextureFont>& getFont() const;
+
+    void setText(const std::string& text);
+    const std::string& getText() const;
+    F32 getTextWidth();
+
+    void setOrderIndex(U32 order_index);
+    U32 getOrderIndex() const;
+
+    void prepare();
+    bool isPrepared() const;
+
+    void draw(const mat4* transform, const ScissorConfig* scissor);
 
 private:
     vec4 color_;
    
-    be::ConstHandle<Texture> texture_;
+    std::string text_;
+    
+    GLenum buffer_mode_;
 
-    GLuint vao_id_; ///< OpenGL Vertex array object id
+    be::ConstHandle<Texture> texture_;
+    be::ConstHandle<TextureFont> font_;
+
+    SamplerConfig sampler_;
+    UniformConfig uniforms_[2];
+    BatcherTask btask_;
     GLuint ibo_id_; ///< OpenGL Vertex Index buffer object id
     GLuint vbo_id_; ///< OpenGL Vertex buffer object id
-    GLsizei ibo_size_; ///< Size of IBO
 
-    GLuint shader_program_id_;
-    GLint color_uniform_location_;
-    GLint texture_uniform_location_;
-    GLint transform_uniform_location_;
+    bool buffers_valid_;
+    F32 text_width_;
 
     TextureFontText(const TextureFontText&);
     void operator=(const TextureFontText&);

@@ -29,36 +29,44 @@
 namespace pbj {
 namespace gfx {
 
+///////////////////////////////////////////////////////////////////////////////
 TextureFontCharacter::TextureFontCharacter()
     : codepoint(cp_invalid),
-      advance(0)
-{}
+      character_advance(0)
+{
+}
 
+///////////////////////////////////////////////////////////////////////////////
 bool TextureFontCharacter::operator==(const TextureFontCharacter& other) const
 {
     return codepoint == other.codepoint;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 bool TextureFontCharacter::operator!=(const TextureFontCharacter& other) const
 {
     return codepoint != other.codepoint;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 bool TextureFontCharacter::operator<(const TextureFontCharacter& other) const
 {
     return codepoint < other.codepoint;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 bool TextureFontCharacter::operator<=(const TextureFontCharacter& other) const
 {
     return codepoint <= other.codepoint;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 bool TextureFontCharacter::operator>(const TextureFontCharacter& other) const
 {
     return codepoint > other.codepoint;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 bool TextureFontCharacter::operator>=(const TextureFontCharacter& other) const
 {
     return codepoint >= other.codepoint;

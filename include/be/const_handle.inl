@@ -133,6 +133,19 @@ inline const T& ConstHandle<T>::operator*() const
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Returns the internal index used to identify an object.
+///
+/// \details Two valid handles which point to the same object will have the
+///         same index, and two handles which point to different objects will
+///         have different indices, but an invalid handle may have the same
+///         index as a different (valid) one.
+template <class T>
+inline uint32_t ConstHandle<T>::getInternalIndex() const
+{
+    return index_;
+}
+
+///////////////////////////////////////////////////////////////////////////////
 /// \brief  Compares this handle with another to see if they reference the same
 ///         target.
 /// \details Two handles which once referenced different objects but are both

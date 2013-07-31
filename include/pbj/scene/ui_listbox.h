@@ -1,15 +1,15 @@
 // Copyright (c) 2013 PBJ^2 Productions
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
 // deal in the Software without restriction, including without limitation the
 // rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
 // sell copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -19,52 +19,70 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   pbj/engine.h
-/// \author Benjamin Crist
-///
-/// \brief  pbj::Engine class header.
+/// \file   pbj/scene/ui_listbox.h
+/// \author Ben Crist
 
-#ifndef PBJ_ENGINE_H_
-#define PBJ_ENGINE_H_
+#ifndef PBJ_SCENE_UI_LISTBOX_H_
+#define PBJ_SCENE_UI_LISTBOX_H_
 
-#include "be/id.h"
-#include "pbj/_pbj.h"
-#include "pbj/window.h"
-#include "pbj/gfx/built_ins.h"
-#include "pbj/gfx/batcher.h"
-
-#include <memory>
+#include "pbj/scene/ui_panel.h"
+#include "pbj/scene/ui_button.h"
+#include "pbj/scene/ui_label.h"
 
 namespace pbj {
+namespace scene {
 
-///////////////////////////////////////////////////////////////////////////////
-/// \brief Manages global engine objects.
-/// \details Only one engine should be created per process.  Attempts to create
-///        multiple engines will result in an exception.
-class Engine
+class UIListboxModel
 {
 public:
-   Engine();
-   ~Engine();
+    virtual ~UIListboxModel() {}
 
-   Window* getWindow() const;
+    virtual std::string operator[](size_t index) = 0;
+    virtual size_t size() const = 0;
 
-   gfx::Batcher& getBatcher();
-
-   const gfx::BuiltIns& getBuiltIns() const;
-
-private:
-    gfx::Batcher batcher_;
-
-    std::unique_ptr<Window> window_;
-    std::unique_ptr<gfx::BuiltIns> built_ins_;
-
-   Engine(const Engine&);
-   void operator=(const Engine&);
+    virtual bool isDirty() = 0;  ///< returns true when listbox data has changed since the last call to isDirty().
 };
 
-Engine& getEngine();
+class UIListbox : public UIElement
+{
+    friend class UIRoot;
 
+public:
+    UIListbox();
+    virtual ~UIListbox();
+
+    UIPanel panel;
+    UIButton* scroll_up;
+    UIButton* scroll_down;
+    UIButton* list_buttons[16];
+    
+    std::unique_ptr<UIListboxModel> model;
+
+    virtual UIElement* getElementAt(const ivec2& screen_position);
+
+    I32 getSelectedIndex() const;
+
+    virtual void draw();
+
+    void onUpClick();
+    void onClick(U32 index);
+    void onDownClick();
+
+private:
+    virtual void onBoundsChange_();
+
+    void calculateBounds_();
+
+    bool bounds_valid_;
+
+    size_t first_visible_index_;
+    size_t selected_index_;
+
+    UIListbox(const UIListbox&);
+    void operator=(const UIListbox&);
+};
+
+} // namespace pbj::scene
 } // namespace pbj
 
 #endif

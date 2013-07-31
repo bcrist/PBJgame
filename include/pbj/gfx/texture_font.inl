@@ -38,15 +38,12 @@ namespace gfx {
 template <typename Iterator>
 TextureFont::TextureFont(const sw::ResourceId& id,
                          const be::ConstHandle<Texture>& texture,
-                         const ivec2& texture_size,
-                         U16 line_height, U16 baseline,
+                         F32 cap_height,
                          const Iterator& chars_begin,
                          const Iterator& chars_end)
     : resource_id_(id),
-      texture_(texture),
-      texture_size_(texture_size),
-      line_height_(line_height),
-      baseline_(baseline)
+      cap_height_(cap_height),
+      texture_(texture)
 {
     static_assert(std::is_same<std::iterator_traits<Iterator>::value_type, TextureFontCharacter>::value,
         "chars_begin and chars_end must be iterators over TextureFontCharacter objects.");

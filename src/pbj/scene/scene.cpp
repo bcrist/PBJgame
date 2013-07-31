@@ -1,5 +1,5 @@
 // Copyright (c) 2013 PBJ^2 Productions
-//
+// 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
 // deal in the Software without restriction, including without limitation the
@@ -19,29 +19,19 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   pbj/sw/sandwich_open.h
+/// \file   pbj/scene.cpp
 /// \author Benjamin Crist
 ///
-/// \brief  pbj::sw::Sandwich non-member functions.
+/// \brief  Implementations of pbj::scene::Scene functions.
 
-#ifndef PBJ_SW_SANDWICH_OPEN_H_
-#define PBJ_SW_SANDWICH_OPEN_H_
-
-#include "pbj/sw/sandwich.h"
-
-#include <unordered_map>
+#include "pbj/scene/scene.h"
 
 namespace pbj {
-namespace sw {
+namespace scene {
 
-void readDirectory(const std::string& path);
+Scene::Scene()
+{
+}
 
-std::vector<Id> getSandwichIds();
-
-std::shared_ptr<Sandwich> open(const Id& id);
-std::shared_ptr<Sandwich> openWritable(const Id& id);
-
-} // namespace pbj::sw
+} // namespace pbj::scene
 } // namespace pbj
-
-#endif

@@ -46,6 +46,8 @@ class Engine;
 ///
 /// \brief  Represents a window or fullscreen exclusive mode which can be used
 ///         to display OpenGL graphics.
+///
+/// \todo   Add support for creating maximized windows (non-fullscreen)
 class Window
 {
    friend class Engine;
@@ -99,21 +101,21 @@ public:
     int getContextVersionMinor() const;
     int getContextRevision() const;
 
-    size_t registerMoveListener(const MoveListener& listener);
-    size_t registerResizeListener(const ResizeListener& listener);
-    size_t registerContextResizeListener(const ContextResizeListener& listener);
-    size_t registerCloseRequestListener(const CloseRequestListener& listener);
-    size_t registerRepaintRequestListener(const RepaintRequestListener& listener);
-    size_t registerFocusChangeListener(const FocusChangeListener& listener);
-    size_t registerStateChangeListener(const StateChangeListener& listener);
+    U32 registerMoveListener(const MoveListener& listener);
+    U32 registerResizeListener(const ResizeListener& listener);
+    U32 registerContextResizeListener(const ContextResizeListener& listener);
+    U32 registerCloseRequestListener(const CloseRequestListener& listener);
+    U32 registerRepaintRequestListener(const RepaintRequestListener& listener);
+    U32 registerFocusChangeListener(const FocusChangeListener& listener);
+    U32 registerStateChangeListener(const StateChangeListener& listener);
 
-    void cancelMoveListener(size_t id);
-    void cancelResizeListener(size_t id);
-    void cancelContextResizeListener(size_t id);
-    void cancelCloseRequestListener(size_t id);
-    void cancelRepaintRequestListener(size_t id);
-    void cancelFocusChangeListener(size_t id);
-    void cancelStateChangeListener(size_t id);
+    void cancelMoveListener(U32 id);
+    void cancelResizeListener(U32 id);
+    void cancelContextResizeListener(U32 id);
+    void cancelCloseRequestListener(U32 id);
+    void cancelRepaintRequestListener(U32 id);
+    void cancelFocusChangeListener(U32 id);
+    void cancelStateChangeListener(U32 id);
 
 private:
     // called from Engine:
@@ -136,13 +138,15 @@ private:
    static void glfwFocusChanged_(GLFWwindow* window, int state);
    static void glfwIconStateChanged_(GLFWwindow* window, int state);
 
-   std::vector<MoveListener> move_listeners_;
-   std::vector<ResizeListener> resize_listeners_;
-   std::vector<ContextResizeListener> context_resize_listeners_;
-   std::vector<CloseRequestListener> close_request_listeners_;
-   std::vector<RepaintRequestListener> repaint_request_listeners_;
-   std::vector<FocusChangeListener> focus_change_listeners_;
-   std::vector<StateChangeListener> state_change_listeners_;
+   std::vector<std::pair<U32, MoveListener> > move_listeners_;
+   std::vector<std::pair<U32, ResizeListener> > resize_listeners_;
+   std::vector<std::pair<U32, ContextResizeListener> > context_resize_listeners_;
+   std::vector<std::pair<U32, CloseRequestListener> > close_request_listeners_;
+   std::vector<std::pair<U32, RepaintRequestListener> > repaint_request_listeners_;
+   std::vector<std::pair<U32, FocusChangeListener> > focus_change_listeners_;
+   std::vector<std::pair<U32, StateChangeListener> > state_change_listeners_;
+
+   U32 next_listener_id_;
 
    WindowSettings window_settings_;
    std::string title_;

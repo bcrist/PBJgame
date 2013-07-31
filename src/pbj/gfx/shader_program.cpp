@@ -31,6 +31,7 @@
 namespace pbj {
 namespace gfx {
 
+///////////////////////////////////////////////////////////////////////////////
 ShaderProgram::ShaderProgram(const sw::ResourceId& id, const Shader& vertex_shader, const Shader& fragment_shader)
     : resource_id_(id),
       gl_id_(0)
@@ -61,31 +62,37 @@ ShaderProgram::ShaderProgram(const sw::ResourceId& id, const Shader& vertex_shad
     checkLinkResult_();
 }
 
+///////////////////////////////////////////////////////////////////////////////
 ShaderProgram::~ShaderProgram()
 {
     invalidate_();
 }
 
+///////////////////////////////////////////////////////////////////////////////
 const be::Handle<ShaderProgram>& ShaderProgram::getHandle()
 {
     return handle_;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 const be::ConstHandle<ShaderProgram>& ShaderProgram::getHandle() const
 {
     return handle_;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 const sw::ResourceId& ShaderProgram::getId() const
 {
     return resource_id_;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 GLuint ShaderProgram::getGlId() const
 {
     return gl_id_;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 void ShaderProgram::checkLinkResult_()
 {
     GLint result = GL_FALSE;
@@ -111,6 +118,7 @@ void ShaderProgram::checkLinkResult_()
     }
 }
 
+///////////////////////////////////////////////////////////////////////////////
 void ShaderProgram::invalidate_()
 {
     if (gl_id_ != 0)

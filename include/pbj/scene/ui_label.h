@@ -35,10 +35,14 @@
 namespace pbj {
 namespace scene {
 
+class UIButton;
+
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief  Text Label UI element.
 class UILabel : public UIElement
 {
+    friend class UIButton;
+
 public:
     enum Align
     {
@@ -50,14 +54,13 @@ public:
     UILabel();
     virtual ~UILabel();
 
+    virtual UIElement* getElementAt(const ivec2& screen_position);
+
     void setText(const std::string& text);
     const std::string& getText() const;
 
-    void setScale(const vec2& scale);
-    const vec2& getScale() const;
-
-    void setBackgroundColor(const color4& color);
-    const color4& getBackgroundColor() const;
+    void setTextScale(const vec2& scale);
+    const vec2& getTextScale() const;
 
     void setTextColor(const color4& color);
     const color4& getTextColor() const;
@@ -68,16 +71,19 @@ public:
     void setAlign(Align align);
     Align getAlign() const;
 
-    virtual void draw(const mat4& view_projection);
+    virtual void draw();
 
 private:
-    std::string text_;
-    color4 background_color_;
-    color4 text_color_;
-    vec2 scale_;
-    be::ConstHandle<gfx::TextureFont> font_;
+    virtual void onBoundsChange_();
+
+    void calculateTextTransform_();
+
+    vec2 text_scale_;
     gfx::TextureFontText tf_text_;
     Align align_;
+
+    mat4 text_transform_;
+    bool text_transform_valid_;
 
     UILabel(const UILabel&);
     void operator=(const UILabel&);
