@@ -67,6 +67,6 @@ namespace net
 		F32 _timeoutAccumulator;
 		Address _address;
 	};
-}
-}
+} //namespace net
+} //namespace pbj
 #endif

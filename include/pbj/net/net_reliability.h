@@ -91,6 +91,6 @@ namespace net
 		PacketQueue _receivedQueue;
 		PacketQueue _ackedQueue;
 	};
-}
-}
+} //namespace net
+} //namespace pbj
 #endif

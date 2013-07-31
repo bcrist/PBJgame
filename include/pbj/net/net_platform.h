@@ -75,6 +75,6 @@ namespace net
 		value = (((I32)data[0]<<24) | ((I32)data[1]<<16) | 
 				  ((I32)data[2]<<8)  | ((I32)data[3]));		
 	}
-}
-}
+} //namespace net
+} //namespace pbj
 #endif

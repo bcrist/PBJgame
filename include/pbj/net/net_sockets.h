@@ -1,8 +1,6 @@
 #ifndef NET_SOCKETS_H_
 #define NET_SOCKETS_H_
 
-
-
 #include <assert.h>
 #include <iostream>
 #include "pbj/net/net_platform.h"
