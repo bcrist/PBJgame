@@ -16,38 +16,11 @@
     <Filter Include="Header Files\%28convenience headers%29">
       <UniqueIdentifier>{c7aef0a0-f62f-483f-9abd-a76b2411d891}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\be">
-      <UniqueIdentifier>{6661df43-4e26-48cf-9e9a-c17f61a4b805}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\be\be::util">
-      <UniqueIdentifier>{c8d7ca3a-a14f-4012-be89-eb4558e502e2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\be\be::bed">
-      <UniqueIdentifier>{499428dd-d146-495a-a0e5-cf1f63caa409}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\be\be::bed\be::bed::detail">
-      <UniqueIdentifier>{f1547d7c-8265-4000-a7be-2025e5f7ccfd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\be\be::detail">
-      <UniqueIdentifier>{25316a9a-5538-421a-8fd0-bbbd958d678d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\pbj">
       <UniqueIdentifier>{3a805a4c-2a4e-437c-bf14-c68d0c4676c3}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\pbj\pbj::net">
       <UniqueIdentifier>{06b9685b-9c27-46e1-b5c8-3a59ef263080}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\pbj\pbj::gfx">
-      <UniqueIdentifier>{772ea536-3ba5-4757-9a7b-ab3065c610bd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\pbj\pbj::scene">
-      <UniqueIdentifier>{b493fc49-c571-4dcc-a803-c01dc754c4f7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\pbj\pbj::scene\%28ui%29">
-      <UniqueIdentifier>{a86e963c-79de-4146-8283-616cad0e2b2e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\pbj\pbj::sw">
-      <UniqueIdentifier>{2afdde60-ca65-4d5f-ad19-5ca960da383b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\_deps">
       <UniqueIdentifier>{c0a76454-9446-4ff9-9858-e2d9091a34d2}</UniqueIdentifier>
@@ -55,46 +28,88 @@
     <Filter Include="Source Files\pbj">
       <UniqueIdentifier>{b58e45fa-ac9c-407d-8e19-c56c6580d7e2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\pbj\pbj::gfx">
-      <UniqueIdentifier>{7baf29b8-b583-47d7-a59c-272a37eb1f6d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\pbj\pbj::gfx\be">
-      <UniqueIdentifier>{ffd0046d-4733-4a19-8740-33481d0be60a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\pbj\pbj::gfx\be\be::util">
-      <UniqueIdentifier>{84d282e3-e95a-46b0-bcde-c88475222bbe}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\pbj\pbj::gfx\be\be::bed">
-      <UniqueIdentifier>{dc17ab19-8f65-4630-8a78-39a3cf1ba0b7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\pbj\pbj::gfx\be\be::bed\be::bed::detail">
-      <UniqueIdentifier>{1dd3a339-492b-4538-af9b-044cc4b49b30}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\pbj\pbj::net">
       <UniqueIdentifier>{43185d20-95cb-413f-b86d-15b767b9a8cd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\pbj\pbj::scene">
-      <UniqueIdentifier>{1653488d-60c4-4287-abc2-9943ccb50560}</UniqueIdentifier>
+    <Filter Include="Header Files\be">
+      <UniqueIdentifier>{07aa536f-546e-4da0-b15c-72e70e7aef41}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\pbj\pbj::scene\%28ui%29">
-      <UniqueIdentifier>{4774f6af-3fd7-4dec-b50a-4c92cfabc369}</UniqueIdentifier>
+    <Filter Include="Header Files\be\be::util">
+      <UniqueIdentifier>{9d087478-8424-4e6c-832a-55f085ceb8ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\be\be::bed">
+      <UniqueIdentifier>{9954954b-2c6c-4dbc-bf43-340aa7af418f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\be\be::bed\be::bed::detail">
+      <UniqueIdentifier>{036fbff0-8d31-4950-b4e6-2bf0edaf203f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\be\be::detail">
+      <UniqueIdentifier>{5519326d-5bee-4589-8635-71be916384ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\pbj\be">
+      <UniqueIdentifier>{b018242b-4a33-4331-b3e8-f05ae305c62b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\pbj\be\be::util">
+      <UniqueIdentifier>{6ea8e32d-c965-447b-9e19-2a8626dcf9bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\pbj\be\be::bed">
+      <UniqueIdentifier>{55371fc9-fd64-4c72-8fe3-5db00f8ff027}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\pbj\be\be::bed\be::bed::detail">
+      <UniqueIdentifier>{d14ede92-9fea-46e1-9523-d41a463b9463}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\pbj\pbj::sw">
-      <UniqueIdentifier>{61787d93-6638-4b0f-af84-2184dabe9416}</UniqueIdentifier>
+      <UniqueIdentifier>{c8de77fc-d7f7-4970-9496-45c4797bc5b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\pbj\pbj::sw">
+      <UniqueIdentifier>{358ff3be-cbcf-4545-a93c-edb8809108ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\pbj\pbj::gfx">
+      <UniqueIdentifier>{38154462-c5b2-4813-8cb8-268aed09bbd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\pbj\pbj::gfx">
+      <UniqueIdentifier>{dbd67fea-0fbf-40ef-be53-b2ccebcf6f4a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\include\pbj\_al.h">
-      <Filter>Header Files\%28convenience headers%29</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\pbj\_gl.h">
-      <Filter>Header Files\%28convenience headers%29</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\pbj\_math.h">
-      <Filter>Header Files\%28convenience headers%29</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\pbj\_pbj.h">
       <Filter>Header Files\%28convenience headers%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\net\net_address.h">
+      <Filter>Header Files\pbj\pbj::net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\net\net_beacon.h">
+      <Filter>Header Files\pbj\pbj::net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\net\net_connection.h">
+      <Filter>Header Files\pbj\pbj::net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\net\net_listener.h">
+      <Filter>Header Files\pbj\pbj::net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\net\net_node.h">
+      <Filter>Header Files\pbj\pbj::net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\net\net_node_mesh.h">
+      <Filter>Header Files\pbj\pbj::net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\net\net_platform.h">
+      <Filter>Header Files\pbj\pbj::net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\net\net_reliability.h">
+      <Filter>Header Files\pbj\pbj::net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\net\net_reliable_connection.h">
+      <Filter>Header Files\pbj\pbj::net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\net\net_sockets.h">
+      <Filter>Header Files\pbj\pbj::net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\net\net_transport.h">
+      <Filter>Header Files\pbj\pbj::net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\net\net_flow_control.h">
+      <Filter>Header Files\pbj\pbj::net</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\be\const_handle.h">
       <Filter>Header Files\be</Filter>
@@ -141,13 +156,19 @@
     <ClInclude Include="..\..\include\be\detail\handle_manager.h">
       <Filter>Header Files\be\be::detail</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\pbj\sw\import.h">
+      <Filter>Header Files\pbj\pbj::sw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\sw\resource_id.h">
+      <Filter>Header Files\pbj\pbj::sw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\sw\sandwich.h">
+      <Filter>Header Files\pbj\pbj::sw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\sw\sandwich_open.h">
+      <Filter>Header Files\pbj\pbj::sw</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\include\pbj\engine.h">
-      <Filter>Header Files\pbj</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\pbj\input_controller.h">
-      <Filter>Header Files\pbj</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\pbj\transform.h">
       <Filter>Header Files\pbj</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\pbj\window.h">
@@ -156,46 +177,16 @@
     <ClInclude Include="..\..\include\pbj\window_settings.h">
       <Filter>Header Files\pbj</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\pbj\net\net_address.h">
-      <Filter>Header Files\pbj\pbj::net</Filter>
+    <ClInclude Include="..\..\include\pbj\editor.h">
+      <Filter>Header Files\pbj\pbj::gfx</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\pbj\net\net_beacon.h">
-      <Filter>Header Files\pbj\pbj::net</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\pbj\net\net_connection.h">
-      <Filter>Header Files\pbj\pbj::net</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\pbj\net\net_listener.h">
-      <Filter>Header Files\pbj\pbj::net</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\pbj\net\net_node.h">
-      <Filter>Header Files\pbj\pbj::net</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\pbj\net\net_node_mesh.h">
-      <Filter>Header Files\pbj\pbj::net</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\pbj\net\net_platform.h">
-      <Filter>Header Files\pbj\pbj::net</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\pbj\net\net_reliability.h">
-      <Filter>Header Files\pbj\pbj::net</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\pbj\net\net_reliable_connection.h">
-      <Filter>Header Files\pbj\pbj::net</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\pbj\net\net_sockets.h">
-      <Filter>Header Files\pbj\pbj::net</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\pbj\net\net_transport.h">
-      <Filter>Header Files\pbj\pbj::net</Filter>
+    <ClInclude Include="..\..\include\pbj\gfx\batcher.h">
+      <Filter>Header Files\pbj\pbj::gfx</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\pbj\gfx\built_ins.h">
       <Filter>Header Files\pbj\pbj::gfx</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\pbj\gfx\mesh.h">
-      <Filter>Header Files\pbj\pbj::gfx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\pbj\gfx\mesh_instance.h">
       <Filter>Header Files\pbj\pbj::gfx</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\pbj\gfx\shader.h">
@@ -205,9 +196,6 @@
       <Filter>Header Files\pbj\pbj::gfx</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\pbj\gfx\skeletal_mesh.h">
-      <Filter>Header Files\pbj\pbj::gfx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\pbj\gfx\skeletal_mesh_instance.h">
       <Filter>Header Files\pbj\pbj::gfx</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\pbj\gfx\skeleton.h">
@@ -228,124 +216,11 @@
     <ClInclude Include="..\..\include\pbj\gfx\texture_font_text.h">
       <Filter>Header Files\pbj\pbj::gfx</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\pbj\scene\ui_button.h">
-      <Filter>Header Files\pbj\pbj::scene\%28ui%29</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\pbj\scene\ui_element.h">
-      <Filter>Header Files\pbj\pbj::scene\%28ui%29</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\pbj\scene\ui_image.h">
-      <Filter>Header Files\pbj\pbj::scene\%28ui%29</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\pbj\scene\ui_label.h">
-      <Filter>Header Files\pbj\pbj::scene\%28ui%29</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\pbj\sw\resource_id.h">
-      <Filter>Header Files\pbj\pbj::sw</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\pbj\sw\sandwich.h">
-      <Filter>Header Files\pbj\pbj::sw</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\pbj\sw\sandwich_open.h">
-      <Filter>Header Files\pbj\pbj::sw</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\pbj\net\net_flow_control.h">
-      <Filter>Header Files\pbj\pbj::net</Filter>
+    <ClInclude Include="..\..\include\pbj\input_controller.h">
+      <Filter>Header Files\pbj</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\include\be\const_handle.inl">
-      <Filter>Header Files\be</Filter>
-    </None>
-    <None Include="..\..\include\be\handle.inl">
-      <Filter>Header Files\be</Filter>
-    </None>
-    <None Include="..\..\include\be\id.inl">
-      <Filter>Header Files\be</Filter>
-    </None>
-    <None Include="..\..\include\be\source_handle.inl">
-      <Filter>Header Files\be</Filter>
-    </None>
-    <None Include="..\..\include\be\detail\handle_manager.inl">
-      <Filter>Header Files\be\be::detail</Filter>
-    </None>
-    <None Include="..\..\include\pbj\gfx\shader_program.inl">
-      <Filter>Header Files\pbj\pbj::gfx</Filter>
-    </None>
-    <None Include="..\..\include\pbj\gfx\texture_font.inl">
-      <Filter>Header Files\pbj\pbj::gfx</Filter>
-    </None>
-    <None Include="..\..\include\pbj\sw\resource_id.inl">
-      <Filter>Header Files\pbj\pbj::sw</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\src\pbj\engine.cpp">
-      <Filter>Source Files\pbj</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\pbj\input_controller.cpp">
-      <Filter>Source Files\pbj</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\pbj\transform.cpp">
-      <Filter>Source Files\pbj</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\pbj\window.cpp">
-      <Filter>Source Files\pbj</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\pbj\window_settings.cpp">
-      <Filter>Source Files\pbj</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\pbj\gfx\built_ins.cpp">
-      <Filter>Source Files\pbj\pbj::gfx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\pbj\gfx\shader.cpp">
-      <Filter>Source Files\pbj\pbj::gfx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\pbj\gfx\shader_program.cpp">
-      <Filter>Source Files\pbj\pbj::gfx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\pbj\gfx\texture.cpp">
-      <Filter>Source Files\pbj\pbj::gfx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\pbj\gfx\texture_font.cpp">
-      <Filter>Source Files\pbj\pbj::gfx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\pbj\gfx\texture_font_character.cpp">
-      <Filter>Source Files\pbj\pbj::gfx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\pbj\gfx\texture_font_text.cpp">
-      <Filter>Source Files\pbj\pbj::gfx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\be\id.cpp">
-      <Filter>Source Files\pbj\pbj::gfx\be</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\be\verbosity.cpp">
-      <Filter>Source Files\pbj\pbj::gfx\be</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\be\util\nconvert.cpp">
-      <Filter>Source Files\pbj\pbj::gfx\be\be::util</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\be\bed\cached_stmt.cpp">
-      <Filter>Source Files\pbj\pbj::gfx\be\be::bed</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\be\bed\db.cpp">
-      <Filter>Source Files\pbj\pbj::gfx\be\be::bed</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\be\bed\stmt.cpp">
-      <Filter>Source Files\pbj\pbj::gfx\be\be::bed</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\be\bed\stmt_cache.cpp">
-      <Filter>Source Files\pbj\pbj::gfx\be\be::bed</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\be\bed\transaction.cpp">
-      <Filter>Source Files\pbj\pbj::gfx\be\be::bed</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\be\bed\detail\db_error.cpp">
-      <Filter>Source Files\pbj\pbj::gfx\be\be::bed\be::bed::detail</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\be\bed\detail\stmt_cache_entry.cpp">
-      <Filter>Source Files\pbj\pbj::gfx\be\be::bed\be::bed::detail</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\pbj\net\net_address.cpp">
       <Filter>Source Files\pbj\pbj::net</Filter>
     </ClCompile>
@@ -373,21 +248,6 @@
     <ClCompile Include="..\..\src\pbj\net\net_sockets.cpp">
       <Filter>Source Files\pbj\pbj::net</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\pbj\scene\ui_element.cpp">
-      <Filter>Source Files\pbj\pbj::scene\%28ui%29</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\pbj\scene\ui_image.cpp">
-      <Filter>Source Files\pbj\pbj::scene\%28ui%29</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\pbj\sw\resource_id.cpp">
-      <Filter>Source Files\pbj\pbj::sw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\pbj\sw\sandwich.cpp">
-      <Filter>Source Files\pbj\pbj::sw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\pbj\sw\sandwich_open.cpp">
-      <Filter>Source Files\pbj\pbj::sw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\deps\pugixml.cpp">
       <Filter>Source Files\_deps</Filter>
     </ClCompile>
@@ -406,5 +266,112 @@
     <ClCompile Include="..\..\src\client_app_entry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\be\id.cpp">
+      <Filter>Source Files\pbj\be</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\be\verbosity.cpp">
+      <Filter>Source Files\pbj\be</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\be\util\nconvert.cpp">
+      <Filter>Source Files\pbj\be\be::util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\be\bed\cached_stmt.cpp">
+      <Filter>Source Files\pbj\be\be::bed</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\be\bed\db.cpp">
+      <Filter>Source Files\pbj\be\be::bed</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\be\bed\stmt.cpp">
+      <Filter>Source Files\pbj\be\be::bed</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\be\bed\stmt_cache.cpp">
+      <Filter>Source Files\pbj\be\be::bed</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\be\bed\transaction.cpp">
+      <Filter>Source Files\pbj\be\be::bed</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\be\bed\detail\db_error.cpp">
+      <Filter>Source Files\pbj\be\be::bed\be::bed::detail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\be\bed\detail\stmt_cache_entry.cpp">
+      <Filter>Source Files\pbj\be\be::bed\be::bed::detail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\sw\import.cpp">
+      <Filter>Source Files\pbj\pbj::sw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\sw\resource_id.cpp">
+      <Filter>Source Files\pbj\pbj::sw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\sw\sandwich.cpp">
+      <Filter>Source Files\pbj\pbj::sw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\sw\sandwich_open.cpp">
+      <Filter>Source Files\pbj\pbj::sw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\engine.cpp">
+      <Filter>Source Files\pbj</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\window.cpp">
+      <Filter>Source Files\pbj</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\window_settings.cpp">
+      <Filter>Source Files\pbj</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\gfx\batcher.cpp">
+      <Filter>Source Files\pbj\pbj::gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\gfx\built_ins.cpp">
+      <Filter>Source Files\pbj\pbj::gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\gfx\mesh.cpp">
+      <Filter>Source Files\pbj\pbj::gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\gfx\shader.cpp">
+      <Filter>Source Files\pbj\pbj::gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\gfx\shader_program.cpp">
+      <Filter>Source Files\pbj\pbj::gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\gfx\texture.cpp">
+      <Filter>Source Files\pbj\pbj::gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\gfx\texture_font.cpp">
+      <Filter>Source Files\pbj\pbj::gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\gfx\texture_font_character.cpp">
+      <Filter>Source Files\pbj\pbj::gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\gfx\texture_font_text.cpp">
+      <Filter>Source Files\pbj\pbj::gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\input_controller.cpp">
+      <Filter>Source Files\pbj</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\include\be\const_handle.inl">
+      <Filter>Header Files\be</Filter>
+    </None>
+    <None Include="..\..\include\be\handle.inl">
+      <Filter>Header Files\be</Filter>
+    </None>
+    <None Include="..\..\include\be\id.inl">
+      <Filter>Header Files\be</Filter>
+    </None>
+    <None Include="..\..\include\be\source_handle.inl">
+      <Filter>Header Files\be</Filter>
+    </None>
+    <None Include="..\..\include\be\detail\handle_manager.inl">
+      <Filter>Header Files\be\be::detail</Filter>
+    </None>
+    <None Include="..\..\include\pbj\sw\resource_id.inl">
+      <Filter>Header Files\pbj\pbj::sw</Filter>
+    </None>
+    <None Include="..\..\include\pbj\gfx\shader_program.inl">
+      <Filter>Header Files\pbj\pbj::gfx</Filter>
+    </None>
+    <None Include="..\..\include\pbj\gfx\texture_font.inl">
+      <Filter>Header Files\pbj\pbj::gfx</Filter>
+    </None>
   </ItemGroup>
 </Project>
