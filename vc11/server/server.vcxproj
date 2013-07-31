@@ -134,6 +134,7 @@
     <None Include="..\..\include\pbj\sw\resource_id.inl">
       <FileType>Document</FileType>
     </None>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{705FDD29-34CB-4CDF-A2D1-AF78601A5D0B}</ProjectGuid>

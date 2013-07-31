@@ -74,7 +74,7 @@ bool Transport::startServer(const U8* const name)
   PBJ_LOG(Verbosity::VNotice) << "Transport(LAN): Server starting" << PBJ_LOG_NL;
 
   _beacon = new Beacon(name, _config.protoId, _config.listenerPort, _config.meshPort);
-  if(!_beacon->start(_config.beaconPort));
+  if(!_beacon->start(_config.beaconPort))
   {
     PBJ_LOG(Verbosity::VError) << "Failed to start beacon on port " << _config.beaconPort << PBJ_LOG_END;
     stop();
