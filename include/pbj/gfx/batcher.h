@@ -48,29 +48,32 @@ struct SamplerConfig
 
 struct UniformConfig
 {
+	//The values assigned are what are returned from glGetActiveUniformsiv
+	//with a parameter of GL_UNIFORM_TYPE.  This is for the convenience of
+	//casting -- Peter
     enum UniformType
     {
-        U1f,    // uses glUniform1fv()
-        U2f,    // uses glUniform2fv()
-        U3f,    // uses glUniform3fv()
-        U4f,    // uses glUniform4fv()
-        U1i,    // uses glUniform1iv()
-        U2i,
-        U3i,
-        U4i,
-        U1u,    // uses glUniform1uiv()
-        U2u,
-        U3u,
-        U4u,
-        UM2f,   // uses glUniformMatrix2fv()
-        UM3f,
-        UM4f,
-        UM2x3f, // uses glUniformMatrix2x3fv()
-        UM3x2f,
-        UM2x4f,
-        UM4x2f,
-        UM3x4f, 
-        UM4x3f
+        U1f = GL_FLOAT,    // uses glUniform1fv()
+        U2f = GL_FLOAT_VEC2,    // uses glUniform2fv()
+        U3f = GL_FLOAT_VEC3,    // uses glUniform3fv()
+        U4f = GL_FLOAT_VEC4,    // uses glUniform4fv()
+        U1i = GL_INT,    // uses glUniform1iv()
+        U2i = GL_INT_VEC2,
+        U3i = GL_INT_VEC3,
+        U4i = GL_INT_VEC4,
+        U1u = GL_UNSIGNED_INT,    // uses glUniform1uiv()
+        U2u = GL_UNSIGNED_INT_VEC2,
+        U3u = GL_UNSIGNED_INT_VEC3,
+        U4u = GL_UNSIGNED_INT_VEC4,
+        UM2f = GL_FLOAT_MAT2,   // uses glUniformMatrix2fv()
+        UM3f = GL_FLOAT_MAT3,
+        UM4f = GL_FLOAT_MAT4,
+        UM2x3f = GL_FLOAT_MAT2x3, // uses glUniformMatrix2x3fv()
+        UM3x2f = GL_FLOAT_MAT3x2,
+        UM2x4f = GL_FLOAT_MAT2x4,
+        UM4x2f = GL_FLOAT_MAT4x2,
+        UM3x4f = GL_FLOAT_MAT3x4, 
+        UM4x3f = GL_FLOAT_MAT4x3
     };
 
     GLint location;

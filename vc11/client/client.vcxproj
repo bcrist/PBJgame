@@ -32,6 +32,7 @@
     <ClInclude Include="..\..\include\be\_be.h" />
     <ClInclude Include="..\..\include\pbj\editor.h" />
     <ClInclude Include="..\..\include\pbj\engine.h" />
+    <ClInclude Include="..\..\include\pbj\entity.h" />
     <ClInclude Include="..\..\include\pbj\gfx\batcher.h" />
     <ClInclude Include="..\..\include\pbj\gfx\built_ins.h" />
     <ClInclude Include="..\..\include\pbj\gfx\mesh.h" />
@@ -81,6 +82,7 @@
     <ClCompile Include="..\..\src\be\verbosity.cpp" />
     <ClCompile Include="..\..\src\client_app_entry.cpp" />
     <ClCompile Include="..\..\src\pbj\engine.cpp" />
+    <ClCompile Include="..\..\src\pbj\entity.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\batcher.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\built_ins.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\mesh.cpp" />
