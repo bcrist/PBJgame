@@ -410,22 +410,6 @@ std::unique_ptr<Texture> loadTexture(sw::Sandwich& sandwich, const Id& texture_i
 
 
             result.reset(new Texture(sw::ResourceId(sandwich.getId(), texture_id), static_cast<const GLubyte*>(data), data_length, internal_format, srgb, mag_mode, min_mode));
-            /*
-         vec3 translation(float(get_texture.getDouble(0)),
-                          float(get_texture.getDouble(1)),
-                          float(get_texture.getDouble(2)));
-
-         quat rotation(float(get_texture.getDouble(6)),
-                       float(get_texture.getDouble(3)),
-                       float(get_texture.getDouble(4)),
-                       float(get_texture.getDouble(5)));
-
-         vec3 scale(float(get_transform.getDouble(7)),
-                    float(get_transform.getDouble(8)),
-                    float(get_transform.getDouble(9)));
-
-         result = Transform::construct(translation, rotation, scale);
-         */
         }
         else
             throw std::runtime_error("Texture not found!");

@@ -210,6 +210,9 @@
     <ClCompile Include="..\..\src\pbj\scene\ui_listbox.cpp">
       <Filter>Source Files\pbj\pbj::scene\%28ui%29</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\pbj\scene\camera.cpp">
+      <Filter>Source Files\pbj\pbj::scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\be\const_handle.h">

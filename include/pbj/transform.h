@@ -51,17 +51,17 @@ public:
 	void move(F32, F32, F32);
 	void move(const vec3&);
 
-	vec3 getPosition() const;
+	const vec3& getPosition() const;
 	void setPosition(F32, F32, F32);
 	void setPosition(const vec3&);
 
-	vec4 getAngleAxis() const;
+	const vec4& getAngleAxis() const;
 	void setAngleAxis(F32, F32, F32, F32);
 	void setAngleAxis(F32, const vec3&);
 
-	quat getRotation() const;
+	const quat& getRotation() const;
 
-	vec3 getScale() const;
+	const vec3& getScale() const;
 	void setScale(F32, F32, F32);
 	void setScale(const vec3&);
 

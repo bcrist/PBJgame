@@ -18,6 +18,40 @@ CREATE TABLE sw_editor_metadata
       PRIMARY KEY (resource_type, resource_id, property)
 );
 
+CREATE TABLE sw_maps
+(
+      id                INTEGER PRIMARY KEY,
+      name              TEXT NOT NULL,
+);
+
+CREATE TABLE sw_static_entities
+(
+      map_id            INTEGER NOT NULL,
+      id                INTEGER PRIMARY KEY,
+      entity_type       INTEGER NOT NULL,
+      r_x               REAL NOT NULL,
+      r_y               REAL NOT NULL,
+      r_z               REAL NOT NULL,
+      r_w               REAL NOT NULL,
+      t_x               REAL NOT NULL,
+      t_y               REAL NOT NULL,
+      t_z               REAL NOT NULL,
+      s_x               REAL NOT NULL,
+      s_y               REAL NOT NULL,
+      s_z               REAL NOT NULL,
+      mesh_id           INTEGER,
+      program_id        INTEGER,
+      collider_id       INTEGER
+);
+
+CREATE TABLE sw_colliders
+(
+      id                INTEGER PRIMARY KEY,
+      collider_type     INTEGER NOT NULL,
+      point_count       INTEGER NOT NULL,
+      point_data        NOT NULL
+);
+
 CREATE TABLE sw_textures
 (
       -- Identifies this texture among all other textures in this sandwich

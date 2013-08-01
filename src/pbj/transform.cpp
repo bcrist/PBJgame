@@ -77,7 +77,7 @@ void Transform::move(const vec3& deltas)
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief The position of the Transform.
 /// \return The position of the Transform as a glm::vec3 (x,y,z).
-glm::vec3 Transform::getPosition() const
+const vec3& Transform::getPosition() const
 {
 	return _position.xyz;
 }
@@ -108,7 +108,7 @@ void Transform::setPosition(const vec3& pos)
 /// \details Keep in mind that the returned angles are not necessarily
 ///          equivilent to Euler angles and that further conversion is
 ///          necessary to get those angle values.
-glm::vec4 Transform::getAngleAxis() const
+const vec4& Transform::getAngleAxis() const
 {
 	F32 angle = glm::angle(_rotation);
 	vec3 axis = glm::axis(_rotation);
@@ -140,7 +140,7 @@ void Transform::setAngleAxis(F32 angle, const glm::vec3& axis)
 /// \return A quaternion representing the rotation of the Transform.
 /// \details I have no idea why we might want to get the rotation is this manner
 ///          but it seems like a good idea.  So here it is.
-glm::quat Transform::getRotation() const
+const quat& Transform::getRotation() const
 {
 	return _rotation;
 }
@@ -148,7 +148,7 @@ glm::quat Transform::getRotation() const
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Get the scale of the Transform.
 /// \return A glm::vec3 representing the scale along the x-, y-, and z- axis.
-glm::vec3 Transform::getScale() const
+const vec3& Transform::getScale() const
 {
 	return _scale;
 }
@@ -176,7 +176,7 @@ void Transform::setScale(const vec3& scale)
 /// \returns The Transform as a 4x4 matrix.
 /// \details Since our call require a transformation matrix, this will provide
 ///          one.
-glm::mat4 Transform::getMatrix() const
+mat4 Transform::getMatrix() const
 {
 	mat4 ret = mat4();
 	vec3 v = _position.xyz;
