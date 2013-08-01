@@ -32,6 +32,7 @@
 #include "pbj/_pbj.h"
 #include "pbj/_math.h"
 #include "pbj/gfx/shader.h"
+#include "pbj/gfx/batcher.h"
 
 #define BAD_GL_VALUE GLuint(-1)
 
@@ -50,11 +51,6 @@ namespace gfx
 		F32 attenuation;
 	};
 
-	/*========================
-	Material
-	
-		Contains data for materials to send to a shader
-	========================*/
 	struct ShaderMaterial
 	{
 		vec4 ambient;
@@ -73,23 +69,16 @@ namespace gfx
 		void destroy();
 
 		void setValues(const GLfloat*, const GLfloat*, const GLfloat*,
-						const GLfloat*, const Light*, const ShaderMaterial*,
-						const bool);
+						const Light*, const ShaderMaterial*);
+		const UniformConfig* getUniformConfigs(I32&); ///< Returns uniform configs for vars WITHOUT data
 		void use();
 
 		const ResourceId& getId() const;
 		GLuint getGlId() const;
 
-		//uniform variable loc accessors
-		//including get for the sake of it, but I don't
-		//think any accessors are really needed for these.
-		//could be wrong.
-		const GLint& getSpecFromTexLoc() const;
-		const GLint& getNormalTextureLoc() const;
 		const GLint& getProjectionMatLoc() const;
 		const GLint& getModelviewMatLoc() const;
 		const GLint& getMvpMatLoc() const;
-		const GLint& getNormalMatLoc() const;
 		const GLint* getLightDataLocs() const;
 		const GLint* getShaderMaterialLocs() const;
 
@@ -100,14 +89,11 @@ namespace gfx
 		ResourceId _resId;
 		GLuint _glId;
 
-		GLint specFromTexLoc;
-		GLint normalTextureLoc;
-		GLint projectionMatLoc;
-		GLint modelviewMatLoc;
-		GLint mvpMatLoc;
-		GLint normalMatLoc;
-		GLint lightDataLocs[5];
-		GLint shaderMaterialLocs[4];
+		GLint _projectionMatLoc;
+		GLint _modelviewMatLoc;
+		GLint _mvpMatLoc;
+		GLint _lightDataLocs[5];
+		GLint _shaderMaterialLocs[4];
 
 	};
 } //namespace pbj::gfx

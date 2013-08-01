@@ -24,7 +24,7 @@
 /// \brief	Implementation of the Entity class
 
 #ifndef ENTITY_H_
-#include "pbj/entity.h"
+#include "pbj/scene/entity.h"
 #endif
 
 using namespace pbj;
@@ -50,7 +50,7 @@ Entity::~Entity()
 void Entity::init()
 {
 	_batcherTask.n_indices = 0;
-	_transform = new Transform();
+	_transform = Transform();
 	_mesh = 0;
 	_material = 0;
 	_initialized = true;
@@ -59,13 +59,6 @@ void Entity::init()
 ////////////////////////////////////////////////////////////////////////////////
 void Entity::destroy()
 {
-	if(_transform != 0)
-	{
-		//any deinit should be called before delete
-		delete _transform;
-		_transform = 0;
-	}
-	
 	if(_mesh != 0)
 	{
 		//any deinit should be called before delete
@@ -143,15 +136,15 @@ void Entity::generateBatcherTask()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Transform* Entity::getTransform()
+const Transform* Entity::getTransform()
 {
 	if(_initialized)
-		return _transform;
-	return 0;
+		return &_transform;
+	return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Entity::setTransform(Transform* transform)
+void Entity::setTransform(Transform transform)
 {
 	if(!_initialized)
 		init();
@@ -167,7 +160,7 @@ Mesh* Entity::getMesh()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void setMesh(Mesh* mesh)
+void Entity::setMesh(Mesh* mesh)
 {
 	if(!_initialized)
 		init();
@@ -175,7 +168,7 @@ void setMesh(Mesh* mesh)
 }
 	
 ////////////////////////////////////////////////////////////////////////////////
-Material* getMaterial()
+Material* Entity::getMaterial()
 {
 	if(_initialized)
 		return _material;
@@ -183,7 +176,7 @@ Material* getMaterial()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void setMaterial(Material* material)
+void Entity::setMaterial(Material* material)
 {
 	if(!_initialized)
 		init();

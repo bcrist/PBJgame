@@ -59,8 +59,8 @@ namespace scene
 		
 		//accessors, these will expand as the class gains more component
 		//possiblities
-		Transform* getTransform();
-		void setTransform(Transform*);
+		const Transform* getTransform();
+		void setTransform(Transform);
 		
 		Mesh* getMesh();
 		void setMesh(Mesh*);
@@ -76,7 +76,7 @@ namespace scene
 		bool _initialized;
 		BatcherTask _batcherTask;
 		
-		Transform* _transform;
+		Transform _transform;
 		Mesh* _mesh;
 		Material* _material;
 		bool _depthTested

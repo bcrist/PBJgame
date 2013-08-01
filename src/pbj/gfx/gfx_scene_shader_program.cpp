@@ -24,29 +24,30 @@
 ///
 /// \brief  pbj::gfx::SceneShaderProgram class implementation.
 #ifndef GFX_SCENE_SHADER_PROGRAM_H_
-#include "pbj/gfx/scene_shader_program.h"
+#include "pbj/gfx/gfx_scene_shader_program.h"
 #endif
 
 using namespace pbj;
 using namespace pbj::gfx;
 
 ////////////////////////////////////////////////////////////////////////////////
+/// \brief
+/// \details
 SceneShaderProgram::SceneShaderProgram(const ResourceId& resourceId) :
 					_resId(resourceId), _glId(BAD_GL_VALUE)
 {
-	specFromTexLoc = BAD_GL_VALUE;
-	normalTextureLoc = BAD_GL_VALUE;
-	projectionMatLoc = BAD_GL_VALUE;
-	modelviewMatLoc = BAD_GL_VALUE;
-	mvpMatLoc = BAD_GL_VALUE;
-	normalMatLoc = BAD_GL_VALUE;
+	_projectionMatLoc = BAD_GL_VALUE;
+	_modelviewMatLoc = BAD_GL_VALUE;
+	_mvpMatLoc = BAD_GL_VALUE;
 	for(int i=0;i<5;++i)
-		lightDataLocs[i] = BAD_GL_VALUE;
+		_lightDataLocs[i] = BAD_GL_VALUE;
 	for(int i=0;i<4;++i)
-		shaderMaterialLocs[i] = BAD_GL_VALUE;
+		_shaderMaterialLocs[i] = BAD_GL_VALUE;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+/// \brief
+/// \details
 SceneShaderProgram::~SceneShaderProgram()
 {
 	if(_glId != BAD_GL_VALUE)
@@ -54,6 +55,8 @@ SceneShaderProgram::~SceneShaderProgram()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+/// \brief
+/// \details
 void SceneShaderProgram::init(const Shader& vertShader, const Shader& fragShader)
 {
 #ifdef PBJ_DEBUG
@@ -75,11 +78,26 @@ void SceneShaderProgram::init(const Shader& vertShader, const Shader& fragShader
     glAttachShader(_glId, vertShader.getGlId());
     glAttachShader(_glId, fragShader.getGlId());
     glLinkProgram(_glId);
-
     checkLinkResult();
+
+	//populate location variables
+	_projectionMatLoc = glGetUniformLocation(_glId, (const GLchar*)"projection_matrix");
+	_modelviewMatLoc = glGetUniformLocation(_glId, (const GLchar*)"modelview_matrix");
+	_mvpMatLoc = glGetUniformLocation(_glId, (const GLchar*)"mvp_matrix");
+	_lightDataLocs[0] = glGetUniformLocation(_glId, (const GLchar*)"light.position");
+	_lightDataLocs[1] = glGetUniformLocation(_glId, (const GLchar*)"light.ambient");
+	_lightDataLocs[2] = glGetUniformLocation(_glId, (const GLchar*)"light.diffuse");
+	_lightDataLocs[3] = glGetUniformLocation(_glId, (const GLchar*)"light.specular");
+	_lightDataLocs[4] = glGetUniformLocation(_glId, (const GLchar*)"light.attenuation");
+	_shaderMaterialLocs[0] = glGetUniformLocation(_glId, (const GLchar*)"material.ambient");
+	_shaderMaterialLocs[1] = glGetUniformLocation(_glId, (const GLchar*)"material.diffuse");
+	_shaderMaterialLocs[2] = glGetUniformLocation(_glId, (const GLchar*)"material.specular");
+	_shaderMaterialLocs[3] = glGetUniformLocation(_glId, (const GLchar*)"material.shininess");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+/// \brief	Deletes the shader programs
+/// \details Deletes shader programs to free up the memory they have allocated
 void SceneShaderProgram::destroy()
 {
 	if (_glId != BAD_GL_VALUE)
@@ -90,36 +108,76 @@ void SceneShaderProgram::destroy()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+/// \brief	Sets values paramaters passed in
+/// \details sets the values of the matricies, lights, and materials
 void SceneShaderProgram::setValues(const GLfloat* projectionMatrix,
 								   const GLfloat* modelviewMatrix,
 								   const GLfloat* mvpMatrix,
-								   const GLfloat* normalMatrix,
 								   const Light* lightData,
-								   const ShaderMaterial* shaderMaterialData,
-								   const bool specFromTexture)
+								   const ShaderMaterial* shaderMaterialData)
 {
 	// matricies
-	glUniformMatrix4fv(projectionMatLoc, 1, GL_FALSE, projectionMatrix);
-	glUniformMatrix4fv(modelviewMatLoc, 1, GL_FALSE, modelviewMatrix);
-	glUniformMatrix4fv(mvpMatLoc, 1, GL_FALSE, mvpMatrix);
-	glUniformMatrix4fv(normalMatLoc, 1, GL_FALSE, normalMatrix);
+	glUniformMatrix4fv(_projectionMatLoc, 1, GL_FALSE, projectionMatrix);
+	glUniformMatrix4fv(_modelviewMatLoc, 1, GL_FALSE, modelviewMatrix);
+	glUniformMatrix4fv(_mvpMatLoc, 1, GL_FALSE, mvpMatrix);
 
 	// light data
-	glUniform4fv(lightDataLocs[0], 1, (GLfloat*)&lightData->position);
-	glUniform4fv(lightDataLocs[1], 1, (GLfloat*)&lightData->ambient);
-	glUniform4fv(lightDataLocs[2], 1, (GLfloat*)&lightData->diffuse);
-	glUniform4fv(lightDataLocs[3], 1, (GLfloat*)&lightData->specular);
-	glUniform1f(lightDataLocs[4], (GLfloat)lightData->attenuation);
+	glUniform4fv(_lightDataLocs[0], 1, (GLfloat*)&lightData->position);
+	glUniform4fv(_lightDataLocs[1], 1, (GLfloat*)&lightData->ambient);
+	glUniform4fv(_lightDataLocs[2], 1, (GLfloat*)&lightData->diffuse);
+	glUniform4fv(_lightDataLocs[3], 1, (GLfloat*)&lightData->specular);
+	glUniform1f(_lightDataLocs[4], (GLfloat)lightData->attenuation);
 
 	// materials
-	glUniform1i(specFromTexLoc, specFromTexture);
-	glUniform4fv(shaderMaterialLocs[0], 1, (GLfloat*)&shaderMaterialData->ambient);
-	glUniform4fv(shaderMaterialLocs[1], 1, (GLfloat*)&shaderMaterialData->diffuse);
-	glUniform4fv(shaderMaterialLocs[2], 1, (GLfloat*)&shaderMaterialData->specular);
-	glUniform1f(shaderMaterialLocs[3], (GLfloat)shaderMaterialData->shininess);
+	glUniform4fv(_shaderMaterialLocs[0], 1, (GLfloat*)&shaderMaterialData->ambient);
+	glUniform4fv(_shaderMaterialLocs[1], 1, (GLfloat*)&shaderMaterialData->diffuse);
+	glUniform4fv(_shaderMaterialLocs[2], 1, (GLfloat*)&shaderMaterialData->specular);
+	glUniform1f(_shaderMaterialLocs[3], (GLfloat)shaderMaterialData->shininess);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+/// \brief Return a \sa gfx::UniformConfig array that contains all
+///        information for the shader EXCLUDING data.
+/// \details The idea is that the data will be populated outside of this class,
+///          so there is no need to do that here.  Additionally
+///          \c UniformConfig.data is a \c void* so any data defined here could
+///          be overwritten the next time the shader is accessed.
+/// \param nUniforms[out] An I32 representing the number of uniforms in the
+///        returned array.
+/// \returns An array of \sa gfx::UniformConfig for each uniform in the shader.
+const gfx::UniformConfig* SceneShaderProgram::getUniformConfigs(I32& nUniforms)
+{
+	nUniforms = 12;
+	UniformConfig ret[12];
+	ret[0].array_size = 1;
+	ret[0].location = _projectionMatLoc;
+	ret[0].type = UniformConfig::UM4f;
+
+	ret[1].array_size = 1;
+	ret[1].location = _modelviewMatLoc;
+	ret[1].type = UniformConfig::UM4f;
+
+	ret[2].array_size = 1;
+	ret[2].location = _mvpMatLoc;
+	ret[2].type = UniformConfig::UM4f;
+
+	for(int i=3;i<8;++i)
+	{
+		ret[i].array_size = 1;
+		ret[i].location = _lightDataLocs[i-3];
+		ret[i].type = UniformConfig::U1f;
+		if(i < 7)
+		{
+			ret[i+5].array_size = 1;
+			ret[i+5].location = _shaderMaterialLocs[i-3];
+			ret[i+5].type = UniformConfig::U1f;
+		}
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/// \brief	Uses the shader on the geometry that follows
+/// \details Grabs the shader program and uses the shader on the geometry that follows
 void SceneShaderProgram::use()
 {
 	assert(_glId != BAD_GL_VALUE);
@@ -127,66 +185,64 @@ void SceneShaderProgram::use()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+/// \brief	Returns the ID for the DB resource
+/// \details
 const ResourceId& SceneShaderProgram::getId() const
 {
 	return _resId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+/// \briefeturns the ID for the shader program resource
+/// \details
 GLuint SceneShaderProgram::getGlId() const
 {
 	return _glId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const GLint& SceneShaderProgram::getSpecFromTexLoc() const
-{
-	return specFromTexLoc;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-const GLint& SceneShaderProgram::getNormalTextureLoc() const
-{
-	return normalTextureLoc;
-}
-
-////////////////////////////////////////////////////////////////////////////////
+/// \brief
+/// \details
 const GLint& SceneShaderProgram::getProjectionMatLoc() const
 {
-	return projectionMatLoc;
+	return _projectionMatLoc;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+/// \brief
+/// \details
 const GLint& SceneShaderProgram::getModelviewMatLoc() const
 {
-	return modelviewMatLoc;
+	return _modelviewMatLoc;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+/// \brief
+/// \details
 const GLint& SceneShaderProgram::getMvpMatLoc() const
 {
-	return mvpMatLoc;
+	return _mvpMatLoc;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const GLint& SceneShaderProgram::getNormalMatLoc() const
-{
-	return normalMatLoc;
-}
-
-////////////////////////////////////////////////////////////////////////////////
+/// \brief
+/// \details
 const GLint* SceneShaderProgram::getLightDataLocs() const
 {
-	return lightDataLocs;
+	return _lightDataLocs;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+/// \brief
+/// \details
 const GLint* SceneShaderProgram::getShaderMaterialLocs() const
 {
-	return shaderMaterialLocs;
+	return _shaderMaterialLocs;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+/// \brief
+/// \details
 void SceneShaderProgram::checkLinkResult()
 {
 	GLint result = GL_FALSE;

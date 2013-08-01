@@ -63,36 +63,48 @@ ShaderProgram::ShaderProgram(const sw::ResourceId& id, const Shader& vertex_shad
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief
+/// \details
 ShaderProgram::~ShaderProgram()
 {
     invalidate_();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief
+/// \details
 const be::Handle<ShaderProgram>& ShaderProgram::getHandle()
 {
     return handle_;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief
+/// \details
 const be::ConstHandle<ShaderProgram>& ShaderProgram::getHandle() const
 {
     return handle_;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief
+/// \details
 const sw::ResourceId& ShaderProgram::getId() const
 {
     return resource_id_;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief
+/// \details
 GLuint ShaderProgram::getGlId() const
 {
     return gl_id_;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief
+/// \details
 void ShaderProgram::checkLinkResult_()
 {
     GLint result = GL_FALSE;
@@ -119,6 +131,8 @@ void ShaderProgram::checkLinkResult_()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief
+/// \details
 void ShaderProgram::invalidate_()
 {
     if (gl_id_ != 0)

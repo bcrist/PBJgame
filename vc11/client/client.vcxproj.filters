@@ -228,14 +228,17 @@
     <ClInclude Include="..\..\include\pbj\scene\entity.h">
       <Filter>Header Files\pbj\pbj::scene</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\pbj\gfx\scene_shader_program.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\pbj\_gl.h">
       <Filter>Header Files\pbj\%28convenience headers%29</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\pbj\_math.h">
       <Filter>Header Files\pbj\%28convenience headers%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\gfx\gfx_scene_shader_program.h">
+      <Filter>Header Files\pbj\pbj::gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\gfx\gfx_entity_material.h">
+      <Filter>Header Files\pbj\pbj::gfx</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -369,7 +372,7 @@
       <Filter>Source Files\pbj\pbj::scene</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\pbj\gfx\gfx_scene_shader_program.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\pbj\pbj::gfx</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

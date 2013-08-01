@@ -145,6 +145,7 @@
     <ClCompile Include="..\..\src\be\util\nconvert.cpp" />
     <ClCompile Include="..\..\src\be\verbosity.cpp" />
     <ClCompile Include="..\..\src\editor_app_entry.cpp" />
+    <ClCompile Include="..\..\src\gfx\entity_material.cpp" />
     <ClCompile Include="..\..\src\pbj\audio\audio_buffer.cpp" />
     <ClCompile Include="..\..\src\pbj\editor.cpp" />
     <ClCompile Include="..\..\src\pbj\engine.cpp" />
