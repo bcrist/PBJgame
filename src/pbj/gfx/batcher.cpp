@@ -29,10 +29,31 @@ namespace gfx {
 namespace {
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Task comparator class.
+///
+/// \details Compares two BatcherTask objects (passed as indices into a vector)
+///         first by "order index" to allow for non-depth tested, painter's
+///         algorithm-style drawing, then by OpenGL shader program ID, and
+///         finally by OpenGL vertex array object (VAO) ID.
 struct TaskCmp
 {
+    ///////////////////////////////////////////////////////////////////////////
+    /// \brief  A pointer to the vector containing the tasks that are being
+    ///         compared.
     std::vector<BatcherTask>* tasks;
 
+    ///////////////////////////////////////////////////////////////////////////
+    /// \brief  Compares two BatcherTask objects (passed as indices into a
+    ///         vector).
+    ///
+    /// \details Tasks are compared first by "order index" to allow for
+    ///         non-depth tested, painter's algorithm-style drawing, then by
+    ///         OpenGL shader program ID, and finally by OpenGL vertex array
+    ///         object (VAO) ID.
+    ///
+    /// \param a_id The index of the first task in the vector.
+    /// \param b_id The index of the second task in the vector.
+    /// \return true if tasks[a_id] < tasks[b_id]
     bool operator()(U16 a_id, U16 b_id)
     {
         BatcherTask* a = &((*tasks)[a_id]);
@@ -76,16 +97,25 @@ struct TaskCmp
 } // namespace pbj::gfx::(anon)
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Constructs a new batcher object.
 Batcher::Batcher()
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Destroys the batcher object.  Any undrawn tasks are skipped.
 Batcher::~Batcher()
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Submits a drawing task to be drawn this frame.
+///
+/// \details After a task is drawn once, it is forgotten - a task must be
+///         submitted every frame in order for it to continue to appear on
+///         screen.
+///
+/// \param  task The drawing task to perform.
 void Batcher::submit(const BatcherTask& task)
 {
     task_ids_.push_back(tasks_.size());
@@ -93,6 +123,15 @@ void Batcher::submit(const BatcherTask& task)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Draws all tasks which have been submitted since the last draw().
+///
+/// \details Tasks are first sorted using the TaskCmp comparator class.  Then
+///         tasks are drawn in the sorted order, making sure that the
+///         current program, bound VAO, bound texture units, uniforms,
+///         depth testing, and scissor testing settings are set correctly.
+///
+///         After drawing, the task vector is cleared, preparing the batcher
+///         for the next frame's tasks.
 void Batcher::draw()
 {
     // sort batches
@@ -233,6 +272,7 @@ void Batcher::draw()
         glDrawElements(GL_TRIANGLES, task.n_indices, task.index_data_type, 0);
     }
 
+    // make sure stuff is unbound/disabled.
     if (current_vao != 0)
         glBindVertexArray(0);
 
