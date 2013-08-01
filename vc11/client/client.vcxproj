@@ -32,10 +32,10 @@
     <ClInclude Include="..\..\include\be\_be.h" />
     <ClInclude Include="..\..\include\pbj\editor.h" />
     <ClInclude Include="..\..\include\pbj\engine.h" />
-    <ClInclude Include="..\..\include\pbj\entity.h" />
     <ClInclude Include="..\..\include\pbj\gfx\batcher.h" />
     <ClInclude Include="..\..\include\pbj\gfx\built_ins.h" />
     <ClInclude Include="..\..\include\pbj\gfx\mesh.h" />
+    <ClInclude Include="..\..\include\pbj\gfx\scene_shader_program.h" />
     <ClInclude Include="..\..\include\pbj\gfx\shader.h" />
     <ClInclude Include="..\..\include\pbj\gfx\shader_program.h" />
     <ClInclude Include="..\..\include\pbj\gfx\skeletal_mesh.h" />
@@ -58,12 +58,15 @@
     <ClInclude Include="..\..\include\pbj\net\net_reliable_connection.h" />
     <ClInclude Include="..\..\include\pbj\net\net_sockets.h" />
     <ClInclude Include="..\..\include\pbj\net\net_transport.h" />
+    <ClInclude Include="..\..\include\pbj\scene\entity.h" />
     <ClInclude Include="..\..\include\pbj\sw\import.h" />
     <ClInclude Include="..\..\include\pbj\sw\resource_id.h" />
     <ClInclude Include="..\..\include\pbj\sw\sandwich.h" />
     <ClInclude Include="..\..\include\pbj\sw\sandwich_open.h" />
     <ClInclude Include="..\..\include\pbj\window.h" />
     <ClInclude Include="..\..\include\pbj\window_settings.h" />
+    <ClInclude Include="..\..\include\pbj\_gl.h" />
+    <ClInclude Include="..\..\include\pbj\_math.h" />
     <ClInclude Include="..\..\include\pbj\_pbj.h" />
   </ItemGroup>
   <ItemGroup>
@@ -82,9 +85,9 @@
     <ClCompile Include="..\..\src\be\verbosity.cpp" />
     <ClCompile Include="..\..\src\client_app_entry.cpp" />
     <ClCompile Include="..\..\src\pbj\engine.cpp" />
-    <ClCompile Include="..\..\src\pbj\entity.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\batcher.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\built_ins.cpp" />
+    <ClCompile Include="..\..\src\pbj\gfx\gfx_scene_shader_program.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\mesh.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\shader.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\shader_program.cpp" />
@@ -104,6 +107,7 @@
     <ClCompile Include="..\..\src\pbj\net\net_reliable_connection.cpp" />
     <ClCompile Include="..\..\src\pbj\net\net_sockets.cpp" />
     <ClCompile Include="..\..\src\pbj\net\net_transport.cpp" />
+    <ClCompile Include="..\..\src\pbj\scene\entity.cpp" />
     <ClCompile Include="..\..\src\pbj\sw\import.cpp" />
     <ClCompile Include="..\..\src\pbj\sw\resource_id.cpp" />
     <ClCompile Include="..\..\src\pbj\sw\sandwich.cpp" />
