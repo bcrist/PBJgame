@@ -19,62 +19,48 @@
 // IN THE SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \file   pbj/transform.h
-/// \author Peter Bartosch
-/// \date   2013-07-18
-/// \brief  A class for representing the transformation of an object.
-/// \details This class is mostly a wrapper for glm calls.  It stores the
-///         position, rotation, and scale of an object.  GLM_SWIZZLE is used to
-///         convert from the position stored as a vec4 to the position as a
-///         vec3.
+/// \file   pbj/scene/camera.h
+/// \author Ben Crist
 
-#ifndef PBJ_TRANSFORM_H_
-#define PBJ_TRANSFORM_H_
-
-#ifndef GLM_SWIZZLE
-	#define GLM_SWIZZLE
-#endif
+#ifndef PBJ_SCENE_CAMERA_H_
+#define PBJ_SCENE_CAMERA_H_
 
 #include "pbj/_pbj.h"
 #include "pbj/_math.h"
 
 namespace pbj {
+namespace scene {
 
-class Transform
+class Camera
 {
 public:
-	Transform();
-	~Transform();
+    Camera();
+    ~Camera();
 
-	void rotate(F32, const vec3&);
+    void setProjection(const mat4& projection);
+    void setTargetPosition(const vec3& position);
+    void setTargetVelocity(const vec3& velocity);
 
-	void move(F32, F32, F32);
-	void move(const vec3&);
+    const mat4& getProjection() const;
+    const mat4& getView() const;
 
-	const vec3& getPosition() const;
-	void setPosition(F32, F32, F32);
-	void setPosition(const vec3&);
+    void update(double delta_t);
 
-	const vec4& getAngleAxis() const;
-	void setAngleAxis(F32, F32, F32, F32);
-	void setAngleAxis(F32, const vec3&);
-
-	const quat& getRotation() const;
-
-	const vec3& getScale() const;
-	void setScale(F32, F32, F32);
-	void setScale(const vec3&);
-
-	mat4 getMatrix() const;
-
-	//Entity* getOwner();
 private:
-	//Entity* _owner
-	vec4 _position;	///< The position.
-	quat _rotation;	///< Rotation stored as a quaternion.
-	vec3 _scale;	///< Scale.
+
+    vec3 position_;
+    vec3 velocity_;
+    vec3 target_position_;
+    vec3 target_velocity_;
+
+    mat4 projection_;
+    mat4 view_;
+
+    Camera(const Camera&);
+    void operator=(const Camera&);
 };
 
-} //namespace pbj
+} // namespace pbj::scene
+} // namespace pbj
 
 #endif

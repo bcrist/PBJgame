@@ -31,6 +31,22 @@
 #include <cassert>
 #include <iostream>
 
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  SQL statement to load a texture from a sandwich.
+/// \param  1 The id of the texture.
+#define PBJ_GFX_TEXTURE_SQL_LOAD "SELECT data_format, width, height, data, " \
+            "internal_format, srgb, mag_filter, min_filter " \
+            "FROM sw_textures WHERE id = ?"
+
+#ifdef BE_ID_NAMES_ENABLED
+#define PBJ_GFX_TEXTURE_SQLID_LOAD PBJ_GFX_TEXTURE_SQL_LOAD
+#else
+// TODO: precalculate ids.
+#define PBJ_GFX_TEXTURE_SQLID_LOAD PBJ_GFX_TEXTURE_SQL_LOAD
+#endif
+
+
 namespace pbj {
 namespace gfx {
 
@@ -160,7 +176,7 @@ void Texture::setData(const GLubyte* data, size_t size)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-size_t Texture::getData(const GLubyte*& data) const
+size_t Texture::getData(const GLubyte** data) const
 {
     data = data_.data();
     return data_.size();
@@ -358,6 +374,63 @@ void Texture::invalidate_()
         glDeleteTextures(1, &gl_id_);
         gl_id_ = 0;
     }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+std::unique_ptr<Texture> loadTexture(sw::Sandwich& sandwich, const Id& texture_id)
+{
+    std::unique_ptr<Texture> result;
+   
+    try
+    {
+        db::StmtCache& cache = sandwich.getStmtCache();
+        db::CachedStmt get_texture = cache.hold(Id(PBJ_GFX_TEXTURE_SQLID_LOAD), PBJ_GFX_TEXTURE_SQL_LOAD);
+
+        get_texture.bind(1, texture_id.value());
+        if (get_texture.step())
+        {
+
+            /*"SELECT data_format, width, height, data, " \
+            "internal_format, srgb, mag_filter, min_filter " \
+            "FROM sw_textures WHERE id = ?"*/
+
+            
+            Id data_format = Id(get_texture.getUInt64(0));
+
+            if (data_format != Id("stbi"))
+                throw std::runtime_error("Unsupported texture data format!");
+
+            const void* data;
+            GLsizei data_length = get_texture.getBlob(3, data);
+
+            Texture::InternalFormat internal_format = static_cast<Texture::InternalFormat>(get_texture.getInt(4));
+            bool srgb = get_texture.getBool(5);
+            Texture::FilterMode mag_mode = static_cast<Texture::FilterMode>(get_texture.getInt(5));
+            Texture::FilterMode min_mode = static_cast<Texture::FilterMode>(get_texture.getInt(6));
+
+
+            result.reset(new Texture(sw::ResourceId(sandwich.getId(), texture_id), static_cast<const GLubyte*>(data), data_length, internal_format, srgb, mag_mode, min_mode));
+        }
+        else
+            throw std::runtime_error("Texture not found!");
+    }
+    catch (const db::Db::error& err)
+    {
+        PBJ_LOG(VWarning) << "Database error while loading texture!" << PBJ_LOG_NL
+                          << "Sandwich ID: " << sandwich.getId() << PBJ_LOG_NL
+                          << " Texture ID: " << texture_id << PBJ_LOG_NL
+                          << "  Exception: " << err.what() << PBJ_LOG_NL
+                          << "        SQL: " << err.sql() << PBJ_LOG_END;
+   }
+   catch (const std::exception& err)
+   {
+      PBJ_LOG(VWarning) << "Exception while loading texture!" << PBJ_LOG_NL
+                          << "Sandwich ID: " << sandwich.getId() << PBJ_LOG_NL
+                          << " Texture ID: " << texture_id << PBJ_LOG_NL
+                          << "  Exception: " << err.what() << PBJ_LOG_END;
+   }
+
+   return result;
 }
 
 } // namespace pbj::gfx
