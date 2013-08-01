@@ -26,6 +26,10 @@
 
 namespace pbj {
 namespace gfx {
+
+std::mt19937 Batcher::prng_;
+std::uniform_int_distribution<I32> Batcher::idist_(0, 15);
+
 namespace {
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -223,6 +227,10 @@ void Batcher::draw()
                 if (tex_unit >= 16 && texture_units[j] == 0)
                     tex_unit = j;
             }
+
+            // if all texture units are used, pick one at random.
+            if (tex_unit >= 16)
+                tex_unit = idist_(prng_);
             
             if (texture_units[tex_unit] != sc.texture_id)
             {

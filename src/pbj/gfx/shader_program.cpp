@@ -32,6 +32,12 @@ namespace pbj {
 namespace gfx {
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Constructs a shader program using a single vertex shader and a
+///         single fragment shader.
+///
+/// \param  id Describes where this shader is stored in the databse.
+/// \param  vertex_shader The vertex shader for this program.
+/// \param  fragment_shader The fragment shader for this program.
 ShaderProgram::ShaderProgram(const sw::ResourceId& id, const Shader& vertex_shader, const Shader& fragment_shader)
     : resource_id_(id),
       gl_id_(0)
@@ -63,36 +69,55 @@ ShaderProgram::ShaderProgram(const sw::ResourceId& id, const Shader& vertex_shad
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  destroys this shader program, deleting it from the GPU's memory.
 ShaderProgram::~ShaderProgram()
 {
     invalidate_();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Retrieves a handle to this shader program.
+///
+/// \return A Handle<ShaderProgram>
 const be::Handle<ShaderProgram>& ShaderProgram::getHandle()
 {
     return handle_;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Retrieves a handle to this shader program.
+///
+/// \return A ConstHandle<ShaderProgram>
 const be::ConstHandle<ShaderProgram>& ShaderProgram::getHandle() const
 {
     return handle_;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Retrieves the shader program's resourceId, specifying where it is
+///         stored in the database.
+///
+/// \return The ResourceId for this shader program.
 const sw::ResourceId& ShaderProgram::getId() const
 {
     return resource_id_;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Retrieves the OpenGL shader program ID.
+///
+/// \return The OpenGL shader program ID.
 GLuint ShaderProgram::getGlId() const
 {
     return gl_id_;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Checks to make sure that the shader program has been linked
+///         successfully.
+///
+/// \details If there was a problem, the info log is retrieved, a warning
+///         is output, and the program is invalidated.
 void ShaderProgram::checkLinkResult_()
 {
     GLint result = GL_FALSE;
@@ -119,6 +144,7 @@ void ShaderProgram::checkLinkResult_()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Invalidates this shader program, deleting it from the GPU's memory.
 void ShaderProgram::invalidate_()
 {
     if (gl_id_ != 0)

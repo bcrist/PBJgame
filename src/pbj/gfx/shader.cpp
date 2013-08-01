@@ -193,10 +193,10 @@ const std::string& Shader::getMetadata(const std::string& key) const
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-/// \brief  Retrieves a const view of the metadata map associated with this
-///         shader.
+/// \brief  Retrieves all the metadata associated with this shader.
 ///
-/// \return The metadata map for this shader.
+/// \return The  a const view of the metadata map associated with this
+///         shader.
 const std::map<std::string, std::string>& Shader::getMetadata() const
 {
     return metadata_;

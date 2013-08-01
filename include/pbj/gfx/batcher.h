@@ -27,11 +27,13 @@
 
 #include <functional>
 #include <vector>
+#include <random>
 
 #include "be/source_handle.h"
 
 #include "pbj/gfx/shader_program.h"
 #include "pbj/gfx/texture.h"
+#include "pbj/_math.h"
 
 #include "pbj/_gl.h"
 #include "pbj/_pbj.h"
@@ -135,6 +137,10 @@ public:
     void draw();
 
 private:
+    static std::mt19937 prng_;
+    static std::uniform_int_distribution<I32> idist_;
+    
+
     std::vector<BatcherTask> tasks_;
     std::vector<U16> task_ids_;
 

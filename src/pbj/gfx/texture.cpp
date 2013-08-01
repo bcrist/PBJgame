@@ -51,6 +51,22 @@ namespace pbj {
 namespace gfx {
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Constructs a texture object and uploads it to the GPU.
+///
+/// \param  id Describes where this texture is stored in the databse.
+/// \param  data A pointer to a memory-image of an image file to use for this
+///         texture.  The data must be in a format readable by STB Image.
+///         eg. PNG, TGA, BMP, JPG, etc.
+/// \param  size The number of bytes of data in the data array.
+/// \param  format Determines the format used by the GPU to store the texture
+///         data on the graphics card.
+/// \param  srgb_color If true, the texture will be interpretted as an sRGB
+///         encoded image, rather than linearly encoded.  The GPU will
+///         automatically linearize the texture data when it is sampled.
+/// \param  mag_mode Determines the type of sampler interpolation used when
+///         the texture appears larger on-screen than the texture size.
+/// \param  min_mode Determines the type of sampler interpolation used when
+///         the texture appears smaller on-screen than the texture size.
 Texture::Texture(const sw::ResourceId& id, const GLubyte* data, size_t size, InternalFormat format, bool srgb_color, FilterMode mag_mode, FilterMode min_mode)
     : resource_id_(id),
       gl_id_(0)
@@ -69,36 +85,53 @@ Texture::Texture(const sw::ResourceId& id, const GLubyte* data, size_t size, Int
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  destroys the texture object, ensuring that it is deleted from the
+///         GPU.
 Texture::~Texture()
 {
     invalidate_();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Returns a handle to this texture.
+///
+/// \return A Handle<Texture> referring to this texture object.
 be::Handle<Texture> Texture::getHandle()
 {
     return handle_;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Returns a handle to this texture.
+///
+/// \return A Handle<Texture> referring to this texture object.
 const be::ConstHandle<Texture> Texture::getHandle() const
 {
     return handle_;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Retrieves this texture's ResourceId
+///
+/// \return A ResourceId defining the location of this texture in a database.
 const sw::ResourceId& Texture::getId() const
 {
     return resource_id_;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Returns the OpenGL ID of the uploaded texture object.
+///
+/// \return the OpenGL texture object ID.
 GLuint Texture::getGlId() const
 {
     return gl_id_;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Returns the dimensions of the texture.
+///
+/// \return the texture's dimensions.
 const ivec2& Texture::getDimensions() const
 {
     return dimensions_;
@@ -106,11 +139,20 @@ const ivec2& Texture::getDimensions() const
 
 #ifdef PBJ_EDITOR
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Constructs a texture without uploading it to the GPU.
+///
+/// \details only available in the editor.
 Texture::Texture()
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Sets this texture's name.
+///
+/// \details The texture name is not used outside the editor, but it also
+///         determines the Id of the texture used to store it in a sandwich.
+///
+/// \param  name The new name for the texture.
 void Texture::setName(const std::string& name)
 {
     metadata_["__name__"] = name;
@@ -118,18 +160,31 @@ void Texture::setName(const std::string& name)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Retrieves the texture's name.
+/// 
+/// \details The texture name is only available in the editor, as it is stored
+///         as editor metadata.
+///
+/// \return The current name of the texture.
 const std::string& Texture::getName() const
 {
     return getMetadata("__name__");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Sets the sandwich where this texture should be stored.
+///
+/// \param  id the Id of the sandwich to store this texture in.
 void Texture::setSandwich(const Id& id)
 {
     resource_id_.sandwich = id;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Sets a metadata key-value pair.  (i.e. author, date, version, etc)
+///
+/// \param  key The metadata property to set.
+/// \param  value The new value of the metadata property.
 void Texture::setMetadata(const std::string& key, const std::string& value)
 {
     if (key[0] == '_' && key[1] == '_')
@@ -150,6 +205,11 @@ void Texture::setMetadata(const std::string& key, const std::string& value)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Retrieves a metadata value.
+///
+/// \param  key The metadata property to get.
+///
+/// \return The value of the requested property.
 const std::string& Texture::getMetadata(const std::string& key) const
 {
     auto i = metadata_.find(key);
@@ -160,12 +220,23 @@ const std::string& Texture::getMetadata(const std::string& key) const
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Retrieves all the metadata associated with this texture.
+///
+/// \return a const view of the metadata map associated with this
+///         texture.
 const std::map<std::string, std::string>& Texture::getMetadata() const
 {
     return metadata_;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Sets the texture data associated with this texture.
+///
+/// \details If the texture has already been uploaded to the GPU, it will be
+///         invalidated and deleted from the GPU.
+///
+/// \param  data A pointer to the new texture data.
+/// \param  size The number of bytes in the new texture data.
 void Texture::setData(const GLubyte* data, size_t size)
 {
     data_.clear();
@@ -176,13 +247,21 @@ void Texture::setData(const GLubyte* data, size_t size)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-size_t Texture::getData(const GLubyte** data) const
+/// \brief  Retrieves this texture's data.
+///
+/// \param  data a reference to a pointer which will be set to the beginnning
+///         of the texture data.
+/// \return The size of the data byte array.
+size_t Texture::getData(const GLubyte*& data) const
 {
     data = data_.data();
     return data_.size();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Sets the format used internally to store texture data on the GPU.
+///
+/// \param  format The internal format to use.
 void Texture::setInternalFormat(InternalFormat format)
 {
     metadata_["__internalformat__"] = std::to_string(format);
@@ -191,12 +270,20 @@ void Texture::setInternalFormat(InternalFormat format)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Retrieves the format used to store the texture data on the GPU.
+///
+/// \return The current internal format.
 Texture::InternalFormat Texture::getInternalFormat() const
 {
     return static_cast<InternalFormat>(std::stoi(getMetadata("__internalformat__")));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Sets whether or not the texture data is interpretted using an sRGB
+///         or linear color space.
+///
+/// \param  srgb_color true if the texture should be interpretted using the
+///         srgb color space.
 void Texture::setSrgbColorspace(bool srgb_color)
 {
     metadata_["__srgb__"] = srgb_color ? "1" : "0";
@@ -205,12 +292,19 @@ void Texture::setSrgbColorspace(bool srgb_color)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Returns whether or not the texture data is interpretted using an
+///         sRGB or linear color space.
+///
+/// \return true if the texture is interpretted using the srgb color space.
 bool Texture::isSrgbColorspace() const
 {
     return std::stoi(getMetadata("__srgb__")) != 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Sets the interpolation filter mode for magnification.
+///
+/// \param  mode The magnification interpolation filter mode.
 void Texture::setMagFilterMode(FilterMode mode)
 {
     metadata_["__minfilter__"] = std::to_string(mode);
@@ -219,12 +313,18 @@ void Texture::setMagFilterMode(FilterMode mode)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Retrieves the interpolation filter mode for magnification.
+///
+/// \return The magnification interpolation filter mode.
 Texture::FilterMode Texture::getMagFilterMode() const
 {
     return static_cast<FilterMode>(std::stoi(getMetadata("__magfilter__")));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Sets the interpolation filter mode for minification.
+///
+/// \param  mode The minification interpolation filter mode.
 void Texture::setMinFilterMode(FilterMode mode)
 {
     metadata_["__minfilter__"] = std::to_string(mode);
@@ -233,24 +333,35 @@ void Texture::setMinFilterMode(FilterMode mode)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Retrieves the interpolation filter mode for minification.
+///
+/// \return The minification interpolation filter mode.
 Texture::FilterMode Texture::getMinFilterMode() const
 {
     return static_cast<FilterMode>(std::stoi(getMetadata("__minfilter__")));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Determines whether the texture has been successfully uploaded to
+///         the GPU.
+///
+/// \return true if the texture is valid and can be used for drawing.
 bool Texture::isValid() const
 {
     return gl_id_ != 0;
 }   
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Uploads the current texture to the GPU.
 void Texture::upload()
 {   
     upload_(data_.data(), data_.size(), getInternalFormat(), isSrgbColorspace(), getMagFilterMode(), getMinFilterMode());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Returns a reference to a static, empty string object.
+///
+/// \return A reference to a static, empty string object.
 std::string& Texture::nullString_() const
 {
     static std::string null_str;
@@ -260,6 +371,21 @@ std::string& Texture::nullString_() const
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Helper for uploading texture data to the GPU.
+///
+/// \param  data A pointer to a memory-image of an image file to use for this
+///         texture.  The data must be in a format readable by STB Image.
+///         eg. PNG, TGA, BMP, JPG, etc.
+/// \param  size The number of bytes of data in the data array.
+/// \param  format Determines the format used by the GPU to store the texture
+///         data on the graphics card.
+/// \param  srgb_color If true, the texture will be interpretted as an sRGB
+///         encoded image, rather than linearly encoded.  The GPU will
+///         automatically linearize the texture data when it is sampled.
+/// \param  mag_mode Determines the type of sampler interpolation used when
+///         the texture appears larger on-screen than the texture size.
+/// \param  min_mode Determines the type of sampler interpolation used when
+///         the texture appears smaller on-screen than the texture size.
 void Texture::upload_(const GLubyte* data, size_t size, InternalFormat format, bool srgb_color, FilterMode mag_mode, FilterMode min_mode)
 {
     invalidate_();
@@ -367,6 +493,7 @@ void Texture::upload_(const GLubyte* data, size_t size, InternalFormat format, b
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  invalidates this texture, deleting it from GPU memory.
 void Texture::invalidate_()
 {
     if (gl_id_ != 0)
@@ -377,6 +504,10 @@ void Texture::invalidate_()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  loads a texture object from a sandwich.
+/// 
+/// \param  sandwich The database from which to load the texture.
+/// \param  texture_id Identifies the texture to load from the database.
 std::unique_ptr<Texture> loadTexture(sw::Sandwich& sandwich, const Id& texture_id)
 {
     std::unique_ptr<Texture> result;
@@ -389,12 +520,6 @@ std::unique_ptr<Texture> loadTexture(sw::Sandwich& sandwich, const Id& texture_i
         get_texture.bind(1, texture_id.value());
         if (get_texture.step())
         {
-
-            /*"SELECT data_format, width, height, data, " \
-            "internal_format, srgb, mag_filter, min_filter " \
-            "FROM sw_textures WHERE id = ?"*/
-
-            
             Id data_format = Id(get_texture.getUInt64(0));
 
             if (data_format != Id("stbi"))

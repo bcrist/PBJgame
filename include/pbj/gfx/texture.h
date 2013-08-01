@@ -85,7 +85,7 @@ public:
     const std::map<std::string, std::string>& getMetadata() const;
 
     void setData(const GLubyte* data, size_t size);
-    size_t getData(const GLubyte** data) const;
+    size_t getData(const GLubyte*& data) const;
 
     void setInternalFormat(InternalFormat format);
     InternalFormat getInternalFormat() const;
