@@ -30,6 +30,10 @@
 using namespace pbj;
 using namespace pbj::gfx;
 
+map<string,I32> SceneShaderProgram::nameToIndex = map<string,I32>();
+map<string,I32> SceneShaderProgram::indexToName = map<string,I32>();
+bool SceneShaderProgram::_mapMade = false;
+
 ////////////////////////////////////////////////////////////////////////////////
 /// \brief
 /// \details
@@ -43,6 +47,36 @@ SceneShaderProgram::SceneShaderProgram(const ResourceId& resourceId) :
 		_lightDataLocs[i] = BAD_GL_VALUE;
 	for(int i=0;i<4;++i)
 		_shaderMaterialLocs[i] = BAD_GL_VALUE;
+	if(!_mapMade)
+	{
+		nameToIndex["projection_matrix"] = 0;
+		nameToIndex["modelview_matrix"] = 1;
+		nameToIndex["mvp_matrix"] = 2;
+		nameToIndex["light.position"] = 3;
+		nameToIndex["light.ambient"] = 4;
+		nameToIndex["light.diffuse"] = 5;
+		nameToIndex["light.specular"] = 6;
+		nameToIndex["light.attenuation"] = 7;
+		nameToIndex["material.ambient"] = 8;
+		nameToIndex["material.diffuse"] = 9;
+		nameToIndex["material.specular"] = 10;
+		nameToIndex["material.shininess"] = 11;
+
+		indexToName[0] = "projection_matrix";
+		indexToName[1] = "modelview_matrix";
+		indexToName[2] = "mvp_matrix";
+		indexToName[3] = "light.position";
+		indexToName[4] = "light.ambient";
+		indexToName[5] = "light.diffuse";
+		indexToName[6] = "light.specular";
+		indexToName[7] = "light.attenuation";
+		indexToName[8] = "material.ambient";
+		indexToName[9] = "material.diffuse";
+		indexToName[10] = "material.specular";
+		indexToName[11] = "material.shininess";
+
+		_mapMade = true;
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////

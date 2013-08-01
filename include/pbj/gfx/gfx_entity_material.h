@@ -36,8 +36,8 @@ namespace gfx
 	class EntityMaterial
 	{
 	public:
-		const U32 nUniforms = 12;
-		const U32 nSamplers = 1;
+		static const unsigned int nUniforms = 12;
+		static const unsigned int nSamplers = 1;
 
 		EntityMaterial();
 		~EntityMaterial();

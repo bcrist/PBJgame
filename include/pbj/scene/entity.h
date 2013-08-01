@@ -32,13 +32,13 @@
 #include "pbj/_pbj.h"
 #include "pbj/transform.h"
 #include "pbj/gfx/mesh.h"
-#include "pbj/gfx/material.h"
+#include "pbj/gfx/gfx_entity_material.h"
 #include "pbj/gfx/batcher.h"
 
 using pbj::gfx::Mesh;
-using pbj::gfx::Material;
+using pbj::gfx::EntityMaterial;
 using pbj::gfx::BatcherTask;
-
+using pbj::gfx::ComponentCallback;
 namespace pbj
 {
 namespace scene
@@ -65,21 +65,19 @@ namespace scene
 		Mesh* getMesh();
 		void setMesh(Mesh*);
 		
-		Material* getMaterial();
-		void setMaterial(Material*);
-		
-		bool isDepthTested() const;
-		void makeDepthTested();
-		void makeNotDepthTested();
-		
+		const EntityMaterial* getMaterial();
+		void setMaterial(EntityMaterial*);
+
 	private:
 		bool _initialized;
 		BatcherTask _batcherTask;
 		
+		U32 _transformCallbackId;
+		U32 _materialCallbackId;
+
 		Transform _transform;
 		Mesh* _mesh;
-		Material* _material;
-		bool _depthTested
+		EntityMaterial* _material;
 	};
 } //namespace pbj::scene
 } //namespace pbj

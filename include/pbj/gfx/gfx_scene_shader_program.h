@@ -29,6 +29,8 @@
 
 #include <assert.h>
 #include <iostream>
+#include <map>
+#include <string>
 #include "pbj/_pbj.h"
 #include "pbj/_math.h"
 #include "pbj/gfx/shader.h"
@@ -37,6 +39,8 @@
 #define BAD_GL_VALUE GLuint(-1)
 
 using pbj::sw::ResourceId;
+using std::map;
+using std::string;
 
 namespace pbj
 {
@@ -62,6 +66,9 @@ namespace gfx
 	class SceneShaderProgram
 	{
 	public:
+		static map<string,I32> nameToIndex;
+		static map<I32,string> indexToName;
+
 		SceneShaderProgram(const ResourceId&);
 		~SceneShaderProgram();
 
@@ -84,6 +91,8 @@ namespace gfx
 
 
 	private:
+		static bool _mapMade;
+
 		void checkLinkResult();
 
 		ResourceId _resId;

@@ -51,6 +51,8 @@ void Entity::init()
 {
 	_batcherTask.n_indices = 0;
 	_transform = Transform();
+	_transformCallbackId = U32(-1);
+	_materialCallbackId = U32(-1);
 	_mesh = 0;
 	_material = 0;
 	_initialized = true;
@@ -105,12 +107,11 @@ void Entity::generateBatcherTask()
 		init();
 		return; //since the default task after init is good, we're done here
 	}
-	
-	//unused?
+	assert(_mesh!=0);
+	assert(_material!=0);
+
 	_batcherTask.order_index;
 	
-	//Shaders do not work here right now.  I don't even now if this is the best
-	//way to go about dealing with them.
     _batcherTask.program_id = _material->getShaderProgram()->getGlId();
 	
 	//At least geometry is easy.
@@ -118,18 +119,35 @@ void Entity::generateBatcherTask()
     _batcherTask.n_indices = _mesh->getIndexCount();
     _batcherTask.index_data_type = _mesh->getIndexType();
 	
-	//not sure where to grab samplers data from
-    _batcherTask.samplers = 0;
-    _batcherTask.n_samplers = 0;
+    _batcherTask.samplers = _material->getSamplerConfigs();
+    _batcherTask.n_samplers = EntityMaterial::nSamplers;
+
+	//still need to figure out data population from here
+	_batcherTask.n_uniforms = EntityMaterial::nUniforms;
+
+    gfx::UniformConfig* unis;
+	memcpy(unis, _material->getUniformConfigs(), EntityMaterial::nUniforms);
+
+	//the checks and assignments in here are not what I'd call "great".  This is
+	//mostly done to have something to work from.
+	for(int i=0;i<EntityMaterial::nUniforms;++i)
+	{
+		if(gfx::SceneShaderProgram::indexToName[i] == "projection_matrix")
+		{
+			unis[i].data = &_transform.getMatrix();
+		}
+		else if(gfx::SceneShaderProgram::indexToName[i] == "modelview_matrix")
+		{
+			unis[i].data = &_transform.getMatrix();
+		}
+		else if(gfx::SceneShaderProgram::indexToName[i] == "mvp_matrix")
+		{
+			unis[i].data = &_transform.getMatrix();
+		}
+	}
+	_batcherTask.uniforms = unis;
 	
-	//not sure how to handle the shader stuff quite yet.  Work around will be
-	//put in the actual draw code for the scene or engine.  Mostly concerned
-	//with being able to grab the uniform locations for each uniform with the
-	//shader program.
-    _batcherTask.uniforms = 0;
-    _batcherTask.n_uniforms = 0;
-	
-    _batcherTask.depth_tested = _depthTested;
+    _batcherTask.depth_tested = false;
 	
 	//Ignoring for now
     _batcherTask.scissor = 0;
@@ -168,7 +186,7 @@ void Entity::setMesh(Mesh* mesh)
 }
 	
 ////////////////////////////////////////////////////////////////////////////////
-Material* Entity::getMaterial()
+const EntityMaterial* Entity::getMaterial()
 {
 	if(_initialized)
 		return _material;
@@ -176,27 +194,13 @@ Material* Entity::getMaterial()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Entity::setMaterial(Material* material)
+void Entity::setMaterial(EntityMaterial* material)
 {
 	if(!_initialized)
 		init();
+
+	if(_material != 0)
+		_material->removeCallback(_materialCallbackId);
 	_material = material;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool Entity::isDepthTested() const
-{
-	return _depthTested;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void Entity::makeDepthTested()
-{
-	_depthTested = true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void Entity::makeNotDepthTested()
-{
-	_depthTested = false;
+	_materialCallbackId = _material->addCallback(ComponentCallback(this->generateBatcherTask));
 }
