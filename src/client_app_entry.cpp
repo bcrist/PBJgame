@@ -51,6 +51,7 @@
 #include <iostream>
 #include <fstream>
 #include <random>
+#include <string>
 
 #if defined(_WIN32) && !defined(DEBUG)
 #include <windows.h>
@@ -68,8 +69,127 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, INT)
 using namespace pbj;
 using pbj::net::Transport;
 
+enum ClientState
+{
+	Searching = 0x01,
+	Connecting = 0x02,
+	Connected = 0x04
+};
 
+Transport* transport;
+I32 prevEntryCount;
+ClientState state;
 
+I32 initializeClient();
+bool viewLobby();
+void joinServer(Transport::LobbyEntry);
+bool doConnecting();
+bool doConnected();
+
+I32 initializeClient()
+{
+	if(!Transport::init())
+	{
+		PBJ_LOG(pbj::VError) << "Failed to initialize transport layer" << PBJ_LOG_END;
+		return 1;
+	}
+
+	Transport* transport = Transport::create();
+
+	if(!transport)
+	{
+		PBJ_LOG(pbj::VError) << "Could not create transport" << PBJ_LOG_END;
+		return 1;
+	}
+	Transport::Config cfg = transport->getConfig();
+	std::cerr<<"Transport configuration:"<<std::endl;
+	std::cerr<<"\tMesh Port:\t"<<cfg.meshPort<<std::endl;
+	std::cerr<<"\tClient Port:\t"<<cfg.clientPort<<std::endl;
+	std::cerr<<"\tServer Port:\t"<<cfg.serverPort<<std::endl;
+	std::cerr<<"\tBeacon Port:\t"<<cfg.beaconPort<<std::endl;
+	std::cerr<<"\tListener Port:\t"<<cfg.listenerPort<<std::endl;
+	std::cerr<<"\tProto Id:\t"<<cfg.protoId<<std::endl;
+	std::cerr<<"\tMesh Send Rate:\t"<<cfg.meshSendRate<<std::endl;
+	std::cerr<<"\tTimeout:\t"<<cfg.timeout<<std::endl;
+	std::cerr<<"\tmax Nodes:\t"<<cfg.maxNodes<<std::endl;
+
+	prevEntryCount = 0;
+	state = Searching;
+	return 0;
+}
+
+bool viewLobby()
+{
+	I32 entryCount = transport->getLobbyEntryCount();
+	std::cerr<<entryCount<<std::endl;
+	if(entryCount != prevEntryCount)
+	{
+		prevEntryCount = entryCount;
+		Transport::LobbyEntry entry;
+		std::cerr<<"--------------------------------------------------------------------------------"<<std::endl
+					<<"Available Servers"<<std::endl;
+		for(I32 i=0;i<entryCount;++i)
+		{
+			if(transport->getLobbyEntryAtIndex(i, entry))
+				std::cerr<<"\t"<<(i+1)<<". "<<entry.name<<" ("<<entry.address<<")"<<std::endl;
+		}
+		std::cerr<<"Enter 'R' to refresh, 'Q' to quit or the number of the server."<<std::endl;
+		std::cerr<<"Choice:"<<std::endl;
+		std::string choice;
+
+		//I'm expect this to halt all execution of the loop in main while it waits for input
+		std::getline(std::cin,choice);
+		if(choice.c_str()[0]=='R' || choice.c_str()[0]=='r')
+		{
+			return false;
+		}
+		else if(choice.c_str()[0]=='Q' || choice.c_str()[0]=='q')
+		{
+			return true;
+		}
+		else
+		{
+			I32 iChoice = atoi(choice.c_str());
+			if(iChoice<=entryCount)
+			{
+				transport->getLobbyEntryAtIndex(iChoice-1,entry);
+				joinServer(entry);
+			}
+			//and why not just refresh if invalid input.
+			return false;
+		}
+	}
+	return false;
+}
+
+void joinServer(Transport::LobbyEntry entry)
+{
+	transport->connectClient(entry.address);
+	state = Connecting;
+}
+
+bool doConnecting()
+{
+	if(transport->connectFailed())
+	{
+		PBJ_LOG(pbj::VError) << "Connect failed" << PBJ_LOG_END;
+		return true;
+	}
+
+	if(transport->isConnected())
+		   state = Connected;
+	return false;
+}
+
+bool doConnected()
+{
+	if(!transport->isConnected())
+	{
+		PBJ_LOG(pbj::VInfo) << "Disconnected" << PBJ_LOG_END;
+		return true;
+	}
+	return false;
+}
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief  Application entry point
 /// \details Parses any command line arguments, then initializes game engine.
@@ -111,59 +231,42 @@ int main(int argc, char* argv[])
    //pbj::Engine engine;
 
    // TODO: start game
-   if(!Transport::init())
-   {
-	   PBJ_LOG(pbj::VError) << "Failed to initialize transport layer" << PBJ_LOG_END;
+   if(initializeClient()==1)
 	   return 1;
-   }
-
-   Transport* transport = Transport::create();
-
-   if(!transport)
+   
+   //connect to server or look for one
+   if(argc >= 2) //address passed to client, try to do direct connect
    {
-	   PBJ_LOG(pbj::VError) << "Could not create transport" << PBJ_LOG_END;
-	   return 1;
-   }
-
-   Transport::Config cfg = transport->getConfig();
-   std::cerr<<"Transport configuration:"<<std::endl;
-   std::cerr<<"\tMesh Port:\t"<<cfg.meshPort<<std::endl;
-	std::cerr<<"\tClient Port:\t"<<cfg.clientPort<<std::endl;
-	std::cerr<<"\tServer Port:\t"<<cfg.serverPort<<std::endl;
-	std::cerr<<"\tBeacon Port:\t"<<cfg.beaconPort<<std::endl;
-	std::cerr<<"\tListener Port:\t"<<cfg.listenerPort<<std::endl;
-	std::cerr<<"\tProto Id:\t"<<cfg.protoId<<std::endl;
-	std::cerr<<"\tMesh Send Rate:\t"<<cfg.meshSendRate<<std::endl;
-	std::cerr<<"\tTimeout:\t"<<cfg.timeout<<std::endl;
-	std::cerr<<"\tmax Nodes:\t"<<cfg.maxNodes<<std::endl;
-   //connect to server
-   if(argc >= 2)
 	   transport->connectClient((U8*)argv[1]);
+	   state = Connecting;
+   }
    else
    {
-	   U8 hostname[64+1];
-	   Transport::getHostName(hostname, sizeof(hostname));
-	   transport->connectClient(hostname);
+	   transport->enterLobby();
    }
 
    //main loop
    const F32 dt = 1.0f/30.0f;
-   bool connected = false;
-   while(true)
+   bool breakLoop = false;
+   std::cerr<<"Starting client loop"<<std::endl;
+   while(!breakLoop)
    {
-	   connected = (!connected && transport->isConnected());
-	   if(connected && !transport->isConnected())
+	   std::cerr<<"Checking client state"<<std::endl;
+	   switch(state)
 	   {
-		   PBJ_LOG(pbj::VInfo) << "Disconnected" << PBJ_LOG_END;
+	   case Searching:
+		   breakLoop = viewLobby();
+		   break;
+	   case Connecting:
+		   breakLoop = doConnecting();
+		   break;
+	   case Connected:
+		   breakLoop = doConnected();
+		   break;
+	   default:
 		   break;
 	   }
-
-	   if(transport->connectFailed())
-	   {
-		   PBJ_LOG(pbj::VError) << "Connect failed" << PBJ_LOG_END;
-		   break;
-	   }
-
+	   
 	   transport->update(dt);
 	   net::waitSeconds(dt);
    }

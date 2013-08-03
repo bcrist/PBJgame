@@ -7,10 +7,12 @@ using namespace net;
 
 Listener::Listener(U32 protoId, F32 timeout)
 {
+	std::cerr<<"Listener construction"<<std::endl;
 	_protoId = protoId;
 	_timeout = timeout;
 	_running = false;
 	clearData();
+	std::cerr<<"Listener data cleared"<<std::endl;
 }
 
 Listener::Listener(U32 protoId)

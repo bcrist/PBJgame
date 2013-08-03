@@ -128,15 +128,8 @@ bool Transport::connectClient(const U8* const server)
   if(isAddress) // yes, connect by address
   {
     printf("lan transport: client connect to address: %d.%d.%d.%d:%d\n", a, b, c, d, port);
-    _node = new Node(_config.protoId, _config.meshSendRate, _config.timeout);
-     if(!_node->start(_config.clientPort))
-    {
-      printf("failed to start node on port %d\n", _config.serverPort);
-      stop();
-      return false;
-    }
-    _node->join(Address((U8)a, (U8)b, (U8)c, (U8)d, (U16)port));
-    return true;
+	Address addr = Address((U8)a, (U8)b, (U8)c, (U8)d, (U16)port);
+	return connectClient(addr);
   }
   else // no, connect by hostname
   {
@@ -158,6 +151,19 @@ bool Transport::connectClient(const U8* const server)
   return true;
 }
 
+bool Transport::connectClient(const Address& server)
+{
+	_node = new Node(_config.protoId, _config.meshSendRate, _config.timeout);
+	if(!_node->start(_config.clientPort))
+	{
+		printf("failed to start node on port %d\n", _config.serverPort);
+		stop();
+		return false;
+	}
+	_node->join(server);
+	return true;
+}
+
 bool Transport::isConnected() const
 {
   return _node && _node->isConnected();
@@ -170,15 +176,16 @@ bool Transport::connectFailed() const
 
 bool Transport::enterLobby()
 {
-  printf("lan transport: enter lobby\n");
-  _listener = new Listener(_config.protoId, _config.timeout);
-  if(!_listener->start(_config.listenerPort))
-  {
-    printf("failed to start listener on port %d\n", _config.listenerPort);
-    stop();
-    return false;
-  }
-  return true;
+	std::cerr<<"Transport: enter lobby"<<std::endl;
+	_listener = new Listener(_config.protoId, _config.timeout);
+	std::cerr<<"Transport: starting listener"<<std::endl;
+	if(!_listener->start(_config.listenerPort))
+	{
+		printf("failed to start listener on port %d\n", _config.listenerPort);
+		stop();
+		return false;
+	}
+	return true;
 }
 
 I32 Transport::getLobbyEntryCount()

@@ -72,6 +72,7 @@ namespace net
 		const Config& getConfig() const;
 		bool startServer(const U8* const);
 		bool connectClient(const U8* const);
+		bool connectClient(const Address&);
 		bool isConnected() const;
 		bool connectFailed() const;
 		bool enterLobby();
