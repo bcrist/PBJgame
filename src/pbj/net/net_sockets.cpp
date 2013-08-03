@@ -130,7 +130,7 @@ int Socket::receive(Address& sender, void* data, int size)
 	std::cerr<<std::endl;*/
 
 	U32 address = ntohl(from.sin_addr.s_addr);
-	U8 port = (U8)ntohs(from.sin_port);
+	U16 port = (U16)ntohs(from.sin_port);
 
 	sender = Address(address, port);
 	

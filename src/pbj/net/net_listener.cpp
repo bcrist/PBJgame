@@ -56,16 +56,16 @@ void Listener::update(F32 dt)
 		I32 bytesRead = _socket.receive(sender, packet, 256);
 		if(bytesRead == 0) //this is how we break out of the loop
 			break;
-		if(bytesRead > 13)
+		if(bytesRead < 13)
 			continue;
 		std::cerr<<"Listener: received " << bytesRead << " bytes." <<std::endl;
 		U32 packetZero;
 		U32 packetProtoId;
-		U32 packetServerPort;
+		U16 packetServerPort;
 		U8 packetStrLength;
 		readInteger(packet, packetZero);
 		readInteger(packet+4, packetProtoId);
-		readInteger(packet+8, packetServerPort);
+		readShort(packet+8, packetServerPort);
 		packetStrLength = packet[12];
 		if(packetZero != 0 || packetProtoId != _protoId || packetStrLength > 63 ||
 			packetStrLength+12+1 > bytesRead)

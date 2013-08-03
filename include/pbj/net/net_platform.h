@@ -54,25 +54,21 @@ namespace net
 
 	inline void writeShort(U8* data, U16 value)
 	{
-		std::cerr<<"\tWriting short: "<<value<<std::endl;
 		data[0] = (U8)((value>>8) & 0xFF);
 		data[1] = (U8)(value & 0xFF);
-		std::cerr<<"\t"<<data[0]<<data[1]<<std::endl;
 	}
 
 	inline void readShort(const U8* data, U16& value)
 	{
-		value = (((I32)data[0]<<8)  | ((I32)data[1]));
+		value = (((U32)(data[0])<<8)  | ((U32)(data[1])));
 	}
 
 	inline void writeInteger(U8* data, U32 value)
 	{
-		std::cerr<<"\tWriting integer: "<<value<<std::endl;
 		data[0] = (U8)(value>>24);
 		data[1] = (U8)((value>>16) & 0xFF);
 		data[2] = (U8)((value>>8) & 0xFF);
 		data[3] = (U8)(value & 0xFF);
-		std::cerr<<"\t"<<data[0]<<data[1]<<data[2]<<data[3]<<std::endl;
 	}
 
 	inline void readInteger(const U8* data, U32& value)

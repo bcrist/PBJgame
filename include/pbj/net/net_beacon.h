@@ -11,10 +11,10 @@ namespace net
 	class Beacon
 	{
 	public:
-		Beacon(const U8* const, U32, U32, U32);
+		Beacon(const U8* const, U32, U16, U16);
 		~Beacon();
 
-		bool start(I32);
+		bool start(U16);
 		void stop();
 		void update(F32);
 

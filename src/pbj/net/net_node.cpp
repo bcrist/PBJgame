@@ -182,7 +182,7 @@ void Node::receivePackets()
 	while (true)
 	{
 		Address sender;
-		int size = _socket.receive(sender, data, sizeof(data));
+		int size = _socket.receive(sender, data, _maxPacketSize*sizeof(data[0]));
 		if (!size)
 			break;
 		processPacket(sender, data, size);
@@ -208,6 +208,7 @@ void Node::processPacket(const Address& sender, U8* data, int size)
 		// determine packet type
 		enum PacketType { ConnectionAccepted, Update };
 		PacketType packetType;
+		std::cerr<<"Node: Packet type received (should be 0 or 1): "<<(I32)(data[4])<<std::endl;
 		if (data[4] == 0)
 			packetType = ConnectionAccepted;
 		else if (data[4] == 1)

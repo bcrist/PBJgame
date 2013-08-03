@@ -148,6 +148,8 @@ void NetMesh::processPacket(const Address& sender, U8* data, I32 size)
 	// ignore packets that dont have the correct protocol id
 	U32 firstIntegerInPacket = (unsigned(data[0]) << 24) | (unsigned(data[1]) << 16) |
 										(unsigned(data[2]) << 8)  | unsigned(data[3]);
+	//std::cerr<<"Comparing protcol ids: " << hex(data[0])<<" "<<hex(data[1])<<" "<<hex(data[2])<<" "<<hex(data[3])<< " == " <<
+	//	hex((U8)((_protoId>>24)&0xFF))<<hex((U8)((_protoId>>16)&0xFF))<<hex((U8)((_protoId>>8)&0xFF))<<hex((U8)(_protoId&0xFF))<<std::endl;
 	if(firstIntegerInPacket != _protoId)
 		return;
 	// determine packet type
@@ -159,58 +161,62 @@ void NetMesh::processPacket(const Address& sender, U8* data, I32 size)
 		packetType = KeepAlive;
 	else
 		return;
+	//std::cerr<<"Packet type: "<<(I32)data[4]<<std::endl;
 	// process packet type
 	switch (packetType)
 	{
-		case JoinRequest:
+	case JoinRequest:
+	{
+		// is address already joining or joined?
+		AddrToNode::iterator it = _addrToNode.find(sender);
+		if(it == _addrToNode.end())
 		{
-			// is address already joining or joined?
-			AddrToNode::iterator it = _addrToNode.find(sender);
-			if(it == _addrToNode.end())
+			std::cerr<<"Mesh: address not found in nodes, starting join process"<<std::endl;
+			// no entry for address, start join process...
+			I32 freeSlot = -1;
+			for(U32 i = 0; i < _nodes.size(); ++i)
 			{
-				// no entry for address, start join process...
-				int freeSlot = -1;
-				for(U32 i = 0; i < _nodes.size(); ++i)
+				if(_nodes[i].mode == NodeState::Disconnected)
 				{
-					if(_nodes[i].mode == NodeState::Disconnected)
-					{
-						freeSlot = (int) i;
-						break;
-					}
-				}
-				if(freeSlot >= 0)
-				{
-					printf("mesh accepts %d.%d.%d.%d:%d as node %d\n", 
-						sender.getA(), sender.getB(), sender.getC(), sender.getD(), sender.getPort(), freeSlot);
-					assert(_nodes[freeSlot].mode == NodeState::Disconnected);
-					_nodes[freeSlot].mode = NodeState::ConnectionAccept;
-					_nodes[freeSlot].nodeId = freeSlot;
-					_nodes[freeSlot].address = sender;
-					_addrToNode.insert(std::make_pair(sender, &_nodes[freeSlot]));
+					freeSlot = (I32) i;
+					break;
 				}
 			}
-			else if(it->second->mode == NodeState::ConnectionAccept)
+			if(freeSlot >= 0)
 			{
-				// reset timeout accumulator, but only while joining
-				it->second->timeoutAccumulator = 0.0f;
+				printf("mesh accepts %d.%d.%d.%d:%d as node %d\n", 
+				sender.getA(), sender.getB(), sender.getC(), sender.getD(), sender.getPort(), freeSlot);
+				assert(_nodes[freeSlot].mode == NodeState::Disconnected);
+				_nodes[freeSlot].mode = NodeState::ConnectionAccept;
+				_nodes[freeSlot].nodeId = freeSlot;
+				_nodes[freeSlot].address = sender;
+				_addrToNode.insert(std::make_pair(sender, &_nodes[freeSlot]));
 			}
+		}
+		else if(it->second->mode == NodeState::ConnectionAccept)
+		{
+			// reset timeout accumulator, but only while joining
+			it->second->timeoutAccumulator = 0.0f;
 		}
 		break;
-		case KeepAlive:
+	}
+	case KeepAlive:
+	{
+		AddrToNode::iterator it = _addrToNode.find(sender);
+		if(it != _addrToNode.end())
 		{
-			AddrToNode::iterator it = _addrToNode.find(sender);
-			if(it != _addrToNode.end())
+			// progress from "connection accept" to "connected"
+			if(it->second->mode == NodeState::ConnectionAccept)
 			{
-				// progress from "connection accept" to "connected"
-				if(it->second->mode == NodeState::ConnectionAccept)
-				{
-					it->second->mode = NodeState::Connected;
-					printf("mesh completes join of node %d\n", it->second->nodeId);
-				}
-				// reset timeout accumulator for node
-				it->second->timeoutAccumulator = 0.0f;
+				it->second->mode = NodeState::Connected;
+				printf("mesh completes join of node %d\n", it->second->nodeId);
 			}
+			// reset timeout accumulator for node
+			it->second->timeoutAccumulator = 0.0f;
 		}
+		break;
+	}
+	default:
 		break;
 	}
 }
@@ -249,7 +255,7 @@ void NetMesh::sendPackets(F32 dt)
 				packet[2] = (U8) ((_protoId >> 8) & 0xFF);
 				packet[3] = (U8) ((_protoId) & 0xFF);
 				packet[4] = 1;
-				U8 * ptr = &packet[5];
+				U8* ptr = &packet[5];
 				for(U32 j = 0; j < _nodes.size(); ++j)
 				{
 					ptr[0] = (U8) _nodes[j].address.getA();
@@ -260,7 +266,7 @@ void NetMesh::sendPackets(F32 dt)
 					ptr[5] = (U8) ((_nodes[j].address.getPort()) & 0xFF);
 					ptr += 6;
 				}
-				_socket.send(_nodes[i].address, packet, sizeof(packet));
+				_socket.send(_nodes[i].address, packet, (5+6*_nodes.size()) * sizeof(packet[0]));
 				delete[] packet;
 			}
 		}

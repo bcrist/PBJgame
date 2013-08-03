@@ -274,7 +274,7 @@ void Transport::update(F32 dt)
       const ListenerEntry& entry = _listener->getEntry(i);
       if(strcmp((const char*)(entry.name), _connectName) == 0)
       {
-        printf("lan transport: found server %d.%d.%d.%d:%d\n", 
+        printf("Transport: found server %d.%d.%d.%d:%d - attempting to connect\n", 
           entry.address.getA(),
           entry.address.getB(),
           entry.address.getC(),
@@ -289,6 +289,8 @@ void Transport::update(F32 dt)
           return;
         }
         _node->join(entry.address);
+
+		//we've found a server, no need to listen for one anymore
         delete _listener;
         _listener = NULL;
         _connectingByName = false;
