@@ -115,10 +115,19 @@ int Socket::receive(Address& sender, void* data, int size)
 
 	sockaddr_in from;
 	I32 fromLength = sizeof(from);
-
 	I32 receivedBytes = recvfrom(_socket, (char*)data, size, 0, (sockaddr*)&from, &fromLength);
 	if(receivedBytes <= 0)
 		return 0;
+	/* Only use this for checking socket reception of data
+	std::cerr<<"Socket: Recieved more than 0 bytes, printing bytes received"<<std::endl<<"\t";
+	for(int i=0;i<receivedBytes;++i)
+	{
+		U8 c = ((U8*)data)[i];
+		std::cerr<<hex(c)<<" ";
+		if(i % 16 == 15)
+			std::cerr<<std::endl<<"\t";
+	}
+	std::cerr<<std::endl;*/
 
 	U32 address = ntohl(from.sin_addr.s_addr);
 	U8 port = (U8)ntohs(from.sin_port);

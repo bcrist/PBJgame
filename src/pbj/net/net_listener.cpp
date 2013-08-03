@@ -30,7 +30,7 @@ Listener::~Listener()
 bool Listener::start(I32 port)
 {
 	assert(!_running);
-	PBJ_LOG(pbj::VInfo) << "Starting listener on port " << port << PBJ_LOG_NL;
+	PBJ_LOG(pbj::VInfo) << "Starting listener on port " << port << PBJ_LOG_END;
 	if(!_socket.open(port))
 		return false;
 	_running = true;
@@ -40,7 +40,7 @@ bool Listener::start(I32 port)
 void Listener::stop()
 {
 	assert(_running);
-	PBJ_LOG(pbj::VInfo) << "Stopping listener" << PBJ_LOG_NL;
+	PBJ_LOG(pbj::VInfo) << "Stopping listener" << PBJ_LOG_END;
 	_socket.close();
 	_running = false;
 	clearData();
@@ -58,6 +58,7 @@ void Listener::update(F32 dt)
 			break;
 		if(bytesRead > 13)
 			continue;
+		std::cerr<<"Listener: received " << bytesRead << " bytes." <<std::endl;
 		U32 packetZero;
 		U32 packetProtoId;
 		U32 packetServerPort;
@@ -68,7 +69,10 @@ void Listener::update(F32 dt)
 		packetStrLength = packet[12];
 		if(packetZero != 0 || packetProtoId != _protoId || packetStrLength > 63 ||
 			packetStrLength+12+1 > bytesRead)
+		{
+			PBJ_LOG(pbj::VInfo) << "This is not the packet we are looking for" << PBJ_LOG_END;
 			continue;
+		}
 		ListenerEntry entry;
 		memcpy(entry.name, packet+13, packetStrLength);
 		entry.name[packetStrLength] = '\0';

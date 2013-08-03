@@ -45,6 +45,8 @@
 #else
 
 #include "pbj/engine.h"
+#include "pbj/net/net_platform.h"
+#include "pbj/net/net_transport.h"
 
 #include <iostream>
 #include <fstream>
@@ -62,6 +64,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, INT)
 }
 
 #endif // defined(_WIN32) && !defined(DEBUG)
+
+using namespace pbj;
+using pbj::net::Transport;
+
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -81,12 +87,12 @@ int main(int argc, char* argv[])
    std::ofstream cerr_log_file;
    std::string cerr_log("pbjgame.log");
 
-   if (argc != 1)
+   /*if (argc != 1)
    {
       std::cout << "PBJgame " << PBJ_VERSION_MAJOR << '.' << PBJ_VERSION_MINOR << " (" << __DATE__ " " __TIME__ << ')' << std::endl
                 << PBJ_COPYRIGHT << std::endl;
       return 1;
-   }
+   }*/
    
    // Set the appropriate verbosity level
    be::setVerbosity(verbosity);
@@ -102,9 +108,71 @@ int main(int argc, char* argv[])
 #endif
 
    // Initialize game engine
-   pbj::Engine engine;
+   //pbj::Engine engine;
 
    // TODO: start game
+   if(!Transport::init())
+   {
+	   PBJ_LOG(pbj::VError) << "Failed to initialize transport layer" << PBJ_LOG_END;
+	   return 1;
+   }
+
+   Transport* transport = Transport::create();
+
+   if(!transport)
+   {
+	   PBJ_LOG(pbj::VError) << "Could not create transport" << PBJ_LOG_END;
+	   return 1;
+   }
+
+   Transport::Config cfg = transport->getConfig();
+   std::cerr<<"Transport configuration:"<<std::endl;
+   std::cerr<<"\tMesh Port:\t"<<cfg.meshPort<<std::endl;
+	std::cerr<<"\tClient Port:\t"<<cfg.clientPort<<std::endl;
+	std::cerr<<"\tServer Port:\t"<<cfg.serverPort<<std::endl;
+	std::cerr<<"\tBeacon Port:\t"<<cfg.beaconPort<<std::endl;
+	std::cerr<<"\tListener Port:\t"<<cfg.listenerPort<<std::endl;
+	std::cerr<<"\tProto Id:\t"<<cfg.protoId<<std::endl;
+	std::cerr<<"\tMesh Send Rate:\t"<<cfg.meshSendRate<<std::endl;
+	std::cerr<<"\tTimeout:\t"<<cfg.timeout<<std::endl;
+	std::cerr<<"\tmax Nodes:\t"<<cfg.maxNodes<<std::endl;
+   //connect to server
+   if(argc >= 2)
+	   transport->connectClient((U8*)argv[1]);
+   else
+   {
+	   U8 hostname[64+1];
+	   Transport::getHostName(hostname, sizeof(hostname));
+	   transport->connectClient(hostname);
+   }
+
+   //main loop
+   const F32 dt = 1.0f/30.0f;
+   bool connected = false;
+   while(true)
+   {
+	   connected = (!connected && transport->isConnected());
+	   if(connected && !transport->isConnected())
+	   {
+		   PBJ_LOG(pbj::VInfo) << "Disconnected" << PBJ_LOG_END;
+		   break;
+	   }
+
+	   if(transport->connectFailed())
+	   {
+		   PBJ_LOG(pbj::VError) << "Connect failed" << PBJ_LOG_END;
+		   break;
+	   }
+
+	   transport->update(dt);
+	   net::waitSeconds(dt);
+   }
+
+   //shutdown
+   Transport::destroy(transport);
+   Transport::shutdown();
+
+   return 0;
 };
 
 #endif

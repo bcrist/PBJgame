@@ -21,8 +21,8 @@ namespace net
 	private:
 		U8 _name[64+1];
 		U32 _protoId;
-		U32 _listenerPort;
-		U32 _serverPort;
+		U16 _listenerPort;
+		U16 _serverPort;
 		bool _running;
 		Socket _socket;
 	};

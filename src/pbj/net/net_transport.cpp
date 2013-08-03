@@ -57,12 +57,12 @@ Transport::~Transport()
 
 void Transport::configure(Config& config)
 {
-  _config = config;
+	_config = config;
 }
 
 const Transport::Config& Transport::getConfig() const
 {
-  return _config;
+	return _config;
 }
 
 bool Transport::startServer(const U8* const name)
@@ -148,6 +148,7 @@ bool Transport::connectClient(const U8* const server)
       stop();
       return false;
     }
+	PBJ_LOG(pbj::VInfo) << "Started listener on port " << _config.listenerPort << PBJ_LOG_END;
     _connectingByName = true;
     strncpy_s(_connectName, (const char*)server, sizeof(_connectName) - 1);
     _connectName[ sizeof(_connectName) - 1 ] = '\0';

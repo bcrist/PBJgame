@@ -135,6 +135,18 @@ Transport* initServer()
 		return 0;
 	}
 
+	 Transport::Config cfg = ret->getConfig();
+   std::cerr<<"Transport configuration:"<<std::endl;
+   std::cerr<<"\tMesh Port:\t"<<cfg.meshPort<<std::endl;
+	std::cerr<<"\tClient Port:\t"<<cfg.clientPort<<std::endl;
+	std::cerr<<"\tServer Port:\t"<<cfg.serverPort<<std::endl;
+	std::cerr<<"\tBeacon Port:\t"<<cfg.beaconPort<<std::endl;
+	std::cerr<<"\tListener Port:\t"<<cfg.listenerPort<<std::endl;
+	std::cerr<<"\tProto Id:\t"<<cfg.protoId<<std::endl;
+	std::cerr<<"\tMesh Send Rate:\t"<<cfg.meshSendRate<<std::endl;
+	std::cerr<<"\tTimeout:\t"<<cfg.timeout<<std::endl;
+	std::cerr<<"\tmax Nodes:\t"<<cfg.maxNodes<<std::endl;
+
 	U8 hostname[64+1] = "hostname";
 	ret->getHostName(hostname, sizeof(hostname));
 	ret->startServer(hostname);

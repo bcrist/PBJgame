@@ -233,6 +233,11 @@ void NetMesh::sendPackets(F32 dt)
 				packet[4] = 0;
 				packet[5] = (U8) i;
 				packet[6] = (U8) _nodes.size();
+				/*
+				std::cerr<<"Packet sent:\n\t";
+				for(int j=0;j<7;++j)
+					std::cerr<<hex(packet[j])<<" ";
+				std::cerr<<std::endl;*/
 				_socket.send(_nodes[i].address, packet, sizeof(packet));
 			}
 			else if(_nodes[i].mode == NodeState::Connected)

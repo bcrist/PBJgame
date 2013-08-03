@@ -42,16 +42,36 @@ void Beacon::stop()
 
 void Beacon::update(F32 dt)
 {
+	std::cerr<<"Beacon: starting update with dt: "<<dt<<std::endl;
 	assert(_running);
 	U8 packet[12+1+64];
+	//I think this might be an issue.
 	writeInteger(packet, 0);
+
 	writeInteger(packet+4, _protoId);
-	writeInteger(packet+8, _serverPort);
-	packet[12] = (U8) strlen((const char*)_name);
-	assert(packet[12]<63);
-	memcpy(packet+13, _name, strlen((const char*)_name));
+
+	std::cerr<<"\tWriting server port:"<<_serverPort<<std::endl;
+	writeShort(packet+8, _serverPort);
+	//add padding?
+	writeShort(packet+10,0);
+
+	size_t len = strlen((const char*)_name);
+	assert(len<63);
+	packet[12] = (U8)len;
+	memcpy(packet+13, _name, len);
+	std::cerr<<"\tAttempting to send packet:\n\t";
+	for(U32 i=0;i<12+len;++i)
+	{
+		std::cerr<<hex(packet[i])<<" ";
+		if(i%16==15)
+			std::cerr<<"\n\t";
+	}
+	std::cerr<<std::endl;
 	if(!_socket.send(Address(255,255,255,255,_listenerPort), packet, 12+1+packet[12]))
 		PBJ_LOG(pbj::VError) << "Failed to send broadcast packet" << PBJ_LOG_END;
+	else
+		std::cerr<<"Sent packet: "<<packet<<std::endl;
 	Address sender;
 	while(_socket.receive(sender, packet, 256));
+	std::cerr<<"Beacon: leaving update"<<std::endl;
 }
