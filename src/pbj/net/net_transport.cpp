@@ -40,10 +40,10 @@ bool Transport::getHostName(U8* hostname, int size)
 
 Transport::Transport()
 {
-  _mesh = 0;
-  _node = 0;
-  _beacon = 0;
-  _listener = 0;
+  _mesh = nullptr;
+  _node = nullptr;
+  _beacon = nullptr;
+  _listener = nullptr;
   _beaconAccumulator = 0.0f;
   _connectingByName = false;
   _connectAccumulator = 0.0f;
@@ -186,6 +186,14 @@ bool Transport::enterLobby()
 		return false;
 	}
 	return true;
+}
+
+bool Transport::leaveLobby()
+{
+	assert(_listener);
+	delete _listener;
+	_listener = nullptr;
+	return !_listener;
 }
 
 I32 Transport::getLobbyEntryCount()

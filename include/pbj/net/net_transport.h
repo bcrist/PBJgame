@@ -76,6 +76,7 @@ namespace net
 		bool isConnected() const;
 		bool connectFailed() const;
 		bool enterLobby();
+		bool leaveLobby();
 		I32 getLobbyEntryCount();
 		bool getLobbyEntryAtIndex(I32, LobbyEntry&);
 		void stop();

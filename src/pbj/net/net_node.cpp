@@ -208,7 +208,7 @@ void Node::processPacket(const Address& sender, U8* data, int size)
 		// determine packet type
 		enum PacketType { ConnectionAccepted, Update };
 		PacketType packetType;
-		std::cerr<<"Node: Packet type received (should be 0 or 1): "<<(I32)(data[4])<<std::endl;
+		//std::cerr<<"Node: Packet type received (should be 0 or 1): "<<(I32)(data[4])<<std::endl;
 		if (data[4] == 0)
 			packetType = ConnectionAccepted;
 		else if (data[4] == 1)
@@ -216,7 +216,7 @@ void Node::processPacket(const Address& sender, U8* data, int size)
 		else
 			return;
 		// handle packet type
-		switch (packetType)
+		switch ((I32)(data[4]))
 		{
 			case ConnectionAccepted:
 			{
@@ -276,8 +276,11 @@ void Node::processPacket(const Address& sender, U8* data, int size)
 					}
 				}
 				_timeoutAccumulator = 0.0f;
+				break;
 			}
-			break;
+			default:
+				std::cerr<<"Node: Packet type received: "<<(I32)(data[4])<<std::endl;
+				break;
 		}
 	}
 	else

@@ -77,7 +77,6 @@ enum ClientState
 };
 
 Transport* transport;
-I32 prevEntryCount;
 ClientState state;
 
 I32 initializeClient();
@@ -94,7 +93,7 @@ I32 initializeClient()
 		return 1;
 	}
 
-	Transport* transport = Transport::create();
+	transport = Transport::create();
 
 	if(!transport)
 	{
@@ -113,7 +112,6 @@ I32 initializeClient()
 	std::cerr<<"\tTimeout:\t"<<cfg.timeout<<std::endl;
 	std::cerr<<"\tmax Nodes:\t"<<cfg.maxNodes<<std::endl;
 
-	prevEntryCount = 0;
 	state = Searching;
 	return 0;
 }
@@ -122,48 +120,48 @@ bool viewLobby()
 {
 	I32 entryCount = transport->getLobbyEntryCount();
 	std::cerr<<entryCount<<std::endl;
-	if(entryCount != prevEntryCount)
+	Transport::LobbyEntry entry;
+	std::cerr<<"--------------------------------------------------------------------------------"<<std::endl
+				<<"Available Servers"<<std::endl;
+	for(I32 i=0;i<entryCount;++i)
 	{
-		prevEntryCount = entryCount;
-		Transport::LobbyEntry entry;
-		std::cerr<<"--------------------------------------------------------------------------------"<<std::endl
-					<<"Available Servers"<<std::endl;
-		for(I32 i=0;i<entryCount;++i)
-		{
-			if(transport->getLobbyEntryAtIndex(i, entry))
-				std::cerr<<"\t"<<(i+1)<<". "<<entry.name<<" ("<<entry.address<<")"<<std::endl;
-		}
-		std::cerr<<"Enter 'R' to refresh, 'Q' to quit or the number of the server."<<std::endl;
-		std::cerr<<"Choice:"<<std::endl;
-		std::string choice;
+		if(transport->getLobbyEntryAtIndex(i, entry))
+			std::cerr<<"\t"<<(i+1)<<". "<<entry.name<<" ("<<entry.address<<")"<<std::endl;
+	}
+	std::cerr<<"Enter 'R' to refresh, 'Q' to quit or the number of the server."<<std::endl;
+	std::cerr<<"Choice:"<<std::endl;
+	std::string choice;
 
-		//I'm expect this to halt all execution of the loop in main while it waits for input
-		std::getline(std::cin,choice);
-		if(choice.c_str()[0]=='R' || choice.c_str()[0]=='r')
+	//I'm expect this to halt all execution of the loop in main while it waits for input
+	std::getline(std::cin,choice);
+	if(choice.c_str()[0]=='R' || choice.c_str()[0]=='r')
+	{
+		return false;
+	}
+	else if(choice.c_str()[0]=='Q' || choice.c_str()[0]=='q')
+	{
+		return true;
+	}
+	else
+	{
+		I32 iChoice = atoi(choice.c_str());
+		if(iChoice<=entryCount)
 		{
-			return false;
+			transport->getLobbyEntryAtIndex(iChoice-1,entry);
+			joinServer(entry);
 		}
-		else if(choice.c_str()[0]=='Q' || choice.c_str()[0]=='q')
-		{
-			return true;
-		}
-		else
-		{
-			I32 iChoice = atoi(choice.c_str());
-			if(iChoice<=entryCount)
-			{
-				transport->getLobbyEntryAtIndex(iChoice-1,entry);
-				joinServer(entry);
-			}
-			//and why not just refresh if invalid input.
-			return false;
-		}
+		//and why not just refresh if invalid input.
 	}
 	return false;
 }
 
 void joinServer(Transport::LobbyEntry entry)
 {
+	if(!transport->leaveLobby())
+	{
+		std::cerr<<"Leaving lobby failed!"<<std::endl;
+		return;
+	}
 	transport->connectClient(entry.address);
 	state = Connecting;
 }
@@ -233,7 +231,8 @@ int main(int argc, char* argv[])
    // TODO: start game
    if(initializeClient()==1)
 	   return 1;
-   
+   assert(transport);
+
    //connect to server or look for one
    if(argc >= 2) //address passed to client, try to do direct connect
    {
@@ -251,7 +250,6 @@ int main(int argc, char* argv[])
    std::cerr<<"Starting client loop"<<std::endl;
    while(!breakLoop)
    {
-	   std::cerr<<"Checking client state"<<std::endl;
 	   switch(state)
 	   {
 	   case Searching:
