@@ -76,12 +76,7 @@ void Node::stop()
 
 void Node::join(const Address& address)
 {
-	PBJ_LOG(pbj::VInfo) << "Node join "
-						<< (U32) address.getA() << "."
-						<< (U32) address.getB() << "."
-						<< (U32) address.getC() << "."
-						<< (U32) address.getD() << ":"
-						<< (U32) address.getPort() << PBJ_LOG_END;
+	PBJ_LOG(pbj::VInfo) << "Node join " << address << PBJ_LOG_END;
 	clearData();
 	_state = Joining;
 	_meshAddress = address;
@@ -138,16 +133,16 @@ I32 Node::getMaxNodes() const
 bool Node::sendPacket(I32 nodeId, const U8* const data, I32 size)
 {
 	assert(_running);
-	if (_nodes.size() == 0)
+	if(_nodes.size() == 0)
 		return false;	// not connected yet
 	assert(nodeId >= 0);
 	assert(nodeId < (int)_nodes.size());
-	if (nodeId < 0 || nodeId >= (int)_nodes.size())
+	if(nodeId < 0 || nodeId >= (int)_nodes.size())
 		return false;
-	if (!_nodes[nodeId].connected)
+	if(!_nodes[nodeId].connected)
 		return false;
 	assert(size <= _maxPacketSize);
-	if (size > _maxPacketSize)
+	if(size > _maxPacketSize)
 		return false;
 	return _socket.send(_nodes[nodeId].address, data, size);
 }
@@ -155,17 +150,18 @@ bool Node::sendPacket(I32 nodeId, const U8* const data, I32 size)
 I32 Node::receivePacket(I32& nodeId, U8* data, I32 size)
 {
 	assert(_running);
-	if (!_receivedPackets.empty())
+	if(!_receivedPackets.empty())
 	{
 		BufferedPacket* packet = _receivedPackets.top();
 		assert(packet);
-		if ((int)packet->data.size() <= size)
+		if((int)packet->data.size() <= size)
 		{
 			nodeId = packet->nodeId;
 			memcpy(data, &packet->data[0], packet->data.size());
+			I32 ret = packet->data.size();
 			delete packet;
 			_receivedPackets.pop();
-			return packet->data.size();
+			return ret;
 		}
 		else
 		{
@@ -183,7 +179,7 @@ void Node::receivePackets()
 	{
 		Address sender;
 		int size = _socket.receive(sender, data, _maxPacketSize*sizeof(data[0]));
-		if (!size)
+		if(!size)
 			break;
 		processPacket(sender, data, size);
 	}
@@ -195,34 +191,23 @@ void Node::processPacket(const Address& sender, U8* data, int size)
 	assert(sender != Address());
 	assert(size > 0);
 	assert(data);
-	
 	// is packet from the mesh?
-	if (sender == _meshAddress)
+	if(sender == _meshAddress)
 	{
 		// *** packet sent from the mesh ***
 		// ignore packets that dont have the correct protocol id
-		unsigned int firstIntegerInPacket = (unsigned(data[0]) << 24) | (unsigned(data[1]) << 16) |
-											(unsigned(data[2]) << 8)  | unsigned(data[3]);
-		if (firstIntegerInPacket != _protoId)
-			return;
-		// determine packet type
-		enum PacketType { ConnectionAccepted, Update };
-		PacketType packetType;
-		//std::cerr<<"Node: Packet type received (should be 0 or 1): "<<(I32)(data[4])<<std::endl;
-		if (data[4] == 0)
-			packetType = ConnectionAccepted;
-		else if (data[4] == 1)
-			packetType = Update;
-		else
+		U32 firstIntegerInPacket;
+		readInteger(data,firstIntegerInPacket);
+		if(firstIntegerInPacket != _protoId)
 			return;
 		// handle packet type
-		switch ((I32)(data[4]))
+		switch(data[4])
 		{
-			case ConnectionAccepted:
+			case 0: //connection accepted
 			{
-				if (size != 7)
+				if(size != 7)
 					return;
-				if (_state == Joining)
+				if(_state == Joining)
 				{
 					_localNodeId = data[5];
 					_nodes.resize(data[6]);
@@ -230,55 +215,48 @@ void Node::processPacket(const Address& sender, U8* data, int size)
 					_state = Joined;
 				}
 				_timeoutAccumulator = 0.0f;
+				break;
 			}
-			break;
-			case Update:
+			case 1: //update
 			{
-				if (size != (int)(5 + _nodes.size() * 6))
+				if(size != (I32)(5 + _nodes.size() * 6))
 					return;
-				if (_state == Joined)
+				if(_state == Joined)
 				{
 					// process update packet
-					unsigned char * ptr = &data[5];
-					for (unsigned int i = 0; i < _nodes.size(); ++i)
+					U8* ptr = &data[5];
+					for(U32 i = 0; i < _nodes.size(); ++i)
 					{
-						unsigned char a = ptr[0];
-						unsigned char b = ptr[1];
-						unsigned char c = ptr[2];
-						unsigned char d = ptr[3];
-						unsigned short port = (unsigned short)ptr[4] << 8 | (unsigned short)ptr[5];
+						U8 a = ptr[0];
+						U8 b = ptr[1];
+						U8 c = ptr[2];
+						U8 d = ptr[3];
+						U16 port = (U16)ptr[4] << 8 | (U16)ptr[5];
 						Address address(a, b, c, d, port);
-						if (address.getAddress() != 0)
-						{
-							// node is connected
-							if (address != _nodes[i].address)
-							{
-								printf("node %d: node %d connected\n", _localNodeId, i);
-								_nodes[i].connected = true;
-								_nodes[i].address = address;
-								_addrToNode[address] = &_nodes[i];
-							}
+						if(address.getAddress() != 0 && address != _nodes[i].address)
+						{ // node is connected but not on record
+							printf("node %d: node %d connected\n", _localNodeId, i);
+							_nodes[i].connected = true;
+							_nodes[i].address = address;
+							_addrToNode[address] = &_nodes[i];
 						}
-						else
+						else if(address.getAddress() == 0 && _nodes[i].connected)
 						{
-							// node is not connected
-							if(_nodes[i].connected)
-							{
-								printf("node %d: node %d disconnected\n", _localNodeId, i);
-								AddrToNode::iterator itor = _addrToNode.find(_nodes[i].address);
-								assert(itor != _addrToNode.end());
-								_addrToNode.erase(itor);
-								_nodes[i].connected = false;
-								_nodes[i].address = Address();
-							}
+							printf("node %d: node %d disconnected\n", _localNodeId, i);
+							AddrToNode::iterator itor = _addrToNode.find(_nodes[i].address);
+							assert(itor != _addrToNode.end());
+							_addrToNode.erase(itor);
+							_nodes[i].connected = false;
+							_nodes[i].address = Address();
 						}
 						ptr += 6;
 					}
+					ptr = nullptr;
 				}
 				_timeoutAccumulator = 0.0f;
 				break;
 			}
-			default:
+			default: //other
 				std::cerr<<"Node: Packet type received: "<<(I32)(data[4])<<std::endl;
 				break;
 		}
@@ -286,19 +264,41 @@ void Node::processPacket(const Address& sender, U8* data, int size)
 	else
 	{
 		AddrToNode::iterator itor = _addrToNode.find(sender);
-		if (itor != _addrToNode.end())
+		if(itor != _addrToNode.end())
 		{
 			// *** packet sent from another node ***
 			NodeState* node = itor->second;
 			assert(node);
-			int nodeId = (int)(node - &_nodes[0]);
+
+			I32 nodeId = (I32)(node - &_nodes[0]);
 			assert(nodeId >= 0);
-			assert(nodeId < (int)_nodes.size());
-			BufferedPacket * packet = new BufferedPacket;
+			assert(nodeId < (I32)_nodes.size());
+			BufferedPacket* packet = new BufferedPacket;
 			packet->nodeId = nodeId;
 			packet->data.resize(size);
 			memcpy(&packet->data[0], data, size);
 			_receivedPackets.push(packet);
+			//this doesn't feel safe.  I need to look over _receivedPackets to find out
+			//when/if this is being deleted properly
+		}
+		else
+		{
+			//_nodes[0] contains the address of the server.  If that is the sender OR
+			//if the sender has same as address we dobut with a different port, then
+			//act like we got something from the server.
+			if(_nodes[0].address == sender ||
+				(sender.getAddress()==_nodes[_localNodeId].address.getAddress() &&
+					sender.getPort()!=_nodes[_localNodeId].address.getPort()))
+			{
+				//first try - treat this like any other packet
+				BufferedPacket* packet = new BufferedPacket;
+				packet->nodeId = 0;
+				packet->data.resize(size);
+				memcpy(&packet->data[0], data, size);
+				_receivedPackets.push(packet);
+			}
+			else
+				std::cerr<<"Node: Couldn't find sender "<<sender<<std::endl;
 		}
 	}
 }
@@ -308,7 +308,7 @@ void Node::sendPackets(F32 dt)
 	_sendAccumulator += dt;
 	while (_sendAccumulator > _sendRate)
 	{
-		if (_state == Joining)
+		if(_state == Joining)
 		{
 			// node is joining: send "join request" packets
 			unsigned char packet[5];
@@ -339,9 +339,9 @@ void Node::checkForTimeout(F32 dt)
 	if(_state == Joining || _state == Joined)
 	{
 		_timeoutAccumulator += dt;
-		if (_timeoutAccumulator > _timeout)
+		if(_timeoutAccumulator > _timeout)
 		{
-			if (_state == Joining)
+			if(_state == Joining)
 			{
 				printf("node join failed\n");
 				_state = JoinFail;

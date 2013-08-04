@@ -78,12 +78,13 @@ enum ClientState
 
 Transport* transport;
 ClientState state;
+F32 clientToServerTimer;
 
 I32 initializeClient();
 bool viewLobby();
 void joinServer(Transport::LobbyEntry);
 bool doConnecting();
-bool doConnected();
+bool doConnected(F32);
 
 I32 initializeClient()
 {
@@ -113,13 +114,13 @@ I32 initializeClient()
 	std::cerr<<"\tmax Nodes:\t"<<cfg.maxNodes<<std::endl;
 
 	state = Searching;
+	clientToServerTimer = 0.0f;
 	return 0;
 }
 
 bool viewLobby()
 {
 	I32 entryCount = transport->getLobbyEntryCount();
-	std::cerr<<entryCount<<std::endl;
 	Transport::LobbyEntry entry;
 	std::cerr<<"--------------------------------------------------------------------------------"<<std::endl
 				<<"Available Servers"<<std::endl;
@@ -179,8 +180,40 @@ bool doConnecting()
 	return false;
 }
 
-bool doConnected()
+bool doConnected(F32 dt)
 {
+	//first receive any information we might need
+	const I32 maxSize = 512;
+	I32 nodeId;
+	U8 data[maxSize];
+	I32 bytesReceived = transport->receivePacket(nodeId, data, maxSize);
+	if(bytesReceived != 0)
+	{ //we actually got something!
+		U32 protoId;
+		net::readInteger(data, protoId);
+		if(transport->getConfig().protoId == protoId)
+		{ //even better, it's the right protocol!
+			//because this is just a test, I will ignore other checks.
+			U8* msg = new U8[bytesReceived-4];
+			strncpy_s((char*)msg, bytesReceived-4, (char*)(data+6), bytesReceived-4);
+			std::cerr<<"Client: received message:\n\t"<<msg<<std::endl;
+		}
+	}
+
+	//now send messages to the server
+	clientToServerTimer+=dt;
+	if(clientToServerTimer >= 1.5f)
+	{
+		U8 packet[512];
+		net::writeInteger(packet, transport->getConfig().protoId);
+		packet[4] = 0x03; //type = 3, which is nothing for the time being
+		packet[5] = 0;
+		strcpy_s((char*)(packet+6),38+1,"This is just a test (client to server)");
+		if(transport->sendPacket(0,packet,512))
+			std::cerr<<"Sent packet to server"<<std::endl;
+		clientToServerTimer-=1.5f;
+	}
+
 	if(!transport->isConnected())
 	{
 		PBJ_LOG(pbj::VInfo) << "Disconnected" << PBJ_LOG_END;
@@ -250,7 +283,6 @@ int main(int argc, char* argv[])
    std::cerr<<"Starting client loop"<<std::endl;
 	while(!breakLoop)
 	{
-		transport->update(dt);
 		switch(state)
 		{
 		case Searching:
@@ -260,11 +292,13 @@ int main(int argc, char* argv[])
 			breakLoop = doConnecting();
 			break;
 		case Connected:
-			breakLoop = doConnected();
+			breakLoop = doConnected(dt);
 			break;
 		default:
 			break;
 		}
+
+		transport->update(dt);
 		net::waitSeconds(dt);
 	}
 

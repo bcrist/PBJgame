@@ -5,7 +5,10 @@
 using namespace pbj;
 using namespace pbj::net;
 
-int Transport::transportCount = 0;
+////////////////////////////////////////////////////////////////////////////////
+//Static variables and methods
+////////////////////////////////////////////////////////////////////////////////
+I32 Transport::transportCount = 0;
 
 bool Transport::init()
 {
@@ -37,7 +40,9 @@ bool Transport::getHostName(U8* hostname, int size)
 {
   return net::getHostName(hostname, size); //from net_sockets.h
 }
-
+////////////////////////////////////////////////////////////////////////////////
+//End statics
+///////////////////////////////////////////////////////////////////////////////
 Transport::Transport()
 {
   _mesh = nullptr;
@@ -53,16 +58,6 @@ Transport::Transport()
 Transport::~Transport()
 {
   stop();
-}
-
-void Transport::configure(Config& config)
-{
-	_config = config;
-}
-
-const Transport::Config& Transport::getConfig() const
-{
-	return _config;
 }
 
 bool Transport::startServer(const U8* const name)
@@ -102,53 +97,53 @@ bool Transport::startServer(const U8* const name)
 
 bool Transport::connectClient(const U8* const server)
 {
-  assert(!_node);
-  assert(!_mesh);
-  assert(!_beacon);
-  assert(!_listener);
+	assert(!_node);
+	assert(!_mesh);
+	assert(!_beacon);
+	assert(!_listener);
 
-  // connect by address?
-  unsigned int a = 0;
-  unsigned int b = 0;
-  unsigned int c = 0;
-  unsigned int d = 0;
-  unsigned int port = 0;
-  bool isAddress = false;
-  if(sscanf_s((const char*)server, "%d.%d.%d.%d:%d", &a, &b, &c, &d, &port))
-  {
-    isAddress = true;
-  }
-  else
-  {
-    port = _config.meshPort;
-    if(sscanf_s((const char*)server, "%d.%d.%d.%d", &a, &b, &c, &d))
-      isAddress = true;
-  }
+	// connect by address?
+	unsigned int a = 0;
+	unsigned int b = 0;
+	unsigned int c = 0;
+	unsigned int d = 0;
+	unsigned int port = 0;
+	bool isAddress = false;
+	if(sscanf_s((const char*)server, "%d.%d.%d.%d:%d", &a, &b, &c, &d, &port))
+	{
+		isAddress = true;
+	}
+	else
+	{
+		port = _config.meshPort;
+		if(sscanf_s((const char*)server, "%d.%d.%d.%d", &a, &b, &c, &d))
+		isAddress = true;
+	}
   
-  if(isAddress) // yes, connect by address
-  {
-    printf("lan transport: client connect to address: %d.%d.%d.%d:%d\n", a, b, c, d, port);
-	Address addr = Address((U8)a, (U8)b, (U8)c, (U8)d, (U16)port);
-	return connectClient(addr);
-  }
-  else // no, connect by hostname
-  {
-    printf("lan transport: client connect by name \"%s\"\n", server);
-    _listener = new Listener(_config.protoId, _config.timeout);
-    if(!_listener->start(_config.listenerPort))
-    {
-      printf("failed to start listener on port %d\n", _config.listenerPort);
-      stop();
-      return false;
-    }
-	PBJ_LOG(pbj::VInfo) << "Started listener on port " << _config.listenerPort << PBJ_LOG_END;
-    _connectingByName = true;
-    strncpy_s(_connectName, (const char*)server, sizeof(_connectName) - 1);
-    _connectName[ sizeof(_connectName) - 1 ] = '\0';
-    _connectAccumulator = 0.0f;
-    _connectFailed = false;
-  }
-  return true;
+	if(isAddress) // yes, connect by address
+	{
+		printf("lan transport: client connect to address: %d.%d.%d.%d:%d\n", a, b, c, d, port);
+		Address addr = Address((U8)a, (U8)b, (U8)c, (U8)d, (U16)port);
+		return connectClient(addr);
+	}
+	else // no, connect by hostname
+	{
+		printf("Transport: client connect by name \"%s\"\n", server);
+		_listener = new Listener(_config.protoId, _config.timeout);
+		if(!_listener->start(_config.listenerPort))
+		{
+			printf("failed to start listener on port %d\n", _config.listenerPort);
+			stop();
+			return false;
+		}
+		PBJ_LOG(pbj::VInfo) << "Started listener on port " << _config.listenerPort << PBJ_LOG_END;
+		_connectingByName = true;
+		strncpy_s(_connectName, (const char*)server, sizeof(_connectName) - 1);
+		_connectName[ sizeof(_connectName) - 1 ] = '\0';
+		_connectAccumulator = 0.0f;
+		_connectFailed = false;
+	}
+	return true;
 }
 
 bool Transport::connectClient(const Address& server)
@@ -162,16 +157,6 @@ bool Transport::connectClient(const Address& server)
 	}
 	_node->join(server);
 	return true;
-}
-
-bool Transport::isConnected() const
-{
-  return _node && _node->isConnected();
-}
-
-bool Transport::connectFailed() const
-{
-  return _node && _node->joinFailed() || _connectingByName && _connectFailed;
 }
 
 bool Transport::enterLobby()
@@ -196,6 +181,128 @@ bool Transport::leaveLobby()
 	return !_listener;
 }
 
+void Transport::stop()
+{
+	PBJ_LOG(Verbosity::VNotice) << "Transport: stop" << PBJ_LOG_END;
+	if(_mesh)
+	{
+		delete _mesh;
+		_mesh = 0;
+	}
+	if(_node)
+	{
+		delete _node;
+		_node = 0;
+	}
+	if(_beacon)
+	{
+		delete _beacon;
+		_beacon = 0;
+	}
+	if(_listener)
+	{
+		delete _listener;
+		_listener = 0;
+	}
+	_connectingByName = false;
+	_connectFailed = false;
+}
+
+bool Transport::sendPacket(I32 nodeId, const U8* const data, I32 size)
+{
+	assert(_node);
+	return _node->sendPacket(nodeId, data, size);
+}
+
+I32 Transport::receivePacket(I32& nodeId, U8* data, I32 size)
+{
+	return _node->receivePacket(nodeId, data, size);
+}
+
+void Transport::update(F32 dt)
+{
+	//if we're still trying to connect, do what's necessary
+	if(_connectingByName && !_connectFailed)
+	{
+		assert(_listener);
+		const int entryCount = _listener->getEntryCount();
+		for(int i = 0; i < entryCount; ++i)
+		{
+			const ListenerEntry& entry = _listener->getEntry(i);
+			if(strcmp((const char*)(entry.name), _connectName) == 0)
+			{
+				PBJ_LOG(pbj::VInfo) << "Transport: found server " << entry.address
+									<< " attempting to connect"<<PBJ_LOG_END;
+				_node = new Node(_config.protoId, _config.meshSendRate, _config.timeout);
+				if(!_node->start(_config.clientPort))
+				{
+					printf("failed to start _node on port %d\n", _config.serverPort);
+					stop();
+					_connectFailed = true;
+					return;
+				}
+				_node->join(entry.address);
+
+				//we've found a server, no need to listen for one anymore
+				delete _listener;
+				_listener = NULL;
+				_connectingByName = false;
+			}
+		}
+		if(_connectingByName)
+		{
+			_connectAccumulator += dt;
+			if(_connectAccumulator > _config.timeout)
+				_connectFailed = true;
+		}
+	}
+
+	//update the other pieces of the trasnport layer if they exist
+	//this allows the Transport to work for servers and clients
+	if(_mesh)
+		_mesh->update(dt);
+	if(_node)
+		_node->update(dt);
+	if(_beacon)
+	{
+		_beaconAccumulator += dt;
+		while(_beaconAccumulator >= 1.0f)
+		{
+			_beacon->update(1.0f);
+			_beaconAccumulator -= 1.0f;
+		}
+	}
+	if(_listener)
+		_listener->update(dt);
+	/*if(_mesh)
+		_mesh->update(dt);
+	if(_node)
+		_node->update(dt);*/
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//Accessors and other lesser methods
+////////////////////////////////////////////////////////////////////////////////
+void Transport::configure(Config& config)
+{
+	_config = config;
+}
+
+const Transport::Config& Transport::getConfig() const
+{
+	return _config;
+
+}
+bool Transport::isConnected() const
+{
+  return _node && _node->isConnected();
+}
+
+bool Transport::connectFailed() const
+{
+  return _node && _node->joinFailed() || _connectingByName && _connectFailed;
+}
+
 I32 Transport::getLobbyEntryCount()
 {
   if(_listener)
@@ -215,32 +322,7 @@ bool Transport::getLobbyEntryAtIndex(I32 index, LobbyEntry& entry)
   return true;
 }
 
-void Transport::stop()
-{
-  PBJ_LOG(Verbosity::VNotice) << "Transport: stop" << PBJ_LOG_END;
-  if(_mesh)
-  {
-    delete _mesh;
-    _mesh = 0;
-  }
-  if(_node)
-  {
-    delete _node;
-    _node = 0;
-  }
-  if(_beacon)
-  {
-    delete _beacon;
-    _beacon = 0;
-  }
-  if(_listener)
-  {
-    delete _listener;
-    _listener = 0;
-  }
-  _connectingByName = false;
-  _connectFailed = false;
-}
+
 
 bool Transport::isNoneConnected(I32 nodeId)
 {
@@ -260,17 +342,6 @@ I32 Transport::getMaxNodes() const
   return _node->getMaxNodes();
 }
 
-bool Transport::sendPacket(I32 nodeId, const U8* const data, I32 size)
-{
-  assert(_node);
-  return _node->sendPacket(nodeId, data, size);
-}
-
-I32 Transport::receivePacket(I32& nodeId, U8* data, int size)
-{
-  return _node->receivePacket(nodeId, data, size);
-}
-
 ReliabilitySystem& Transport::getReliability(I32)
 {
   //todo: implement
@@ -282,65 +353,4 @@ I32 Transport::getNumberConnected() const
 {
 	assert(_mesh);
 	return _mesh->getNumberConnected();
-}
-
-void Transport::update(F32 dt)
-{
-  if(_connectingByName && !_connectFailed)
-  {
-    assert(_listener);
-    const int entryCount = _listener->getEntryCount();
-    for(int i = 0; i < entryCount; ++i)
-    {
-      const ListenerEntry& entry = _listener->getEntry(i);
-      if(strcmp((const char*)(entry.name), _connectName) == 0)
-      {
-        printf("Transport: found server %d.%d.%d.%d:%d - attempting to connect\n", 
-          entry.address.getA(),
-          entry.address.getB(),
-          entry.address.getC(),
-          entry.address.getD(),
-          entry.address.getPort());
-        _node = new Node(_config.protoId, _config.meshSendRate, _config.timeout);
-         if(!_node->start(_config.clientPort))
-        {
-          printf("failed to start _node on port %d\n", _config.serverPort);
-          stop();
-          _connectFailed = true;
-          return;
-        }
-        _node->join(entry.address);
-
-		//we've found a server, no need to listen for one anymore
-        delete _listener;
-        _listener = NULL;
-        _connectingByName = false;
-      }
-    }
-    if(_connectingByName)
-    {
-      _connectAccumulator += dt;
-      if(_connectAccumulator > _config.timeout)
-        _connectFailed = true;
-    }
-  }
-  if(_mesh)
-    _mesh->update(dt);
-  if(_node)
-    _node->update(dt);
-  if(_beacon)
-  {
-    _beaconAccumulator += dt;
-    while(_beaconAccumulator >= 1.0f)
-    {
-      _beacon->update(1.0f);
-      _beaconAccumulator -= 1.0f;
-    }
-  }
-  if(_listener)
-    _listener->update(dt);
-  if(_mesh)
-    _mesh->update(dt);
-  if(_node)
-    _node->update(dt);
 }

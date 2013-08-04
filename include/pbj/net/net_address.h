@@ -1,12 +1,16 @@
 #ifndef NET_ADDRESS_H_
 #define NET_ADDRESS_H_
 
+#include <iostream>
 #include "pbj/_pbj.h"
+
+using std::ostream;
 
 namespace pbj
 {
 namespace net
 {
+	
 	class Address
 	{
 	public:
@@ -46,6 +50,13 @@ namespace net
 		U32 _address;
 		U16 _port;
 	};
+
+	inline ostream& operator<<(ostream& os, const Address& addr)
+	{
+		os << (U32)addr.getA() << '.' << (U32)addr.getB() << '.' << (U32)addr.getC() << '.'
+			<< (U32)addr.getD() << ':' << addr.getPort();
+		return os;
+	}
 }
 }
 #endif
