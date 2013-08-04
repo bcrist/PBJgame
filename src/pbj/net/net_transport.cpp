@@ -278,6 +278,12 @@ ReliabilitySystem& Transport::getReliability(I32)
   return reliabilitySystem;
 }
 
+I32 Transport::getNumberConnected() const
+{
+	assert(_mesh);
+	return _mesh->getNumberConnected();
+}
+
 void Transport::update(F32 dt)
 {
   if(_connectingByName && !_connectFailed)

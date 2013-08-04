@@ -56,7 +56,7 @@ namespace net
 				protoId = 0x47464750;
 				meshSendRate = 0.25f;
 				timeout = 10.0f;
-				maxNodes = 4;
+				maxNodes = 16;
 			}
 		};
 
@@ -79,6 +79,7 @@ namespace net
 		bool leaveLobby();
 		I32 getLobbyEntryCount();
 		bool getLobbyEntryAtIndex(I32, LobbyEntry&);
+		I32 getNumberConnected() const;
 		void stop();
 
 		bool isNoneConnected(I32);

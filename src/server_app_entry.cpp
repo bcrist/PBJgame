@@ -162,6 +162,20 @@ void runServer(Transport* transport)
 	const F32 dt = 1.0f/30.0f;
 	while(true)
 	{
+		I32 n = transport->getNumberConnected();
+		for(I32 i=1;i<n;++i) //I don't like this
+		{
+			U8 packet[512];
+			packet[0] = (U8) ((transport->getConfig().protoId >> 24) & 0xFF);
+			packet[1] = (U8) ((transport->getConfig().protoId >> 16) & 0xFF);
+			packet[2] = (U8) ((transport->getConfig().protoId >> 8) & 0xFF);
+			packet[3] = (U8) ((transport->getConfig().protoId) & 0xFF);
+			packet[4] = 2; //type = 2, which is nothing for the time being
+			packet[5] = (U8)i;
+			strcpy_s((char*)(packet+6),19+1,"This is just a test");
+			if(transport->sendPacket(i,packet,512))
+				std::cerr<<"Sent packet to node: "<<i<<std::endl;
+		}
 		transport->update(dt);
 		pbj::net::waitSeconds(dt);
 	}

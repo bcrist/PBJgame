@@ -32,6 +32,7 @@ namespace net
 		bool isNodeConnected(I32);
 		Address getNodeAddress(I32);
 		I32 getMaxNodes() const;
+		I32 getNumberConnected() const;
 		void reserve(I32, const Address&);
 
 	protected:

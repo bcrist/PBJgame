@@ -115,6 +115,11 @@ I32 NetMesh::getMaxNodes() const
 	return (I32)_nodes.size();
 }
 
+I32 NetMesh::getNumberConnected() const
+{
+	return _addrToNode.size();
+}
+
 void NetMesh::reserve(I32 nodeId, const Address& address)
 {
 	assert(nodeId >= 0);

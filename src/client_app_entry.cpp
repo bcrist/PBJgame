@@ -248,26 +248,25 @@ int main(int argc, char* argv[])
    const F32 dt = 1.0f/30.0f;
    bool breakLoop = false;
    std::cerr<<"Starting client loop"<<std::endl;
-   while(!breakLoop)
-   {
-	   switch(state)
-	   {
-	   case Searching:
-		   breakLoop = viewLobby();
-		   break;
-	   case Connecting:
-		   breakLoop = doConnecting();
-		   break;
-	   case Connected:
-		   breakLoop = doConnected();
-		   break;
-	   default:
-		   break;
-	   }
-	   
-	   transport->update(dt);
-	   net::waitSeconds(dt);
-   }
+	while(!breakLoop)
+	{
+		transport->update(dt);
+		switch(state)
+		{
+		case Searching:
+			breakLoop = viewLobby();
+			break;
+		case Connecting:
+			breakLoop = doConnecting();
+			break;
+		case Connected:
+			breakLoop = doConnected();
+			break;
+		default:
+			break;
+		}
+		net::waitSeconds(dt);
+	}
 
    //shutdown
    Transport::destroy(transport);
