@@ -1,26 +1,6 @@
-// Copyright (c) 2013 PBJ Productions
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to
-// deal in the Software without restriction, including without limitation the
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-// sell copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
-
 ///////////////////////////////////////////////////////////////////////////////
 /// \file   app_entry.cpp
-/// \author Benjamin Crist
+/// \author Benjamin Crist and Peter Bartosch
 ///
 /// \brief  Application entry point.
 /// \details Parses command line parameters, initializes game engine, loads
@@ -210,7 +190,7 @@ bool doConnected(F32 dt)
 		packet[5] = 0;
 		strcpy_s((char*)(packet+6),38+1,"This is just a test (client to server)");
 		if(transport->sendPacket(0,packet,512))
-			std::cerr<<"Sent packet to server"<<std::endl;
+			std::cerr<<"Sent packet to server "<<(transport->getNodeAt(0))<<std::endl;
 		clientToServerTimer-=1.5f;
 	}
 

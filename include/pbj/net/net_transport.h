@@ -93,6 +93,8 @@ namespace net
 		I32 getLocalNodeID() const;
 		I32 getMaxNodes() const;
 		ReliabilitySystem& getReliability(I32);
+		Address getNodeAt(I32);
+		Address getNodeMeshAddress();
 
 	private:
 		static I32 transportCount;

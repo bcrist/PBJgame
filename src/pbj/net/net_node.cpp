@@ -62,6 +62,7 @@ bool Node::start(I32 port)
 	if(!_socket.open(port))
 		return false;
 	_running = true;
+	_socket.localIP();
 	return true;
 }
 
@@ -117,6 +118,7 @@ bool Node::isNodeConnected(I32 nodeId)
 	return _nodes[nodeId].connected;
 }
 
+Address Node::getMeshAddress() { return _meshAddress; }
 Address Node::getNodeAddress(I32 nodeId)
 {
 	assert(nodeId >= 0);
@@ -192,7 +194,7 @@ void Node::processPacket(const Address& sender, U8* data, int size)
 	assert(size > 0);
 	assert(data);
 	// is packet from the mesh?
-	if(sender == _meshAddress)
+	if(sender == _meshAddress || sender.getPort() == 30000)
 	{
 		// *** packet sent from the mesh ***
 		// ignore packets that dont have the correct protocol id
@@ -286,9 +288,10 @@ void Node::processPacket(const Address& sender, U8* data, int size)
 			//_nodes[0] contains the address of the server.  If that is the sender OR
 			//if the sender has same as address we dobut with a different port, then
 			//act like we got something from the server.
-			if(_nodes[0].address == sender ||
+			if(_nodes[0].address == sender || sender.getPort() == 30002)/*
 				(sender.getAddress()==_nodes[_localNodeId].address.getAddress() &&
-					sender.getPort()!=_nodes[_localNodeId].address.getPort()))
+					sender.getPort()!=_nodes[_localNodeId].address.getPort())
+					|| sender.getPort() == 30002)*/
 			{
 				//first try - treat this like any other packet
 				BufferedPacket* packet = new BufferedPacket;
@@ -311,22 +314,22 @@ void Node::sendPackets(F32 dt)
 		if(_state == Joining)
 		{
 			// node is joining: send "join request" packets
-			unsigned char packet[5];
-			packet[0] = (unsigned char) ((_protoId >> 24) & 0xFF);
-			packet[1] = (unsigned char) ((_protoId >> 16) & 0xFF);
-			packet[2] = (unsigned char) ((_protoId >> 8) & 0xFF);
-			packet[3] = (unsigned char) ((_protoId) & 0xFF);
+			U8 packet[5];
+			packet[0] = (U8) ((_protoId >> 24) & 0xFF);
+			packet[1] = (U8) ((_protoId >> 16) & 0xFF);
+			packet[2] = (U8) ((_protoId >> 8) & 0xFF);
+			packet[3] = (U8) ((_protoId) & 0xFF);
 			packet[4] = 0;
 			_socket.send(_meshAddress, packet, sizeof(packet));
 		}
 		else if(_state == Joined)
 		{
 			// node is joined: send "keep alive" packets
-			unsigned char packet[5];
-			packet[0] = (unsigned char) ((_protoId >> 24) & 0xFF);
-			packet[1] = (unsigned char) ((_protoId >> 16) & 0xFF);
-			packet[2] = (unsigned char) ((_protoId >> 8) & 0xFF);
-			packet[3] = (unsigned char) ((_protoId) & 0xFF);
+			U8 packet[5];
+			packet[0] = (U8) ((_protoId >> 24) & 0xFF);
+			packet[1] = (U8) ((_protoId >> 16) & 0xFF);
+			packet[2] = (U8) ((_protoId >> 8) & 0xFF);
+			packet[3] = (U8) ((_protoId) & 0xFF);
 			packet[4] = 1;
 			_socket.send(_meshAddress, packet, sizeof(packet));
 		}

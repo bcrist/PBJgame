@@ -37,6 +37,7 @@ namespace net
 		I32 getMaxNodes() const;
 		bool sendPacket(I32, const U8* const, I32);
 		I32 receivePacket(I32&, U8*, I32);
+		Address getMeshAddress();
 
 	protected:
 		void receivePackets();

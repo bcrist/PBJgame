@@ -70,7 +70,7 @@ bool Socket::open(U16 port)
 			return false;
 		}
 	}
-
+	_port = port;
 	return true;
 }
 
@@ -136,4 +136,27 @@ int Socket::receive(Address& sender, void* data, int size)
 	
 	return receivedBytes;
 
+}
+
+U32 Socket::localIP()
+{
+	U8 hostname[80];
+	gethostname((char*)hostname,80);
+	hostent *phe = gethostbyname((char*)hostname);
+	Address lb = Address(127,0,0,1,0);
+	in_addr loopback;
+	loopback.s_addr = htonl(lb.getAddress());
+	U32 ret = 0;
+	for(I32 i=0;phe->h_addr_list[i]!=0;++i)
+	{
+		in_addr addr;
+		memcpy(&addr, phe->h_addr_list[i], sizeof(in_addr));
+		if(addr.s_addr != loopback.s_addr)
+		{
+			ret = ntohl(addr.s_addr);
+			break;
+		}
+
+	}
+	return ret;
 }

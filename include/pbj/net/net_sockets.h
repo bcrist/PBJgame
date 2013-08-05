@@ -28,8 +28,10 @@ namespace net
 		bool isOpen() const;
 		bool send(const Address&, const void*, I32);
 		I32 receive(Address&, void*, I32);
+		U32 localIP();
 	private:
 		I32 _socket;
+		U16 _port;
 		I32 _options;
 	};
 } //namespace net

@@ -89,6 +89,7 @@ bool Transport::startServer(const U8* const name)
     stop();
     return false;
   }
+  
   _mesh->reserve(0, Address(127,0,0,1,_config.serverPort));
   _node->join(Address(127,0,0,1,_config.meshPort));
   PBJ_LOG_STREAM << "Server started" << PBJ_LOG_END;
@@ -219,6 +220,13 @@ I32 Transport::receivePacket(I32& nodeId, U8* data, I32 size)
 	return _node->receivePacket(nodeId, data, size);
 }
 
+Address Transport::getNodeAt(I32 idx)
+{
+	return _node->getNodeAddress(idx);
+}
+
+Address Transport::getNodeMeshAddress() { return _node->getMeshAddress(); }
+
 void Transport::update(F32 dt)
 {
 	//if we're still trying to connect, do what's necessary
@@ -274,10 +282,6 @@ void Transport::update(F32 dt)
 	}
 	if(_listener)
 		_listener->update(dt);
-	/*if(_mesh)
-		_mesh->update(dt);
-	if(_node)
-		_node->update(dt);*/
 }
 
 ////////////////////////////////////////////////////////////////////////////////

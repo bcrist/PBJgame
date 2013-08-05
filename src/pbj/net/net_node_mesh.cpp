@@ -128,7 +128,10 @@ void NetMesh::reserve(I32 nodeId, const Address& address)
 		nodeId, address.getA(), address.getB(), address.getC(), address.getD(), address.getPort());
 	_nodes[nodeId].mode = NodeState::ConnectionAccept;
 	_nodes[nodeId].nodeId = nodeId;
-	_nodes[nodeId].address = address;
+	if(nodeId==0)
+		_nodes[nodeId].address = Address(_socket.localIP(), address.getPort());
+	else
+		_nodes[nodeId].address = address;
 	_addrToNode.insert(std::make_pair(address, &_nodes[nodeId]));
 }
 
