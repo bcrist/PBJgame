@@ -1,3 +1,8 @@
+////////////////////////////////////////////////////////////////////////////////
+/// \file	Z:\Documents\PBJgame\src\pbj\net\net_sockets.cpp
+///
+/// \brief	Implements the net sockets class.
+////////////////////////////////////////////////////////////////////////////////
 #ifndef NET_SOCKETS_H_
 #include "pbj/net/net_sockets.h"
 #endif
@@ -5,23 +10,61 @@
 using namespace pbj;
 using namespace pbj::net;
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	Socket::Socket()
+///
+/// \brief	Default constructor.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+////////////////////////////////////////////////////////////////////////////////
 Socket::Socket()
 {
 	_options = Options::NonBlocking;
 	_socket = 0;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	Socket::Socket(I32 options)
+///
+/// \brief	Constructor.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \param	options	Options for controlling the operation.
+////////////////////////////////////////////////////////////////////////////////
 Socket::Socket(I32 options)
 {
 	_options = options;
 	_socket = 0;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	Socket::~Socket()
+///
+/// \brief	Destructor.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+////////////////////////////////////////////////////////////////////////////////
 Socket::~Socket()
 {
 	close();
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	bool Socket::open(U16 port)
+///
+/// \brief	Opens the given port.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \param	port	The port.
+///
+/// \return	true if it succeeds, false if it fails.
+////////////////////////////////////////////////////////////////////////////////
 bool Socket::open(U16 port)
 {
 	assert(!isOpen());
@@ -74,6 +117,14 @@ bool Socket::open(U16 port)
 	return true;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	void Socket::close()
+///
+/// \brief	Closes this object.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+////////////////////////////////////////////////////////////////////////////////
 void Socket::close()
 {
 	if(_socket != 0)
@@ -83,8 +134,32 @@ void Socket::close()
 	}
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	bool Socket::isOpen() const
+///
+/// \brief	Query if this object is open.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \return	true if open, false if not.
+////////////////////////////////////////////////////////////////////////////////
 bool Socket::isOpen() const { return _socket != 0; }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	bool Socket::send(const Address& dest, const void* data, I32 size)
+///
+/// \brief	Send this message.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \param	dest	Destination for the.
+/// \param	data	The data.
+/// \param	size	The size.
+///
+/// \return	true if it succeeds, false if it fails.
+////////////////////////////////////////////////////////////////////////////////
 bool Socket::send(const Address& dest, const void* data, I32 size)
 {
 	assert(data);
@@ -105,6 +180,20 @@ bool Socket::send(const Address& dest, const void* data, I32 size)
 	return sentBytes == size;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	int Socket::receive(Address& sender, void* data, int size)
+///
+/// \brief	Receives.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \param [in,out]	sender	The sender.
+/// \param [in,out]	data  	If non-null, the data.
+/// \param	size		  	The size.
+///
+/// \return	.
+////////////////////////////////////////////////////////////////////////////////
 int Socket::receive(Address& sender, void* data, int size)
 {
 	assert(data);
@@ -138,6 +227,16 @@ int Socket::receive(Address& sender, void* data, int size)
 
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	U32 Socket::localIP()
+///
+/// \brief	Gets the local IP.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \return	.
+////////////////////////////////////////////////////////////////////////////////
 U32 Socket::localIP()
 {
 	U8 hostname[80];

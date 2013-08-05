@@ -1,3 +1,10 @@
+///////////////////////////////////////////////////////////////////////////////
+/// \file	Z:\Documents\PBJgame\src\pbj\net\net_beacon.cpp
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+/// \brief	Implements the net beacon class.
+///////////////////////////////////////////////////////////////////////////////
+
 #ifndef NET_LAN_BEACON_CPP
 #include "pbj/net/net_beacon.h"
 #endif
@@ -5,6 +12,20 @@
 using namespace pbj;
 using namespace net;
 
+///////////////////////////////////////////////////////////////////////////////
+/// \fn	Beacon::Beacon(const U8* const name, U32 protoId, U16 listenerPort,
+/// 	U16 serverPort) : _socket(Socket::Broadcast | Socket::NonBlocking)
+///
+/// \brief	Constructor.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \param	name			The name.
+/// \param	protoId			Identifier for the protocol.
+/// \param	listenerPort	The listener port.
+/// \param	serverPort  	The server port.
+///////////////////////////////////////////////////////////////////////////////
 Beacon::Beacon(const U8* const name, U32 protoId, U16 listenerPort, U16 serverPort)
 	: _socket(Socket::Broadcast | Socket::NonBlocking)
 {
@@ -16,12 +37,32 @@ Beacon::Beacon(const U8* const name, U32 protoId, U16 listenerPort, U16 serverPo
 	_running = false;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+/// \fn	Beacon::~Beacon()
+///
+/// \brief	Destructor.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///////////////////////////////////////////////////////////////////////////////
 Beacon::~Beacon()
 {
 	if(_running)
 		stop();
 }
 
+///////////////////////////////////////////////////////////////////////////////
+/// \fn	bool Beacon::start(U16 port)
+///
+/// \brief	Starts the Beacon on the given port.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \param	port	The port on which the Beacon will transmit.
+///
+/// \return	true if it succeeds, false if it fails.
+///////////////////////////////////////////////////////////////////////////////
 bool Beacon::start(U16 port)
 {
 	assert(!_running);
@@ -32,6 +73,14 @@ bool Beacon::start(U16 port)
 	return true;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+/// \fn	void Beacon::stop()
+///
+/// \brief	Stops this object.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///////////////////////////////////////////////////////////////////////////////
 void Beacon::stop()
 {
 	assert(_running);
@@ -40,6 +89,16 @@ void Beacon::stop()
 	_running = false;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+/// \fn	void Beacon::update(F32 dt)
+///
+/// \brief	Updates using the given dt.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \param	dt	The change in time (delta time).
+///////////////////////////////////////////////////////////////////////////////
 void Beacon::update(F32 dt)
 {
 	//std::cerr<<"Beacon: starting update with dt: "<<dt<<std::endl;

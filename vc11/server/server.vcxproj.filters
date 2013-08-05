@@ -373,6 +373,5 @@
     <None Include="..\..\include\pbj\gfx\texture_font.inl">
       <Filter>Header Files\pbj\pbj::gfx</Filter>
     </None>
-    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

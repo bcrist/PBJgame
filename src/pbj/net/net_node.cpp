@@ -1,3 +1,8 @@
+////////////////////////////////////////////////////////////////////////////////
+/// \file	Z:\Documents\PBJgame\src\pbj\net\net_node.cpp
+///
+/// \brief	Implements the net node class.
+////////////////////////////////////////////////////////////////////////////////
 #ifndef NET_NODE_H_
 #include "pbj/net/net_node.h"
 #endif
@@ -5,6 +10,16 @@
 using namespace pbj;
 using namespace pbj::net;
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	Node::Node(U32 protocolId)
+///
+/// \brief	Constructor.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \param	protocolId	Identifier for the protocol.
+////////////////////////////////////////////////////////////////////////////////
 Node::Node(U32 protocolId)
 {
 	_protoId = protocolId;
@@ -16,6 +31,17 @@ Node::Node(U32 protocolId)
 	clearData();
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	Node::Node(U32 protocolId, F32 sendRate)
+///
+/// \brief	Constructor.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \param	protocolId	Identifier for the protocol.
+/// \param	sendRate  	The send rate.
+////////////////////////////////////////////////////////////////////////////////
 Node::Node(U32 protocolId, F32 sendRate)
 {
 	_protoId = protocolId;
@@ -27,6 +53,18 @@ Node::Node(U32 protocolId, F32 sendRate)
 	clearData();
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	Node::Node(U32 protocolId, F32 sendRate, F32 timeout)
+///
+/// \brief	Constructor.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \param	protocolId	Identifier for the protocol.
+/// \param	sendRate  	The send rate.
+/// \param	timeout   	The timeout.
+////////////////////////////////////////////////////////////////////////////////
 Node::Node(U32 protocolId, F32 sendRate, F32 timeout)
 {
 	_protoId = protocolId;
@@ -39,6 +77,20 @@ Node::Node(U32 protocolId, F32 sendRate, F32 timeout)
 
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	Node::Node(U32 protocolId, F32 sendRate, F32 timeout,
+/// 	I32 maxPacketSize)
+///
+/// \brief	Constructor.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \param	protocolId   	Identifier for the protocol.
+/// \param	sendRate	 	The send rate.
+/// \param	timeout		 	The timeout.
+/// \param	maxPacketSize	Size of the maximum packet.
+////////////////////////////////////////////////////////////////////////////////
 Node::Node(U32 protocolId, F32 sendRate, F32 timeout, I32 maxPacketSize)
 {
 	_protoId = protocolId;
@@ -49,12 +101,33 @@ Node::Node(U32 protocolId, F32 sendRate, F32 timeout, I32 maxPacketSize)
 	_running = false;
 	clearData();
 }
+
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	Node::~Node()
+///
+/// \brief	Destructor.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+////////////////////////////////////////////////////////////////////////////////
 Node::~Node()
 {
 	if(_running)
 		stop();
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	bool Node::start(I32 port)
+///
+/// \brief	Starts the given port.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \param	port	The port.
+///
+/// \return	true if it succeeds, false if it fails.
+////////////////////////////////////////////////////////////////////////////////
 bool Node::start(I32 port)
 {
 	assert(!_running);
@@ -66,6 +139,14 @@ bool Node::start(I32 port)
 	return true;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	void Node::stop()
+///
+/// \brief	Stops this object.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+////////////////////////////////////////////////////////////////////////////////
 void Node::stop()
 {
 	assert(_running);
@@ -75,6 +156,16 @@ void Node::stop()
 	_running = false;
 }	
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	void Node::join(const Address& address)
+///
+/// \brief	Joins the given address.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \param	address	The address.
+////////////////////////////////////////////////////////////////////////////////
 void Node::join(const Address& address)
 {
 	PBJ_LOG(pbj::VInfo) << "Node join " << address << PBJ_LOG_END;
@@ -83,26 +174,76 @@ void Node::join(const Address& address)
 	_meshAddress = address;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	bool Node::isJoining() const
+///
+/// \brief	Query if this object is joining.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \return	true if joining, false if not.
+////////////////////////////////////////////////////////////////////////////////
 bool Node::isJoining() const
 {
 	return _state == Joining;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	bool Node::joinFailed() const
+///
+/// \brief	Determines if we can join failed.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \return	true if it succeeds, false if it fails.
+////////////////////////////////////////////////////////////////////////////////
 bool Node::joinFailed() const
 {
 	return _state == JoinFail;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	bool Node::isConnected() const
+///
+/// \brief	Query if this object is connected.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \return	true if connected, false if not.
+////////////////////////////////////////////////////////////////////////////////
 bool Node::isConnected() const
 {
 	return _state == Joined;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	I32 Node::getLocalNodeId() const
+///
+/// \brief	Gets local node identifier.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \return	The local node identifier.
+////////////////////////////////////////////////////////////////////////////////
 I32 Node::getLocalNodeId() const
 {
 	return _localNodeId;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	void Node::update(F32 dt)
+///
+/// \brief	Updates the given dt.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \param	dt	The dt.
+////////////////////////////////////////////////////////////////////////////////
 void Node::update(F32 dt)
 {
 	assert(_running);
@@ -111,6 +252,18 @@ void Node::update(F32 dt)
 	checkForTimeout(dt);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	bool Node::isNodeConnected(I32 nodeId)
+///
+/// \brief	Query if 'nodeId' is node connected.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \param	nodeId	Identifier for the node.
+///
+/// \return	true if node connected, false if not.
+////////////////////////////////////////////////////////////////////////////////
 bool Node::isNodeConnected(I32 nodeId)
 {
 	assert(nodeId >= 0);
@@ -118,7 +271,30 @@ bool Node::isNodeConnected(I32 nodeId)
 	return _nodes[nodeId].connected;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	Address Node::getMeshAddress()
+///
+/// \brief	Gets mesh address.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \return	The mesh address.
+////////////////////////////////////////////////////////////////////////////////
 Address Node::getMeshAddress() { return _meshAddress; }
+
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	Address Node::getNodeAddress(I32 nodeId)
+///
+/// \brief	Gets node address.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \param	nodeId	Identifier for the node.
+///
+/// \return	The node address.
+////////////////////////////////////////////////////////////////////////////////
 Address Node::getNodeAddress(I32 nodeId)
 {
 	assert(nodeId >= 0);
@@ -126,12 +302,36 @@ Address Node::getNodeAddress(I32 nodeId)
 	return _nodes[nodeId].address;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	I32 Node::getMaxNodes() const
+///
+/// \brief	Gets maximum nodes.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \return	The maximum nodes.
+////////////////////////////////////////////////////////////////////////////////
 I32 Node::getMaxNodes() const
 {
 	assert(_nodes.size() <= 255);
 	return _nodes.size();
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	bool Node::sendPacket(I32 nodeId, const U8* const data, I32 size)
+///
+/// \brief	Sends a packet.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \param	nodeId	Identifier for the node.
+/// \param	data  	The data.
+/// \param	size  	The size.
+///
+/// \return	true if it succeeds, false if it fails.
+////////////////////////////////////////////////////////////////////////////////
 bool Node::sendPacket(I32 nodeId, const U8* const data, I32 size)
 {
 	assert(_running);
@@ -149,6 +349,20 @@ bool Node::sendPacket(I32 nodeId, const U8* const data, I32 size)
 	return _socket.send(_nodes[nodeId].address, data, size);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	I32 Node::receivePacket(I32& nodeId, U8* data, I32 size)
+///
+/// \brief	Receive packet.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \param [in,out]	nodeId	Identifier for the node.
+/// \param [in,out]	data  	If non-null, the data.
+/// \param	size		  	The size.
+///
+/// \return	.
+////////////////////////////////////////////////////////////////////////////////
 I32 Node::receivePacket(I32& nodeId, U8* data, I32 size)
 {
 	assert(_running);
@@ -174,6 +388,14 @@ I32 Node::receivePacket(I32& nodeId, U8* data, I32 size)
 	return 0;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	void Node::receivePackets()
+///
+/// \brief	Receive packets.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+////////////////////////////////////////////////////////////////////////////////
 void Node::receivePackets()
 {
 	U8* data = new U8[_maxPacketSize];
@@ -188,6 +410,18 @@ void Node::receivePackets()
 	delete[] data;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	void Node::processPacket(const Address& sender, U8* data, int size)
+///
+/// \brief	Process the packet.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \param	sender			The sender.
+/// \param [in,out]	data	If non-null, the data.
+/// \param	size			The size.
+////////////////////////////////////////////////////////////////////////////////
 void Node::processPacket(const Address& sender, U8* data, int size)
 {
 	assert(sender != Address());
@@ -306,6 +540,16 @@ void Node::processPacket(const Address& sender, U8* data, int size)
 	}
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	void Node::sendPackets(F32 dt)
+///
+/// \brief	Sends the packets.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \param	dt	The dt.
+////////////////////////////////////////////////////////////////////////////////
 void Node::sendPackets(F32 dt)
 {
 	_sendAccumulator += dt;
@@ -337,6 +581,16 @@ void Node::sendPackets(F32 dt)
 	}
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	void Node::checkForTimeout(F32 dt)
+///
+/// \brief	Check for timeout.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \param	dt	The dt.
+////////////////////////////////////////////////////////////////////////////////
 void Node::checkForTimeout(F32 dt)
 {
 	if(_state == Joining || _state == Joined)
@@ -359,6 +613,14 @@ void Node::checkForTimeout(F32 dt)
 	}
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	void Node::clearData()
+///
+/// \brief	Clears the data.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+////////////////////////////////////////////////////////////////////////////////
 void Node::clearData()
 {
 	_nodes.clear();
