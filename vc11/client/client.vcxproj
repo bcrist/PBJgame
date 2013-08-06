@@ -30,6 +30,7 @@
     <ClInclude Include="..\..\include\be\source_handle.h" />
     <ClInclude Include="..\..\include\be\util\nconvert.h" />
     <ClInclude Include="..\..\include\be\_be.h" />
+    <ClInclude Include="..\..\include\pbj\client.h" />
     <ClInclude Include="..\..\include\pbj\editor.h" />
     <ClInclude Include="..\..\include\pbj\engine.h" />
     <ClInclude Include="..\..\include\pbj\gfx\batcher.h" />
@@ -80,6 +81,7 @@
     <ClCompile Include="..\..\src\be\util\nconvert.cpp" />
     <ClCompile Include="..\..\src\be\verbosity.cpp" />
     <ClCompile Include="..\..\src\client_app_entry.cpp" />
+    <ClCompile Include="..\..\src\pbj\client.cpp" />
     <ClCompile Include="..\..\src\pbj\engine.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\batcher.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\built_ins.cpp" />
@@ -202,7 +204,7 @@
       <SubSystem>Console</SubSystem>
     </Link>
     <PostBuildEvent>
-      <Command>$(SolutionDir)script\postbuild.cmd "$(TargetPath)" "$(SolutionDir)..\stage\$(TargetFileName)"</Command>
+      <Command>"$(SolutionDir)script\postbuild.cmd" "$(TargetPath)" "$(SolutionDir)..\stage\$(TargetFileName)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Test|Win32'">
