@@ -1,3 +1,8 @@
+////////////////////////////////////////////////////////////////////////////////
+/// \file	Z:\Documents\PBJgame\include\pbj\net\net_reliability.h
+///
+/// \brief	Declares the net reliability class.
+////////////////////////////////////////////////////////////////////////////////
 #ifndef NET_RELIABILITY_H_
 #define NET_RELIABILITY_H_
 
@@ -16,11 +21,33 @@ namespace pbj
 {
 namespace net
 {
+	////////////////////////////////////////////////////////////////////////////
+	/// \fn	inline bool sequence_more_recent(U32 s1, U32 s2, U32 max)
+	///
+	/// \brief	Sequence more recent.
+	///
+	/// \author	Peter Bartosch
+	/// \date	2013-08-05
+	///
+	/// \param	s1 	The first U32.
+	/// \param	s2 	The second U32.
+	/// \param	max	The maximum.
+	///
+	/// \return	true if it succeeds, false if it fails.
+	////////////////////////////////////////////////////////////////////////////
 	inline bool sequence_more_recent(U32 s1, U32 s2, U32 max)
 	{
 		return (s1>s2) && (s1-s2<=max/2) || (s2>s1) && (s2-s1>max/2);
 	}
 
+	////////////////////////////////////////////////////////////////////////////
+	/// \struct	PacketData
+	///
+	/// \brief	Packet data.
+	///
+	/// \author	Peter Bartosch
+	/// \date	2013-08-05
+	////////////////////////////////////////////////////////////////////////////
 	struct PacketData
 	{
 		U32 seq;
@@ -28,6 +55,14 @@ namespace net
 		I32 size;
 	};
 
+	////////////////////////////////////////////////////////////////////////////
+	/// \class	PacketQueue
+	///
+	/// \brief	Queue of packets.
+	///
+	/// \author	Peter Bartosch
+	/// \date	2013-08-05
+	////////////////////////////////////////////////////////////////////////////
 	class PacketQueue : public std::list<PacketData>
 	{
 	public:
@@ -36,6 +71,14 @@ namespace net
 		void verify_sorted(U32);
 	};
 
+	////////////////////////////////////////////////////////////////////////////
+	/// \class	ReliabilitySystem
+	///
+	/// \brief	Reliability system.
+	///
+	/// \author	Peter Bartosch
+	/// \date	2013-08-05
+	////////////////////////////////////////////////////////////////////////////
 	class ReliabilitySystem
 	{
 	public:

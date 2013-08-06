@@ -25,15 +25,26 @@ namespace pbj
 {
 namespace net
 {
+	////////////////////////////////////////////////////////////////////////////
+	/// \class	Transport
+	///
+	/// \brief	Transport.
+	///
+	/// \author	Peter Bartosch
+	/// \date	2013-08-05
+	////////////////////////////////////////////////////////////////////////////
 	class Transport
 	{
 	public:
-		static bool init();
-		static void shutdown();
-		static Transport* create();
-		static void destroy(Transport*);
-		static bool getHostName(U8*, int);
 
+		////////////////////////////////////////////////////////////////////////
+		/// \struct	Config
+		///
+		/// \brief	Configuration.
+		///
+		/// \author	Peter Bartosch
+		/// \date	2013-08-05
+		////////////////////////////////////////////////////////////////////////
 		struct Config
 		{
 			U16 meshPort;
@@ -56,39 +67,62 @@ namespace net
 				protoId = 0x47464750;
 				meshSendRate = 0.25f;
 				timeout = 10.0f;
-				maxNodes = 4;
+				maxNodes = 16;
 			}
 		};
 
+		////////////////////////////////////////////////////////////////////////
+		/// \struct	LobbyEntry
+		///
+		/// \brief	Lobby entry.
+		///
+		/// \author	Peter Bartosch
+		/// \date	2013-08-05
+		////////////////////////////////////////////////////////////////////////
 		struct LobbyEntry
 		{
 			U8 name[65];
 			U8 address[65];
 		};
 
+		static bool init();
+		static void shutdown();
+		static Transport* create();
+		static void destroy(Transport*);
+		static bool getHostName(U8*, int);
+
 		~Transport();
 
-		void configure(Config&);
-		const Config& getConfig() const;
+		
 		bool startServer(const U8* const);
 		bool connectClient(const U8* const);
+		bool connectClient(const Address&);
+		
+		bool enterLobby();
+		bool leaveLobby();
+		
+		void stop();
+		bool sendPacket(I32, const U8* const, I32);
+		I32 receivePacket(I32&, U8*, I32);
+		
+		void update(F32);
+
 		bool isConnected() const;
 		bool connectFailed() const;
-		bool enterLobby();
+		void configure(Config&);
+		const Config& getConfig() const;
 		I32 getLobbyEntryCount();
 		bool getLobbyEntryAtIndex(I32, LobbyEntry&);
-		void stop();
-
+		I32 getNumberConnected() const;
 		bool isNoneConnected(I32);
 		I32 getLocalNodeID() const;
 		I32 getMaxNodes() const;
-		bool sendPacket(I32, const U8* const, I32);
-		I32 receivePacket(I32&, U8*, I32);
 		ReliabilitySystem& getReliability(I32);
-		void update(F32);
+		Address getNodeAt(I32);
+		Address getNodeMeshAddress();
 
 	private:
-		static int transportCount;
+		static I32 transportCount;
 
 		Transport();
 

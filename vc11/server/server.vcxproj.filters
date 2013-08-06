@@ -219,6 +219,9 @@
     <ClInclude Include="..\..\include\pbj\input_controller.h">
       <Filter>Header Files\pbj</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\pbj\server.h">
+      <Filter>Header Files\pbj</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\server_app_entry.cpp">
@@ -347,6 +350,9 @@
     <ClCompile Include="..\..\src\pbj\input_controller.cpp">
       <Filter>Source Files\pbj</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\pbj\server.cpp">
+      <Filter>Source Files\pbj</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\include\be\const_handle.inl">
@@ -373,6 +379,5 @@
     <None Include="..\..\include\pbj\gfx\texture_font.inl">
       <Filter>Header Files\pbj\pbj::gfx</Filter>
     </None>
-    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

@@ -7,10 +7,12 @@ using namespace net;
 
 Listener::Listener(U32 protoId, F32 timeout)
 {
+	std::cerr<<"Listener construction"<<std::endl;
 	_protoId = protoId;
 	_timeout = timeout;
 	_running = false;
 	clearData();
+	std::cerr<<"Listener data cleared"<<std::endl;
 }
 
 Listener::Listener(U32 protoId)
@@ -30,7 +32,7 @@ Listener::~Listener()
 bool Listener::start(I32 port)
 {
 	assert(!_running);
-	PBJ_LOG(pbj::VInfo) << "Starting listener on port " << port << PBJ_LOG_NL;
+	PBJ_LOG(pbj::VInfo) << "Starting listener on port " << port << PBJ_LOG_END;
 	if(!_socket.open(port))
 		return false;
 	_running = true;
@@ -40,7 +42,7 @@ bool Listener::start(I32 port)
 void Listener::stop()
 {
 	assert(_running);
-	PBJ_LOG(pbj::VInfo) << "Stopping listener" << PBJ_LOG_NL;
+	PBJ_LOG(pbj::VInfo) << "Stopping listener" << PBJ_LOG_END;
 	_socket.close();
 	_running = false;
 	clearData();
@@ -56,19 +58,21 @@ void Listener::update(F32 dt)
 		I32 bytesRead = _socket.receive(sender, packet, 256);
 		if(bytesRead == 0) //this is how we break out of the loop
 			break;
-		if(bytesRead > 13)
+		if(bytesRead < 13)
 			continue;
 		U32 packetZero;
 		U32 packetProtoId;
-		U32 packetServerPort;
+		U16 packetServerPort;
 		U8 packetStrLength;
 		readInteger(packet, packetZero);
 		readInteger(packet+4, packetProtoId);
-		readInteger(packet+8, packetServerPort);
+		readShort(packet+8, packetServerPort);
 		packetStrLength = packet[12];
 		if(packetZero != 0 || packetProtoId != _protoId || packetStrLength > 63 ||
 			packetStrLength+12+1 > bytesRead)
+		{
 			continue;
+		}
 		ListenerEntry entry;
 		memcpy(entry.name, packet+13, packetStrLength);
 		entry.name[packetStrLength] = '\0';

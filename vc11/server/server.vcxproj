@@ -57,6 +57,7 @@
     <ClInclude Include="..\..\include\pbj\net\net_reliable_connection.h" />
     <ClInclude Include="..\..\include\pbj\net\net_sockets.h" />
     <ClInclude Include="..\..\include\pbj\net\net_transport.h" />
+    <ClInclude Include="..\..\include\pbj\server.h" />
     <ClInclude Include="..\..\include\pbj\sw\import.h" />
     <ClInclude Include="..\..\include\pbj\sw\resource_id.h" />
     <ClInclude Include="..\..\include\pbj\sw\sandwich.h" />
@@ -101,6 +102,7 @@
     <ClCompile Include="..\..\src\pbj\net\net_reliable_connection.cpp" />
     <ClCompile Include="..\..\src\pbj\net\net_sockets.cpp" />
     <ClCompile Include="..\..\src\pbj\net\net_transport.cpp" />
+    <ClCompile Include="..\..\src\pbj\server.cpp" />
     <ClCompile Include="..\..\src\pbj\sw\import.cpp" />
     <ClCompile Include="..\..\src\pbj\sw\resource_id.cpp" />
     <ClCompile Include="..\..\src\pbj\sw\sandwich.cpp" />
@@ -134,7 +136,6 @@
     <None Include="..\..\include\pbj\sw\resource_id.inl">
       <FileType>Document</FileType>
     </None>
-    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{705FDD29-34CB-4CDF-A2D1-AF78601A5D0B}</ProjectGuid>
@@ -202,7 +203,7 @@
       <SubSystem>Console</SubSystem>
     </Link>
     <PostBuildEvent>
-      <Command>$(SolutionDir)script\postbuild.cmd $(TargetPath) $(SolutionDir)..\stage\$(TargetFileName)</Command>
+      <Command>"$(SolutionDir)script\postbuild.cmd" "$(TargetPath)" "$(SolutionDir)..\stage\$(TargetFileName)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Test|Win32'">

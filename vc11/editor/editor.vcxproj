@@ -80,10 +80,10 @@
       <SubSystem>Console</SubSystem>
     </Link>
     <PostBuildEvent>
-      <Command>$(SolutionDir)script\postbuild.cmd "$(TargetPath)" "$(SolutionDir)..\stage\$(TargetFileName)"</Command>
+      <Command>"$(SolutionDir)script\postbuild.cmd" "$(TargetPath)" "$(SolutionDir)..\stage\$(TargetFileName)"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>$(SolutionDir)script\prebuild.cmd "$(SolutionDir)script\md5sum.exe" "$(SolutionDir)script\md5.txt" "$(SolutionDir)script\wget.exe" "$(SolutionDir)lib"</Command>
+      <Command>"$(SolutionDir)script\prebuild.cmd" "$(SolutionDir)script\md5sum.exe" "$(SolutionDir)script\md5.txt" "$(SolutionDir)script\wget.exe" "$(SolutionDir)lib"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Test|Win32'">

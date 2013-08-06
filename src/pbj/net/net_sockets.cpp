@@ -1,3 +1,8 @@
+////////////////////////////////////////////////////////////////////////////////
+/// \file	Z:\Documents\PBJgame\src\pbj\net\net_sockets.cpp
+///
+/// \brief	Implements the net sockets class.
+////////////////////////////////////////////////////////////////////////////////
 #ifndef NET_SOCKETS_H_
 #include "pbj/net/net_sockets.h"
 #endif
@@ -5,23 +10,61 @@
 using namespace pbj;
 using namespace pbj::net;
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	Socket::Socket()
+///
+/// \brief	Default constructor.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+////////////////////////////////////////////////////////////////////////////////
 Socket::Socket()
 {
 	_options = Options::NonBlocking;
 	_socket = 0;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	Socket::Socket(I32 options)
+///
+/// \brief	Constructor.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \param	options	Options for controlling the operation.
+////////////////////////////////////////////////////////////////////////////////
 Socket::Socket(I32 options)
 {
 	_options = options;
 	_socket = 0;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	Socket::~Socket()
+///
+/// \brief	Destructor.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+////////////////////////////////////////////////////////////////////////////////
 Socket::~Socket()
 {
 	close();
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	bool Socket::open(U16 port)
+///
+/// \brief	Opens the given port.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \param	port	The port.
+///
+/// \return	true if it succeeds, false if it fails.
+////////////////////////////////////////////////////////////////////////////////
 bool Socket::open(U16 port)
 {
 	assert(!isOpen());
@@ -70,10 +113,18 @@ bool Socket::open(U16 port)
 			return false;
 		}
 	}
-
+	_port = port;
 	return true;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	void Socket::close()
+///
+/// \brief	Closes this object.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+////////////////////////////////////////////////////////////////////////////////
 void Socket::close()
 {
 	if(_socket != 0)
@@ -83,8 +134,32 @@ void Socket::close()
 	}
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	bool Socket::isOpen() const
+///
+/// \brief	Query if this object is open.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \return	true if open, false if not.
+////////////////////////////////////////////////////////////////////////////////
 bool Socket::isOpen() const { return _socket != 0; }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	bool Socket::send(const Address& dest, const void* data, I32 size)
+///
+/// \brief	Send this message.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \param	dest	Destination for the.
+/// \param	data	The data.
+/// \param	size	The size.
+///
+/// \return	true if it succeeds, false if it fails.
+////////////////////////////////////////////////////////////////////////////////
 bool Socket::send(const Address& dest, const void* data, I32 size)
 {
 	assert(data);
@@ -105,6 +180,20 @@ bool Socket::send(const Address& dest, const void* data, I32 size)
 	return sentBytes == size;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	int Socket::receive(Address& sender, void* data, int size)
+///
+/// \brief	Receives.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \param [in,out]	sender	The sender.
+/// \param [in,out]	data  	If non-null, the data.
+/// \param	size		  	The size.
+///
+/// \return	.
+////////////////////////////////////////////////////////////////////////////////
 int Socket::receive(Address& sender, void* data, int size)
 {
 	assert(data);
@@ -115,16 +204,58 @@ int Socket::receive(Address& sender, void* data, int size)
 
 	sockaddr_in from;
 	I32 fromLength = sizeof(from);
-
 	I32 receivedBytes = recvfrom(_socket, (char*)data, size, 0, (sockaddr*)&from, &fromLength);
 	if(receivedBytes <= 0)
 		return 0;
+	/* Only use this for checking socket reception of data
+	std::cerr<<"Socket: Recieved more than 0 bytes, printing bytes received"<<std::endl<<"\t";
+	for(int i=0;i<receivedBytes;++i)
+	{
+		U8 c = ((U8*)data)[i];
+		std::cerr<<hex(c)<<" ";
+		if(i % 16 == 15)
+			std::cerr<<std::endl<<"\t";
+	}
+	std::cerr<<std::endl;*/
 
 	U32 address = ntohl(from.sin_addr.s_addr);
-	U8 port = (U8)ntohs(from.sin_port);
+	U16 port = (U16)ntohs(from.sin_port);
 
 	sender = Address(address, port);
 	
 	return receivedBytes;
 
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	U32 Socket::localIP()
+///
+/// \brief	Gets the local IP.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \return	.
+////////////////////////////////////////////////////////////////////////////////
+U32 Socket::localIP()
+{
+	U8 hostname[80];
+	gethostname((char*)hostname,80);
+	hostent *phe = gethostbyname((char*)hostname);
+	Address lb = Address(127,0,0,1,0);
+	in_addr loopback;
+	loopback.s_addr = htonl(lb.getAddress());
+	U32 ret = 0;
+	for(I32 i=0;phe->h_addr_list[i]!=0;++i)
+	{
+		in_addr addr;
+		memcpy(&addr, phe->h_addr_list[i], sizeof(in_addr));
+		if(addr.s_addr != loopback.s_addr)
+		{
+			ret = ntohl(addr.s_addr);
+			break;
+		}
+
+	}
+	return ret;
 }

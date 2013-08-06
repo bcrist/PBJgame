@@ -239,7 +239,10 @@
     </ClInclude>
     <ClInclude Include="..\..\include\pbj\gfx\gfx_entity_material.h">
       <Filter>Header Files\pbj\pbj::gfx</Filter>
-    </ClInclude>
+	</ClInclude>
+    <ClInclude Include="..\..\include\pbj\client.h">
+      <Filter>Header Files\pbj</Filter>
+	</ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\pbj\net\net_address.cpp">
@@ -373,6 +376,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\pbj\gfx\gfx_scene_shader_program.cpp">
       <Filter>Source Files\pbj\pbj::gfx</Filter>
+	</ClCompile>
+    <ClCompile Include="..\..\src\pbj\client.cpp">
+      <Filter>Source Files\pbj</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
