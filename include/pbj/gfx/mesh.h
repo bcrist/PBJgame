@@ -17,6 +17,13 @@
 namespace pbj {
 namespace gfx {
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  A MeshVertexAttributeSpec describes the OpenGL vertex attribute
+///         indices that correspond to each vec4 in vertex_data.
+///
+/// \details The number of vec4's that correspond to a single vertex is
+///         determined by the first negative index in indices.  For instance
+///         
 struct MeshVertexAttributeSpec
 {
     GLint indices[16];
@@ -24,16 +31,19 @@ struct MeshVertexAttributeSpec
     MeshVertexAttributeSpec();
 };
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Represents a set of vertex data, including positions and all other
+///         associated data required to render the vertex. (eg. texcoords,
+///         vertex colors, etc.
 class Mesh
 {
 public:
     Mesh(const sw::ResourceId& id,
-        GLvoid* vertex_data,
+        vec4* vertex_data,
         const MeshVertexAttributeSpec& attributes,
         GLsizei n_vertices,
-        GLvoid* index_data,
-        GLsizei n_indices,
-        GLenum index_data_type = GL_UNSIGNED_SHORT);
+        GLushort* index_data,
+        GLsizei n_indices);
     ~Mesh();
     
     const be::Handle<Mesh>& getHandle();
@@ -44,7 +54,6 @@ public:
     GLuint getVaoId() const;
     GLuint getIboId() const;
     GLsizei getIndexCount() const;
-    GLenum getIndexType() const;
 
     void drawElements();
 
@@ -56,9 +65,6 @@ private:
     GLuint ibo_id_; ///< OpenGL Vertex Index buffer object id
     GLuint vbo_id_; ///< OpenGL Vertex buffer object id
     GLsizei index_count_; ///< Size of IBO
-    GLenum ibo_data_type_; ///< Data type of IBO elements.
-    
-    
 
     Mesh(const Mesh&);
     void operator=(const Mesh&);

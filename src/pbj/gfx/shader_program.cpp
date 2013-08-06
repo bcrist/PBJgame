@@ -15,7 +15,7 @@ namespace gfx {
 /// \brief  Constructs a shader program using a single vertex shader and a
 ///         single fragment shader.
 ///
-/// \param  id Describes where this shader is stored in the databse.
+/// \param  id Describes where this shader program is stored in the databse.
 /// \param  vertex_shader The vertex shader for this program.
 /// \param  fragment_shader The fragment shader for this program.
 ShaderProgram::ShaderProgram(const sw::ResourceId& id, const Shader& vertex_shader, const Shader& fragment_shader)
