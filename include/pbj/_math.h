@@ -15,6 +15,12 @@
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/epsilon.hpp>
 
+/// \brief Convenience constant for converting angles
+#define DEGTORAD 0.0174532925199432957f
+
+/// \brief Convenience constant for converting angles
+#define RADTODEG 57.295779513082320876f
+
 namespace pbj {
 
 typedef glm::ivec2 ivec2;  ///< 2-component integer-valued vector type.

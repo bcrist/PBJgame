@@ -213,6 +213,9 @@
     <ClCompile Include="..\..\src\pbj\scene\camera.cpp">
       <Filter>Source Files\pbj\pbj::scene</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\gfx\entity_material.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\be\const_handle.h">

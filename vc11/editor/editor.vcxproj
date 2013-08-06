@@ -80,10 +80,10 @@
       <SubSystem>Console</SubSystem>
     </Link>
     <PostBuildEvent>
-      <Command>$(SolutionDir)script\postbuild.cmd "$(TargetPath)" "$(SolutionDir)..\stage\$(TargetFileName)"</Command>
+      <Command>"$(SolutionDir)script\postbuild.cmd" "$(TargetPath)" "$(SolutionDir)..\stage\$(TargetFileName)"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>$(SolutionDir)script\prebuild.cmd "$(SolutionDir)script\md5sum.exe" "$(SolutionDir)script\md5.txt" "$(SolutionDir)script\wget.exe" "$(SolutionDir)lib"</Command>
+      <Command>"$(SolutionDir)script\prebuild.cmd" "$(SolutionDir)script\md5sum.exe" "$(SolutionDir)script\md5.txt" "$(SolutionDir)script\wget.exe" "$(SolutionDir)lib"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Test|Win32'">
@@ -145,6 +145,7 @@
     <ClCompile Include="..\..\src\be\util\nconvert.cpp" />
     <ClCompile Include="..\..\src\be\verbosity.cpp" />
     <ClCompile Include="..\..\src\editor_app_entry.cpp" />
+    <ClCompile Include="..\..\src\gfx\entity_material.cpp" />
     <ClCompile Include="..\..\src\pbj\audio\audio_buffer.cpp" />
     <ClCompile Include="..\..\src\pbj\editor.cpp" />
     <ClCompile Include="..\..\src\pbj\engine.cpp" />

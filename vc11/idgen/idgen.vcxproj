@@ -80,7 +80,7 @@
       <SubSystem>Console</SubSystem>
     </Link>
     <PostBuildEvent>
-      <Command>$(SolutionDir)script\postbuild.cmd "$(TargetPath)" "$(SolutionDir)..\stage\$(TargetFileName)"</Command>
+      <Command>"$(SolutionDir)script\postbuild.cmd" "$(TargetPath)" "$(SolutionDir)..\stage\$(TargetFileName)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Test|Win32'">

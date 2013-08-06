@@ -32,6 +32,10 @@ Transform::~Transform()
 void Transform::rotate(F32 angle, const vec3& axis)
 {
 	_rotation = glm::rotate(_rotation, angle, axis);
+	/*
+	if(_owner->rigidbody!=0)
+		//convert y rotation to euler angles and set the rigidbody accordingly
+	*/
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -44,6 +48,10 @@ void Transform::move(F32 dx, F32 dy, F32 dz)
 	vec3 v = _position.xyz;
 	mat4 m = glm::translate(mat4(), v);
 	_position = m * vec4(dx, dy, dz, 1.0f);
+	/*
+	if(_owner->rigidbody!=0)
+		_owner->rigidbody->moveBody(_position.x, _position.y);
+	*/
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -70,6 +78,10 @@ const vec3& Transform::getPosition() const
 void Transform::setPosition(F32 x, F32 y, F32 z)
 {
 	_position = vec4(x, y, z, 1.0f);
+	/*
+	if(_owner->rigidbody!=0)
+		_owner->rigidbody->moveBody(_position.x, _position.y);
+	*/
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -104,6 +116,10 @@ const vec4& Transform::getAngleAxis() const
 void Transform::setAngleAxis(F32 angle, F32 x, F32 y, F32 z)
 {
 	_rotation = glm::angleAxis(angle, x, y, z);
+	/*
+	if(_owner->rigidbody!=0)
+		//convert y rotation to euler angles and set the rigidbody accordingly
+	*/
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -166,4 +182,10 @@ mat4 Transform::getMatrix() const
 	return ret;
 }
 
+/*
+Entity* Transform::getOwner()
+{
+	return _owner;
+}
+*/
 } // namespace pbj

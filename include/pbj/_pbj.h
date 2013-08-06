@@ -133,5 +133,4 @@ typedef be::Id Id;
 ///
 /// \sa     BE_LOG_END
 #define PBJ_LOG_END BE_LOG_END
-
 #endif

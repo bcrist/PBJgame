@@ -46,7 +46,10 @@ public:
 	void setScale(const vec3&);
 
 	mat4 getMatrix() const;
+
+	//Entity* getOwner();
 private:
+	//Entity* _owner
 	vec4 _position;	///< The position.
 	quat _rotation;	///< Rotation stored as a quaternion.
 	vec3 _scale;	///< Scale.

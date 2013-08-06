@@ -48,51 +48,49 @@ ShaderProgram::ShaderProgram(const sw::ResourceId& id, const Shader& vertex_shad
     checkLinkResult_();
 }
 
-///////////////////////////////////////////////////////////////////////////////
 /// \brief  destroys this shader program, deleting it from the GPU's memory.
 ShaderProgram::~ShaderProgram()
 {
     invalidate_();
 }
 
-///////////////////////////////////////////////////////////////////////////////
 /// \brief  Retrieves a handle to this shader program.
 ///
 /// \return A Handle<ShaderProgram>
+>>>>>>> ben
 const be::Handle<ShaderProgram>& ShaderProgram::getHandle()
 {
     return handle_;
 }
 
-///////////////////////////////////////////////////////////////////////////////
 /// \brief  Retrieves a handle to this shader program.
 ///
 /// \return A ConstHandle<ShaderProgram>
+>>>>>>> ben
 const be::ConstHandle<ShaderProgram>& ShaderProgram::getHandle() const
 {
     return handle_;
 }
 
-///////////////////////////////////////////////////////////////////////////////
 /// \brief  Retrieves the shader program's resourceId, specifying where it is
 ///         stored in the database.
 ///
 /// \return The ResourceId for this shader program.
+>>>>>>> ben
 const sw::ResourceId& ShaderProgram::getId() const
 {
     return resource_id_;
 }
 
-///////////////////////////////////////////////////////////////////////////////
 /// \brief  Retrieves the OpenGL shader program ID.
 ///
 /// \return The OpenGL shader program ID.
+>>>>>>> ben
 GLuint ShaderProgram::getGlId() const
 {
     return gl_id_;
 }
 
-///////////////////////////////////////////////////////////////////////////////
 /// \brief  Checks to make sure that the shader program has been linked
 ///         successfully.
 ///
@@ -123,7 +121,6 @@ void ShaderProgram::checkLinkResult_()
     }
 }
 
-///////////////////////////////////////////////////////////////////////////////
 /// \brief  Invalidates this shader program, deleting it from the GPU's memory.
 void ShaderProgram::invalidate_()
 {
