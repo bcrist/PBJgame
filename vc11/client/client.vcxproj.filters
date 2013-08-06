@@ -220,7 +220,7 @@
       <Filter>Header Files\pbj</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\pbj\client.h">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files\pbj</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

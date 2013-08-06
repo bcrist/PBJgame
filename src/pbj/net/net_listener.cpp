@@ -60,7 +60,6 @@ void Listener::update(F32 dt)
 			break;
 		if(bytesRead < 13)
 			continue;
-		std::cerr<<"Listener: received " << bytesRead << " bytes." <<std::endl;
 		U32 packetZero;
 		U32 packetProtoId;
 		U16 packetServerPort;
@@ -72,7 +71,6 @@ void Listener::update(F32 dt)
 		if(packetZero != 0 || packetProtoId != _protoId || packetStrLength > 63 ||
 			packetStrLength+12+1 > bytesRead)
 		{
-			PBJ_LOG(pbj::VInfo) << "This is not the packet we are looking for" << PBJ_LOG_END;
 			continue;
 		}
 		ListenerEntry entry;

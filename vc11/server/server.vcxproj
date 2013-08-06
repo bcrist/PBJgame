@@ -57,6 +57,7 @@
     <ClInclude Include="..\..\include\pbj\net\net_reliable_connection.h" />
     <ClInclude Include="..\..\include\pbj\net\net_sockets.h" />
     <ClInclude Include="..\..\include\pbj\net\net_transport.h" />
+    <ClInclude Include="..\..\include\pbj\server.h" />
     <ClInclude Include="..\..\include\pbj\sw\import.h" />
     <ClInclude Include="..\..\include\pbj\sw\resource_id.h" />
     <ClInclude Include="..\..\include\pbj\sw\sandwich.h" />
@@ -101,6 +102,7 @@
     <ClCompile Include="..\..\src\pbj\net\net_reliable_connection.cpp" />
     <ClCompile Include="..\..\src\pbj\net\net_sockets.cpp" />
     <ClCompile Include="..\..\src\pbj\net\net_transport.cpp" />
+    <ClCompile Include="..\..\src\pbj\server.cpp" />
     <ClCompile Include="..\..\src\pbj\sw\import.cpp" />
     <ClCompile Include="..\..\src\pbj\sw\resource_id.cpp" />
     <ClCompile Include="..\..\src\pbj\sw\sandwich.cpp" />
