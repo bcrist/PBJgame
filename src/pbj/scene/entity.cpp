@@ -148,7 +148,9 @@ void Entity::generateBatcherTask()
 	//still need to figure out data population from here
 	_batcherTask.n_uniforms = EntityMaterial::nUniforms;
 
-    gfx::UniformConfig* unis;
+    gfx::UniformConfig unis[EntityMaterial::nUniforms];
+
+	//want a copy because a material may be shared across Entity objects
 	memcpy(unis, _material->getUniformConfigs(), EntityMaterial::nUniforms);
 
 	//the checks and assignments in here are not what I'd call "great".  This is
@@ -279,5 +281,5 @@ void Entity::setMaterial(EntityMaterial* material)
 	if(_material != 0)
 		_material->removeCallback(_materialCallbackId);
 	_material = material;
-	_materialCallbackId = _material->addCallback(ComponentCallback(this->generateBatcherTask));
+	_materialCallbackId = _material->addCallback([&](){ this->generateBatcherTask(); });
 }

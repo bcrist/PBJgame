@@ -93,6 +93,10 @@ int main(int argc, char* argv[])
 	}
 #endif
 	
+	//before starting up the client, we start the engine
+	pbj::Engine engine;
+
+	//now on to client startup
 	bool goodInit = false;
 	I32 exitCode = 0;
 	

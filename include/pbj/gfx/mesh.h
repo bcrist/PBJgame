@@ -47,7 +47,7 @@ public:
     GLenum getIndexType() const;
 
     void drawElements();
-
+	
 private:
     be::SourceHandle<Mesh> handle_;
     sw::ResourceId resource_id_;
@@ -58,8 +58,6 @@ private:
     GLsizei index_count_; ///< Size of IBO
     GLenum ibo_data_type_; ///< Data type of IBO elements.
     
-    
-
     Mesh(const Mesh&);
     void operator=(const Mesh&);
 };

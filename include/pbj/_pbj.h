@@ -36,6 +36,7 @@
 
 #include "be/_be.h"
 
+#include <functional>
 // make sure size_t, ptrdiff_t, int64_t, etc. are defined
 #include <cstddef>
 #include <cstdint>
@@ -69,6 +70,11 @@ namespace pbj {
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief  Implementation details used by classes in \ref pbj.
 namespace detail { }
+
+
+////////////////////////////////////////////////////////////////////////////////
+/// \brief	Namespace for drawing.
+namespace gfx { typedef std::function<void()> ComponentCallback; }
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief  Alias of be::bed.

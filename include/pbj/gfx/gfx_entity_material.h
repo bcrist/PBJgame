@@ -26,12 +26,13 @@
 using std::vector;
 using std::pair;
 using std::function;
+using pbj::gfx::ComponentCallback;
 
 namespace pbj
 {
 namespace gfx
 {
-	typedef std::function<void()> ComponentCallback;
+	
 
 	class EntityMaterial
 	{

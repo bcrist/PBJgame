@@ -151,6 +151,7 @@
     <ClCompile Include="..\..\src\pbj\engine.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\batcher.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\built_ins.cpp" />
+    <ClCompile Include="..\..\src\pbj\gfx\gfx_scene_shader_program.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\mesh.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\shader.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\shader_program.cpp" />
@@ -197,6 +198,7 @@
     <ClInclude Include="..\..\include\pbj\engine.h" />
     <ClInclude Include="..\..\include\pbj\gfx\batcher.h" />
     <ClInclude Include="..\..\include\pbj\gfx\built_ins.h" />
+    <ClInclude Include="..\..\include\pbj\gfx\gfx_scene_shader_program.h" />
     <ClInclude Include="..\..\include\pbj\gfx\mesh.h" />
     <ClInclude Include="..\..\include\pbj\gfx\shader.h" />
     <ClInclude Include="..\..\include\pbj\gfx\shader_program.h" />

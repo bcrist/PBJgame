@@ -76,6 +76,12 @@
     <Filter Include="Header Files\pbj\%28convenience headers%29">
       <UniqueIdentifier>{c7aef0a0-f62f-483f-9abd-a76b2411d891}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\pbj\pbj::scene\%28ui%29">
+      <UniqueIdentifier>{5df59621-0f86-4de5-a148-c7085850fe40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\pbj\pbj::scene\%28ui%29">
+      <UniqueIdentifier>{584dbb66-4aea-48f6-acc8-1794aa917c7a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\pbj\_pbj.h">
@@ -239,10 +245,37 @@
     </ClInclude>
     <ClInclude Include="..\..\include\pbj\gfx\gfx_entity_material.h">
       <Filter>Header Files\pbj\pbj::gfx</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\..\include\pbj\client.h">
       <Filter>Header Files\pbj</Filter>
-	</ClInclude>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\scene\scene.h">
+      <Filter>Header Files\pbj\pbj::scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\transform.h">
+      <Filter>Header Files\pbj</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\scene\ui_button.h">
+      <Filter>Header Files\pbj\pbj::scene\%28ui%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\scene\ui_element.h">
+      <Filter>Header Files\pbj\pbj::scene\%28ui%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\scene\ui_image.h">
+      <Filter>Header Files\pbj\pbj::scene\%28ui%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\scene\ui_label.h">
+      <Filter>Header Files\pbj\pbj::scene\%28ui%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\scene\ui_listbox.h">
+      <Filter>Header Files\pbj\pbj::scene\%28ui%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\scene\ui_panel.h">
+      <Filter>Header Files\pbj\pbj::scene\%28ui%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pbj\scene\ui_root.h">
+      <Filter>Header Files\pbj\pbj::scene\%28ui%29</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\pbj\net\net_address.cpp">
@@ -376,9 +409,39 @@
     </ClCompile>
     <ClCompile Include="..\..\src\pbj\gfx\gfx_scene_shader_program.cpp">
       <Filter>Source Files\pbj\pbj::gfx</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\..\src\pbj\client.cpp">
       <Filter>Source Files\pbj</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\scene\scene.cpp">
+      <Filter>Source Files\pbj\pbj::scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gfx\entity_material.cpp">
+      <Filter>Source Files\pbj\pbj::gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\transform.cpp">
+      <Filter>Source Files\pbj</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\scene\ui_button.cpp">
+      <Filter>Source Files\pbj\pbj::scene\%28ui%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\scene\ui_element.cpp">
+      <Filter>Source Files\pbj\pbj::scene\%28ui%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\scene\ui_image.cpp">
+      <Filter>Source Files\pbj\pbj::scene\%28ui%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\scene\ui_label.cpp">
+      <Filter>Source Files\pbj\pbj::scene\%28ui%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\scene\ui_listbox.cpp">
+      <Filter>Source Files\pbj\pbj::scene\%28ui%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\scene\ui_panel.cpp">
+      <Filter>Source Files\pbj\pbj::scene\%28ui%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\scene\ui_root.cpp">
+      <Filter>Source Files\pbj\pbj::scene\%28ui%29</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

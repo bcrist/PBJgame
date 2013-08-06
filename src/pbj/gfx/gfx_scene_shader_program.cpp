@@ -15,7 +15,7 @@ using namespace pbj::gfx;
 map<string,I32> SceneShaderProgram::nameToIndex = map<string,I32>();
 
 /// \brief	Name of the scene shader program index to.
-map<string,I32> SceneShaderProgram::indexToName = map<string,I32>();
+map<I32,string> SceneShaderProgram::indexToName = map<I32,string>();
 
 /// \brief	true to scene shader program map made.
 bool SceneShaderProgram::_mapMade = false;
@@ -73,6 +73,47 @@ SceneShaderProgram::SceneShaderProgram(const ResourceId& resourceId) :
 	}
 }
 
+SceneShaderProgram::SceneShaderProgram() : _glId(BAD_GL_VALUE)
+{
+	_projectionMatLoc = BAD_GL_VALUE;
+	_modelviewMatLoc = BAD_GL_VALUE;
+	_mvpMatLoc = BAD_GL_VALUE;
+	for(int i=0;i<5;++i)
+		_lightDataLocs[i] = BAD_GL_VALUE;
+	for(int i=0;i<4;++i)
+		_shaderMaterialLocs[i] = BAD_GL_VALUE;
+	if(!_mapMade)
+	{
+		nameToIndex["projection_matrix"] = 0;
+		nameToIndex["modelview_matrix"] = 1;
+		nameToIndex["mvp_matrix"] = 2;
+		nameToIndex["light.position"] = 3;
+		nameToIndex["light.ambient"] = 4;
+		nameToIndex["light.diffuse"] = 5;
+		nameToIndex["light.specular"] = 6;
+		nameToIndex["light.attenuation"] = 7;
+		nameToIndex["material.ambient"] = 8;
+		nameToIndex["material.diffuse"] = 9;
+		nameToIndex["material.specular"] = 10;
+		nameToIndex["material.shininess"] = 11;
+
+		indexToName[0] = "projection_matrix";
+		indexToName[1] = "modelview_matrix";
+		indexToName[2] = "mvp_matrix";
+		indexToName[3] = "light.position";
+		indexToName[4] = "light.ambient";
+		indexToName[5] = "light.diffuse";
+		indexToName[6] = "light.specular";
+		///< An enum constant representing the index to name[ 7] option
+		indexToName[7] = "light.attenuation";
+		indexToName[8] = "material.ambient";
+		indexToName[9] = "material.diffuse";
+		indexToName[10] = "material.specular";
+		indexToName[11] = "material.shininess";
+
+		_mapMade = true;
+	}
+}
 ////////////////////////////////////////////////////////////////////////////////
 /// \fn	SceneShaderProgram::~SceneShaderProgram()
 ///
@@ -209,35 +250,38 @@ void SceneShaderProgram::setValues(const GLfloat* projectionMatrix,
 /// \return	\c NULL if it fails; otherwise an array of \sa gfx::UniformConfig
 /// 		for each uniform in the shader.
 ////////////////////////////////////////////////////////////////////////////////
-const gfx::UniformConfig* SceneShaderProgram::getUniformConfigs(I32& nUniforms)
+I32 SceneShaderProgram::getUniformConfigs(gfx::UniformConfig* unis)
 {
-	nUniforms = 12;
-	UniformConfig ret[12];
-	ret[0].array_size = 1;
-	ret[0].location = _projectionMatLoc;
-	ret[0].type = UniformConfig::UM4f;
+	I32 nUniforms = 12;
 
-	ret[1].array_size = 1;
-	ret[1].location = _modelviewMatLoc;
-	ret[1].type = UniformConfig::UM4f;
+	unis[0].array_size = 1;
+	unis[0].location = _projectionMatLoc;
+	unis[0].type = UniformConfig::UM4f;
 
-	ret[2].array_size = 1;
-	ret[2].location = _mvpMatLoc;
-	ret[2].type = UniformConfig::UM4f;
+	unis[1].array_size = 1;
+	unis[1].location = _modelviewMatLoc;
+	unis[1].type = UniformConfig::UM4f;
+
+	unis[2].array_size = 1;
+	unis[2].location = _mvpMatLoc;
+	unis[2].type = UniformConfig::UM4f;
 
 	for(int i=3;i<8;++i)
 	{
-		///< An enum constant representing the ret[i].array size option
-		ret[i].array_size = 1;
-		ret[i].location = _lightDataLocs[i-3];
-		ret[i].type = UniformConfig::U1f;
+		///< An enum constant representing the unis[i].array size option
+		unis[i].array_size = 1;
+		unis[i].location = _lightDataLocs[i-3];
+		unis[i].type = UniformConfig::U1f;
 		if(i < 7)
 		{
-			ret[i+5].array_size = 1;
-			ret[i+5].location = _shaderMaterialLocs[i-3];
-			ret[i+5].type = UniformConfig::U1f;
+			unis[i+5].array_size = 1;
+			unis[i+5].location = _shaderMaterialLocs[i-3];
+			unis[i+5].type = UniformConfig::U1f;
 		}
 	}
+
+	//yeah, not acceptable.  need to change the way this works.
+	return nUniforms;
 }
 
 void SceneShaderProgram::use()

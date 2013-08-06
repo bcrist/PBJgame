@@ -57,7 +57,6 @@ ShaderProgram::~ShaderProgram()
 /// \brief  Retrieves a handle to this shader program.
 ///
 /// \return A Handle<ShaderProgram>
->>>>>>> ben
 const be::Handle<ShaderProgram>& ShaderProgram::getHandle()
 {
     return handle_;
@@ -66,7 +65,6 @@ const be::Handle<ShaderProgram>& ShaderProgram::getHandle()
 /// \brief  Retrieves a handle to this shader program.
 ///
 /// \return A ConstHandle<ShaderProgram>
->>>>>>> ben
 const be::ConstHandle<ShaderProgram>& ShaderProgram::getHandle() const
 {
     return handle_;
@@ -76,7 +74,7 @@ const be::ConstHandle<ShaderProgram>& ShaderProgram::getHandle() const
 ///         stored in the database.
 ///
 /// \return The ResourceId for this shader program.
->>>>>>> ben
+
 const sw::ResourceId& ShaderProgram::getId() const
 {
     return resource_id_;
@@ -85,7 +83,7 @@ const sw::ResourceId& ShaderProgram::getId() const
 /// \brief  Retrieves the OpenGL shader program ID.
 ///
 /// \return The OpenGL shader program ID.
->>>>>>> ben
+
 GLuint ShaderProgram::getGlId() const
 {
     return gl_id_;

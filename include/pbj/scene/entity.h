@@ -7,12 +7,9 @@
 #ifndef ENTITY_H_
 #define ENTITY_H_
 
-#ifndef PBJ_SCENE_ENTITY_H_
-#define PBJ_SCENE_ENTITY_H_
-
 #include "pbj/gfx/mesh.h"
 #include "pbj/transform.h"
->>>>>>> ben
+
 #include "pbj/_pbj.h"
 #include "pbj/transform.h"
 #include "pbj/gfx/mesh.h"
@@ -23,6 +20,7 @@ using pbj::gfx::Mesh;
 using pbj::gfx::EntityMaterial;
 using pbj::gfx::BatcherTask;
 using pbj::gfx::ComponentCallback;
+
 namespace pbj
 {
 namespace scene
@@ -30,7 +28,8 @@ namespace scene
 	////////////////////////////////////////////////////////////////////////////
 	/// \class	Entity
 	///
-	/// \brief	Entity.
+	/// \brief	Entity keeps track of all data relating to an object within a
+	/// 		scene.
 	///
 	/// \author	Peter Bartosch
 	/// \date	2013-08-05
@@ -38,6 +37,8 @@ namespace scene
 	class Entity
 	{
 	public:
+		
+
 		Entity();
 		~Entity();
 		
@@ -67,6 +68,7 @@ namespace scene
 		U32 _transformCallbackId;
 		U32 _materialCallbackId;
 
+		//components
 		Transform _transform;
 		Mesh* _mesh;
 		EntityMaterial* _material;

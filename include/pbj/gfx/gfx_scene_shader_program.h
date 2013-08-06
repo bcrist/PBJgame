@@ -73,6 +73,7 @@ namespace gfx
 		static map<string,I32> nameToIndex;
 		static map<I32,string> indexToName;
 
+		SceneShaderProgram();
 		SceneShaderProgram(const ResourceId&);
 		~SceneShaderProgram();
 
@@ -81,7 +82,7 @@ namespace gfx
 
 		void setValues(const GLfloat*, const GLfloat*, const GLfloat*,
 						const Light*, const ShaderMaterial*);
-		const UniformConfig* getUniformConfigs(I32&); ///< Returns uniform configs for vars WITHOUT data
+		I32 getUniformConfigs(UniformConfig*); ///< Returns uniform configs for vars WITHOUT data
 		void use();
 
 		const ResourceId& getId() const;

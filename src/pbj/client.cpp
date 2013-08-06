@@ -46,8 +46,11 @@ bool Client::init(U32 fps)
 /// 			including initializing the Transport layer.  If the passed addr
 /// 			is \c NULL then it is assumed that we want to check a lobby for
 /// 			servers.  Otherwise an attempt is made to connect directly, and
-/// 			if it fails then the client closes.
-/// 			TODO: add in engine.
+/// 			if it fails then the client closes.  On another note, I don't
+/// 			think it's killing us to do all of this init as a static method,
+/// 			but a part of me thinks that the static should reference an
+/// 			internal startup.
+/// 			TODO: add in engine, push this to a non-static method
 ////////////////////////////////////////////////////////////////////////////////
 bool Client::init(const U8* const addr, U32 fps)
 {
@@ -99,15 +102,26 @@ bool Client::init(const U8* const addr, U32 fps)
 	_instance->_sendMsgTimer = 0.0f;
 	
 	//TODO: fit game engine in
-	// Initialize game engine
-	// pbj::Engine engine;
+	// Engine init stuff
+	
+	_instance->_window.registerContextResizeListener([=](I32 width, I32 height) { _instance->onContextResized(width, height); });
+
+    InputController::registerKeyUpListener([&](I32 keycode, I32 scancode, I32 modifiers)
+    {
+		
+        _instance->_running = !(keycode == GLFW_KEY_ESCAPE);
+    });
+
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+	_instance->_running = true;
 	return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \fn	I32 Client::run()
 ///
-/// \brief	Gets the run.
+/// \brief	Runs the main loop for the client.
 ///
 /// \author	Peter Bartosch
 /// \date	2013-08-05
@@ -116,11 +130,13 @@ bool Client::init(const U8* const addr, U32 fps)
 ////////////////////////////////////////////////////////////////////////////////
 I32 Client::run()
 {
-	do
+	while(_instance->_running)
 	{
 		net::waitSeconds(_instance->_dt);
+		_instance->update();
+		
+		_instance->draw();
 	}
-	while(_instance->update());
 	return 0;
 }
 
@@ -159,7 +175,11 @@ Client::Client() :
 	_transport(nullptr),
 	_dt(0.0f),
 	_state(Disconnected),
-	_sendMsgTimer(0.0f)
+	_sendMsgTimer(0.0f),
+	_engine(getEngine()),
+	_batcher(getEngine().getBatcher()),
+	_builtIns(getEngine().getBuiltIns()),
+	_window(*getEngine().getWindow())
 {}
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -181,29 +201,41 @@ Client::~Client()
 /// \author	Peter Bartosch
 /// \date	2013-08-05
 ///
-/// \return	true if the next loop should happen; false otherwise.
+/// \return	true if the next loop should happen; false otherwise.  This is being
+/// 		changed to a void eventually.
 ////////////////////////////////////////////////////////////////////////////////
 bool Client::update()
 {
 	_transport->update(_dt);
+
+	//I don't know that we actually want network state to end the game.  We may,
+	//but for now I'm not implementing it.  Need to figure out drawing and such
+	//anyway.
 	switch(_state)
 	{
 	case Searching:
-		return displayLobby();
+		displayLobby();
 		break;
 	case Connecting:
-		return doConnecting();
+		doConnecting();
 		break;
 	case Connected:
-		return doConnected();
+		doConnected();
 		break;
 	default:
 		return false; //don't want infinite loops if the state is bad
 		break;
 	}
+	
 	// TODO:
 	// fit game engine in here
 	// remove stderr output and the like in favor of actual graphics
+	glfwPollEvents();
+
+	if(_window.isClosePending() && _running)
+		_running = false;
+
+	return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -236,7 +268,7 @@ bool Client::displayLobby()
 
 	//I'm expect this to halt all execution of the loop in main while it waits
 	//for input
-	std::getline(std::cin,choice);
+	//std::getline(std::cin,choice);
 	if(choice.c_str()[0]=='R' || choice.c_str()[0]=='r')
 	{
 		return true;
@@ -358,4 +390,35 @@ void Client::joinServer(Transport::LobbyEntry entry)
 	}
 	_transport->connectClient(entry.address);
 	_state = Connecting;
+}
+
+void Client::draw()
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
+	Transform trans = Transform();
+
+	const gfx::Mesh& testMesh = _builtIns.getMesh(Id("Mesh.std_quad"));
+	gfx::Mesh* useMesh = (Mesh*)&testMesh;
+	gfx::SceneShaderProgram ssp = gfx::SceneShaderProgram();
+	ssp.init(_builtIns.getShader(Id("Shader.UIBox.vertex")),
+			_builtIns.getShader(Id("Shader.UIBox.fragment")));
+	gfx::EntityMaterial mat = EntityMaterial();
+	mat.setShaderProgram(&ssp);
+
+	scene::Entity e = scene::Entity();
+	e.setMaterial(&mat);
+	e.setMesh(useMesh);
+	e.setTransform(trans);
+
+	e.generateBatcherTask();
+	_batcher.submit(*(e.getBatcherTask()));
+	_batcher.draw();
+
+	glfwSwapBuffers(_window.getGlfwHandle());
+}
+
+void Client::onContextResized(I32 width, I32 height)
+{
+	//nothing doing for now
 }

@@ -95,9 +95,11 @@ void EntityMaterial::setTexture(Texture* newTexture)
 ////////////////////////////////////////////////////////////////////////////////
 void EntityMaterial::generateUniformConfigs()
 {
-	I32 unused;
-	memcpy(_uniforms, _shader->getUniformConfigs(unused), nUniforms);
-	doCalls();
+	I32 nUnis = _shader->getUniformConfigs(_uniforms);
+	// I don't know that this needs to happen.  Every time something on the 
+	// material changes, doCalls is called and I don't foresee configs being
+	// generated outside of the Entity class, which registers into doCalls.
+	// doCalls();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -112,7 +114,10 @@ void EntityMaterial::generateSamplerConfigs()
 		_samplers[i].texture_id = _texture->getGlId();
 		_samplers[i].uniform_location = glGetUniformLocation(_shader->getGlId(), "texsampler");
 	}
-	doCalls();
+	// I don't know that this needs to happen.  Every time something on the 
+	// material changes, doCalls is called and I don't foresee configs being
+	// generated outside of the Entity class, which registers into doCalls.
+	// doCalls();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -138,7 +143,7 @@ U32 EntityMaterial::addCallback(ComponentCallback callback)
 	{
 		//if the target pointers are the same, then the callback is already
 		//registered and has an id.
-		if(it->second.target == callback.target)
+		if(it->second.target<ComponentCallback>() == callback.target<ComponentCallback>())
 			return it->first;
 	}
 
