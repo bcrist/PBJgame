@@ -23,73 +23,117 @@ namespace pbj {
 namespace gfx {
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Retrieves a TextureFont from the assets baked into the executable.
+///
+/// \param  id The Id of the asset to retrieve.
+/// \return A reference to the requested resource.
+/// \throws std::invalid_argument If the TextureFont Id does not correspond
+///         to a builtin TextureFont
 const TextureFont& BuiltIns::getTextureFont(const Id& id) const
 {
     auto i = texture_fonts_.find(id);
     if (i != texture_fonts_.end())
         return *i->second;
 
-    // TODO: log warning
+    PBJ_LOG(VError) << "Builtin TextureFont not found!" << PBJ_LOG_NL
+                    << "TextureFont ID: " << id << PBJ_LOG_END;
+
     throw std::invalid_argument("TextureFont not found!");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Retrieves a Mesh from the resources baked into the executable.
+///
+/// \param  id The Id of the mesh to retrieve.
+/// \return A reference to the requested resource.
+/// \throws std::invalid_argument If the Mesh Id does not correspond to a
+///         builtin Mesh.
 const Mesh& BuiltIns::getMesh(const Id& id) const
 {
     auto i = meshes_.find(id);
     if (i != meshes_.end())
         return *i->second;
 
-    // TODO: log warning
+    PBJ_LOG(VError) << "Builtin Mesh not found!" << PBJ_LOG_NL
+                    << "Mesh ID: " << id << PBJ_LOG_END;
+
     throw std::invalid_argument("Mesh not found!");
 }
     
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Retrieves a Texture from the resources baked into the executable.
+///
+/// \param  id The Id of the texture to retrieve.
+/// \return A reference to the requested resource.
+/// \throws std::invalid_argument If the Texture Id does not correspond to a
+///         builtin Texture.
 const Texture& BuiltIns::getTexture(const Id& id) const
 {
     auto i = textures_.find(id);
     if (i != textures_.end())
         return *i->second;
 
-    // TODO: log warning
+    PBJ_LOG(VError) << "Builtin Texture not found!" << PBJ_LOG_NL
+                    << "Texture ID: " << id << PBJ_LOG_END;
+
     throw std::invalid_argument("Texture not found!");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Retrieves a Shader from the resources baked into the executable.
+///
+/// \param  id The Id of the shader to retrieve.
+/// \return A reference to the requested resource.
+/// \throws std::invalid_argument If the Shader Id does not correspond to a
+///         builtin Shader.
 const Shader& BuiltIns::getShader(const Id& id) const
 {
     auto i = shaders_.find(id);
     if (i != shaders_.end())
         return *i->second;
 
-    // TODO: log warning
+    PBJ_LOG(VError) << "Builtin Shader not found!" << PBJ_LOG_NL
+                    << "Shader ID: " << id << PBJ_LOG_END;
+
     throw std::invalid_argument("Shader not found!");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Retrieves a ShaderProgram from the resources baked into the
+///         executable.
+///
+/// \param  id The Id of the program to retrieve.
+/// \return A reference to the requested resource.
+/// \throws std::invalid_argument If the ShaderProgram Id does not correspond
+///         to a builtin ShaderProgram.
 const ShaderProgram& BuiltIns::getProgram(const Id& id) const
 {
     auto i = programs_.find(id);
     if (i != programs_.end())
         return *i->second;
 
-    // TODO: log warning
+    PBJ_LOG(VError) << "Builtin ShaderProgram not found!" << PBJ_LOG_NL
+                    << "ShaderProgram ID: " << id << PBJ_LOG_END;
+
     throw std::invalid_argument("Program not found!");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Constructs a BuiltIns object with copies of all the builtin
+///         resources baked into the executable.
 BuiltIns::BuiltIns()
 {
     GLenum err;
     sw::ResourceId id(Id(0), Id(0));
 
-        while ((err = glGetError()) != GL_NO_ERROR)
+    while ((err = glGetError()) != GL_NO_ERROR)
     {
         PBJ_LOG(pbj::VWarning) << "OpenGL error!" << PBJ_LOG_NL
                                << "Error Code: " << err << PBJ_LOG_NL
                                << "     Error: " << pbj::getGlErrorString(err) << PBJ_LOG_END;
     }
 
+    ///////////////////////////////////////////////////////////////////////////
     id.resource = Id("Mesh.std_quad");
     try
     {
@@ -140,6 +184,7 @@ BuiltIns::BuiltIns()
                                << "     Error: " << pbj::getGlErrorString(err) << PBJ_LOG_END;
     }
 
+    ///////////////////////////////////////////////////////////////////////////
     id.resource = Id("Shader.UIBox.vertex");
     try
     {
@@ -167,6 +212,7 @@ BuiltIns::BuiltIns()
                                << "     Error: " << pbj::getGlErrorString(err) << PBJ_LOG_END;
     }
 
+    ///////////////////////////////////////////////////////////////////////////
     id.resource = Id("Shader.UIBox.fragment");
     try
     {
@@ -209,6 +255,7 @@ BuiltIns::BuiltIns()
                                << "     Error: " << pbj::getGlErrorString(err) << PBJ_LOG_END;
     }
 
+    ///////////////////////////////////////////////////////////////////////////
     id.resource = Id("ShaderProgram.UIBox");
     try
     {
@@ -222,6 +269,7 @@ BuiltIns::BuiltIns()
         logWarning("ShaderProgram", id, err.what());
     }
 
+    ///////////////////////////////////////////////////////////////////////////
     id.resource = Id("Shader.TextureFontText.vertex");
     try
     {
@@ -243,6 +291,7 @@ BuiltIns::BuiltIns()
         logWarning("Shader", id, err.what());
     }
 
+    ///////////////////////////////////////////////////////////////////////////
     id.resource = Id("Shader.TextureFontText.fragment");
     try
     {
@@ -264,6 +313,7 @@ BuiltIns::BuiltIns()
         logWarning("Shader", id, err.what());
     }
 
+    ///////////////////////////////////////////////////////////////////////////
     id.resource = Id("ShaderProgram.TextureFontText");
     try
     {
@@ -277,6 +327,7 @@ BuiltIns::BuiltIns()
         logWarning("ShaderProgram", id, err.what());
     }
 
+    ///////////////////////////////////////////////////////////////////////////
     id.resource = Id("Texture.TextureFont.default");
     try
     {
@@ -442,6 +493,7 @@ BuiltIns::BuiltIns()
         logWarning("Texture", id, err.what());
     }
 
+    ///////////////////////////////////////////////////////////////////////////
     id.resource = Id("TextureFont.default");
     try
     {
@@ -658,11 +710,19 @@ BuiltIns::BuiltIns()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  BuiltIns destructor.  Nothing to do (all resources stored in
+///         std:: containers).
 BuiltIns::~BuiltIns()
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Logs a warning when an error occurs initializing a builtin
+///         resource.
+///
+/// \param  type A c-string describing the type of resource that had an error.
+/// \param  id The Id of the resource that failed to initialize.
+/// \param  what_arg The error string from the exception that was thrown.
 void BuiltIns::logWarning(const char* type, const sw::ResourceId id, const std::string& what_arg) const
 {
     PBJ_LOG(VWarning) << "Exception while initializing built-in resource!" << PBJ_LOG_NL
@@ -670,7 +730,6 @@ void BuiltIns::logWarning(const char* type, const sw::ResourceId id, const std::
                       << "  Resource ID: " << id.resource << PBJ_LOG_NL
                       << "    Exception: " << what_arg << PBJ_LOG_END;
 }
-
 
 } // namespace pbj::gfx
 } // namespace pbj
