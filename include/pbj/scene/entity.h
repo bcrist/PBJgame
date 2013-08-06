@@ -1,31 +1,9 @@
-// Copyright (c) 2013 PBJ^2 Productions
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to
-// deal in the Software without restriction, including without limitation the
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-// sell copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
-
-///////////////////////////////////////////////////////////////////////////////
-/// \file	pbj/entity.h
-/// \author	Peter Barotsch
-/// \brief	Definition for the Entity class.
-/// \details	The entity class is used to keep track of all data relating to
-///             something in the game.  It must have a position but any other
-///				components on it are optional.
-
+////////////////////////////////////////////////////////////////////////////////
+/// \file	C:\Users\pbartosch_sa\Documents\Visual Studio 2012\Projects\
+/// 		PBJgame\include\pbj\scene\entity.h
+///
+/// \brief	Declares the entity class.
+////////////////////////////////////////////////////////////////////////////////
 #ifndef ENTITY_H_
 #define ENTITY_H_
 
@@ -43,6 +21,14 @@ namespace pbj
 {
 namespace scene
 {
+	////////////////////////////////////////////////////////////////////////////
+	/// \class	Entity
+	///
+	/// \brief	Entity.
+	///
+	/// \author	Peter Bartosch
+	/// \date	2013-08-05
+	////////////////////////////////////////////////////////////////////////////
 	class Entity
 	{
 	public:

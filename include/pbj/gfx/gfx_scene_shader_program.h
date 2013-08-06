@@ -1,29 +1,9 @@
-// Copyright (c) 2013 PBJ^2 Productions
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to
-// deal in the Software without restriction, including without limitation the
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-// sell copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
-
-///////////////////////////////////////////////////////////////////////////////
-/// \file   pbj/gfx/gfx_scene_shader_program.h
-/// \author Peter Bartosch
+////////////////////////////////////////////////////////////////////////////////
+/// \file	C:\Users\pbartosch_sa\Documents\Visual Studio 2012\Projects\
+/// 		PBJgame\include\pbj\gfx\gfx_scene_shader_program.h
 ///
-/// \brief  pbj::gfx::SceneShaderProgram class header.
-
+/// \brief	Declares the graphics scene shader program class.
+////////////////////////////////////////////////////////////////////////////////
 #ifndef GFX_SCENE_SHADER_PROGRAM_H_
 #define GFX_SCENE_SHADER_PROGRAM_H_
 
@@ -46,6 +26,14 @@ namespace pbj
 {
 namespace gfx
 {
+	////////////////////////////////////////////////////////////////////////////
+	/// \struct	Light
+	///
+	/// \brief	A struct for representing light in a shader
+	///
+	/// \author	Peter Bartosch
+	/// \date	2013-08-05
+	////////////////////////////////////////////////////////////////////////////
 	struct Light
 	{
 		vec4 position;
@@ -55,6 +43,14 @@ namespace gfx
 		F32 attenuation;
 	};
 
+	////////////////////////////////////////////////////////////////////////////
+	/// \struct	ShaderMaterial
+	///
+	/// \brief	A struct for representing the material of a shader.
+	///
+	/// \author	Peter Bartosch
+	/// \date	2013-08-05
+	////////////////////////////////////////////////////////////////////////////
 	struct ShaderMaterial
 	{
 		vec4 ambient;
@@ -63,6 +59,14 @@ namespace gfx
 		F32 shininess;
 	};
 
+	////////////////////////////////////////////////////////////////////////////
+	/// \class	SceneShaderProgram
+	///
+	/// \brief	Scene shader program.
+	///
+	/// \author	Peter Bartosch
+	/// \date	2013-08-05
+	////////////////////////////////////////////////////////////////////////////
 	class SceneShaderProgram
 	{
 	public:

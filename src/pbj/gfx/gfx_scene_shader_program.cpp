@@ -1,28 +1,9 @@
-// Copyright (c) 2013 PBJ^2 Productions
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to
-// deal in the Software without restriction, including without limitation the
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-// sell copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
-
 ////////////////////////////////////////////////////////////////////////////////
-/// \file   pbj/gfx/gfx_scene_shader_program.cpp
-/// \author Peter Bartosch
+/// \file	C:\Users\pbartosch_sa\Documents\Visual Studio 2012\Projects\
+/// 		PBJgame\src\pbj\gfx\gfx_scene_shader_program.cpp
 ///
-/// \brief  pbj::gfx::SceneShaderProgram class implementation.
+/// \brief	Implements the graphics scene shader program class.
+////////////////////////////////////////////////////////////////////////////////
 #ifndef GFX_SCENE_SHADER_PROGRAM_H_
 #include "pbj/gfx/gfx_scene_shader_program.h"
 #endif
@@ -30,13 +11,25 @@
 using namespace pbj;
 using namespace pbj::gfx;
 
+/// \brief	Zero-based index of the scene shader program name to.
 map<string,I32> SceneShaderProgram::nameToIndex = map<string,I32>();
+
+/// \brief	Name of the scene shader program index to.
 map<string,I32> SceneShaderProgram::indexToName = map<string,I32>();
+
+/// \brief	true to scene shader program map made.
 bool SceneShaderProgram::_mapMade = false;
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief
-/// \details
+/// \fn	SceneShaderProgram::SceneShaderProgram(const ResourceId& resourceId)
+///
+/// \brief	Constructor.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \param	resourceId	Identifier for the resource.
+////////////////////////////////////////////////////////////////////////////////
 SceneShaderProgram::SceneShaderProgram(const ResourceId& resourceId) :
 					_resId(resourceId), _glId(BAD_GL_VALUE)
 {
@@ -69,6 +62,7 @@ SceneShaderProgram::SceneShaderProgram(const ResourceId& resourceId) :
 		indexToName[4] = "light.ambient";
 		indexToName[5] = "light.diffuse";
 		indexToName[6] = "light.specular";
+		///< An enum constant representing the index to name[ 7] option
 		indexToName[7] = "light.attenuation";
 		indexToName[8] = "material.ambient";
 		indexToName[9] = "material.diffuse";
@@ -80,8 +74,13 @@ SceneShaderProgram::SceneShaderProgram(const ResourceId& resourceId) :
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief
-/// \details
+/// \fn	SceneShaderProgram::~SceneShaderProgram()
+///
+/// \brief	Destructor.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+////////////////////////////////////////////////////////////////////////////////
 SceneShaderProgram::~SceneShaderProgram()
 {
 	if(_glId != BAD_GL_VALUE)
@@ -89,8 +88,17 @@ SceneShaderProgram::~SceneShaderProgram()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief
-/// \details
+/// \fn	void SceneShaderProgram::init(const Shader& vertShader,
+/// 	const Shader& fragShader)
+///
+/// \brief	Initialises this object.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \param	vertShader	The vertical shader.
+/// \param	fragShader	The fragment shader.
+////////////////////////////////////////////////////////////////////////////////
 void SceneShaderProgram::init(const Shader& vertShader, const Shader& fragShader)
 {
 #ifdef PBJ_DEBUG
@@ -117,6 +125,7 @@ void SceneShaderProgram::init(const Shader& vertShader, const Shader& fragShader
 	//populate location variables
 	_projectionMatLoc = glGetUniformLocation(_glId, (const GLchar*)"projection_matrix");
 	_modelviewMatLoc = glGetUniformLocation(_glId, (const GLchar*)"modelview_matrix");
+	///< An enum constant representing the mvp matrix location option
 	_mvpMatLoc = glGetUniformLocation(_glId, (const GLchar*)"mvp_matrix");
 	_lightDataLocs[0] = glGetUniformLocation(_glId, (const GLchar*)"light.position");
 	_lightDataLocs[1] = glGetUniformLocation(_glId, (const GLchar*)"light.ambient");
@@ -130,8 +139,13 @@ void SceneShaderProgram::init(const Shader& vertShader, const Shader& fragShader
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief	Deletes the shader programs
-/// \details Deletes shader programs to free up the memory they have allocated
+/// \fn	void SceneShaderProgram::destroy()
+///
+/// \brief	Destroys this object.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+////////////////////////////////////////////////////////////////////////////////
 void SceneShaderProgram::destroy()
 {
 	if (_glId != BAD_GL_VALUE)
@@ -142,8 +156,21 @@ void SceneShaderProgram::destroy()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief	Sets values paramaters passed in
-/// \details sets the values of the matricies, lights, and materials
+/// \fn	void SceneShaderProgram::setValues(const GLfloat* projectionMatrix,
+/// 	const GLfloat* modelviewMatrix, const GLfloat* mvpMatrix,
+/// 	const Light* lightData, const ShaderMaterial* shaderMaterialData)
+///
+/// \brief	Sets the values.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \param	projectionMatrix  	The projection matrix.
+/// \param	modelviewMatrix   	The modelview matrix.
+/// \param	mvpMatrix		  	The mvp matrix.
+/// \param	lightData		  	Information describing the light.
+/// \param	shaderMaterialData	Information describing the shader material.
+////////////////////////////////////////////////////////////////////////////////
 void SceneShaderProgram::setValues(const GLfloat* projectionMatrix,
 								   const GLfloat* modelviewMatrix,
 								   const GLfloat* mvpMatrix,
@@ -155,7 +182,6 @@ void SceneShaderProgram::setValues(const GLfloat* projectionMatrix,
 	glUniformMatrix4fv(_modelviewMatLoc, 1, GL_FALSE, modelviewMatrix);
 	glUniformMatrix4fv(_mvpMatLoc, 1, GL_FALSE, mvpMatrix);
 
-	// light data
 	glUniform4fv(_lightDataLocs[0], 1, (GLfloat*)&lightData->position);
 	glUniform4fv(_lightDataLocs[1], 1, (GLfloat*)&lightData->ambient);
 	glUniform4fv(_lightDataLocs[2], 1, (GLfloat*)&lightData->diffuse);
@@ -170,15 +196,19 @@ void SceneShaderProgram::setValues(const GLfloat* projectionMatrix,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief Return a \sa gfx::UniformConfig array that contains all
-///        information for the shader EXCLUDING data.
-/// \details The idea is that the data will be populated outside of this class,
-///          so there is no need to do that here.  Additionally
-///          \c UniformConfig.data is a \c void* so any data defined here could
-///          be overwritten the next time the shader is accessed.
-/// \param nUniforms[out] An I32 representing the number of uniforms in the
-///        returned array.
-/// \returns An array of \sa gfx::UniformConfig for each uniform in the shader.
+/// \fn	const gfx::UniformConfig* SceneShaderProgram::getUniformConfigs(I32& nUniforms)
+///
+/// \brief	Gets uniform configs.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \param[out]	nUniforms	An I32 representing the number of uniforms in the
+/// 						returned array.
+///
+/// \return	\c NULL if it fails; otherwise an array of \sa gfx::UniformConfig
+/// 		for each uniform in the shader.
+////////////////////////////////////////////////////////////////////////////////
 const gfx::UniformConfig* SceneShaderProgram::getUniformConfigs(I32& nUniforms)
 {
 	nUniforms = 12;
@@ -197,6 +227,7 @@ const gfx::UniformConfig* SceneShaderProgram::getUniformConfigs(I32& nUniforms)
 
 	for(int i=3;i<8;++i)
 	{
+		///< An enum constant representing the ret[i].array size option
 		ret[i].array_size = 1;
 		ret[i].location = _lightDataLocs[i-3];
 		ret[i].type = UniformConfig::U1f;
@@ -209,9 +240,6 @@ const gfx::UniformConfig* SceneShaderProgram::getUniformConfigs(I32& nUniforms)
 	}
 }
 
-////////////////////////////////////////////////////////////////////////////////
-/// \brief	Uses the shader on the geometry that follows
-/// \details Grabs the shader program and uses the shader on the geometry that follows
 void SceneShaderProgram::use()
 {
 	assert(_glId != BAD_GL_VALUE);
@@ -219,64 +247,80 @@ void SceneShaderProgram::use()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief	Returns the ID for the DB resource
-/// \details
+/// \fn	const ResourceId& SceneShaderProgram::getId() const
+///
+/// \brief	Gets the identifier.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \return	The identifier.
+////////////////////////////////////////////////////////////////////////////////
 const ResourceId& SceneShaderProgram::getId() const
 {
 	return _resId;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-/// \briefeturns the ID for the shader program resource
-/// \details
 GLuint SceneShaderProgram::getGlId() const
 {
 	return _glId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief
-/// \details
+/// \fn	const GLint& SceneShaderProgram::getProjectionMatLoc() const
+///
+/// \brief	Gets projection matrix location.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \return	The projection matrix location.
+////////////////////////////////////////////////////////////////////////////////
 const GLint& SceneShaderProgram::getProjectionMatLoc() const
 {
 	return _projectionMatLoc;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-/// \brief
-/// \details
 const GLint& SceneShaderProgram::getModelviewMatLoc() const
 {
 	return _modelviewMatLoc;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief
-/// \details
+/// \fn	const GLint& SceneShaderProgram::getMvpMatLoc() const
+///
+/// \brief	Gets mvp matrix location.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \return	The mvp matrix location.
+////////////////////////////////////////////////////////////////////////////////
 const GLint& SceneShaderProgram::getMvpMatLoc() const
 {
 	return _mvpMatLoc;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-/// \brief
-/// \details
 const GLint* SceneShaderProgram::getLightDataLocs() const
 {
 	return _lightDataLocs;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief
-/// \details
+/// \fn	const GLint* SceneShaderProgram::getShaderMaterialLocs() const
+///
+/// \brief	Gets shader material locs.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \return	null if it fails, else the shader material locs.
+////////////////////////////////////////////////////////////////////////////////
 const GLint* SceneShaderProgram::getShaderMaterialLocs() const
 {
 	return _shaderMaterialLocs;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-/// \brief
-/// \details
 void SceneShaderProgram::checkLinkResult()
 {
 	GLint result = GL_FALSE;

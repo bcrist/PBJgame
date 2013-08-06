@@ -1,28 +1,9 @@
-// Copyright (c) 2013 PBJ^2 Productions
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to
-// deal in the Software without restriction, including without limitation the
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-// sell copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
-
-///////////////////////////////////////////////////////////////////////////////
-/// \file	pbj/entity.h
-/// \author	Peter Barotsch
-/// \brief	Implementation of the Entity class
-
+////////////////////////////////////////////////////////////////////////////////
+/// \file	C:\Users\pbartosch_sa\Documents\Visual Studio 2012\Projects\
+/// 		PBJgame\src\pbj\scene\entity.cpp
+///
+/// \brief	Implements the entity class.
+////////////////////////////////////////////////////////////////////////////////
 #ifndef ENTITY_H_
 #include "pbj/scene/entity.h"
 #endif
@@ -31,11 +12,25 @@ using namespace pbj;
 using namespace pbj::scene;
 
 ////////////////////////////////////////////////////////////////////////////////
+/// \fn	Entity::Entity()
+///
+/// \brief	Default constructor.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+////////////////////////////////////////////////////////////////////////////////
 Entity::Entity()
 {
 	_initialized = false;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	Entity::~Entity()
+///
+/// \brief	Destructor.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
 ////////////////////////////////////////////////////////////////////////////////
 Entity::~Entity()
 {
@@ -47,17 +42,32 @@ Entity::~Entity()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+/// \fn	void Entity::init()
+///
+/// \brief	Initialises this object.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+////////////////////////////////////////////////////////////////////////////////
 void Entity::init()
 {
 	_batcherTask.n_indices = 0;
 	_transform = Transform();
 	_transformCallbackId = U32(-1);
+	///< An enum constant representing the material callback identifier option
 	_materialCallbackId = U32(-1);
 	_mesh = 0;
 	_material = 0;
 	_initialized = true;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	void Entity::destroy()
+///
+/// \brief	Destroys this object.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
 ////////////////////////////////////////////////////////////////////////////////
 void Entity::destroy()
 {
@@ -84,8 +94,15 @@ void Entity::destroy()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief Returns a pointer to the \sa BatcherTask for this Entity.
-/// \return A pointer to the Entity's \sa BatcherTask.
+/// \fn	const BatcherTask* Entity::getBatcherTask()
+///
+/// \brief	Gets batcher task.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \return	null if it fails, else the batcher task.
+////////////////////////////////////////////////////////////////////////////////
 const BatcherTask* Entity::getBatcherTask()
 {
 	if(_batcherTask.n_indices != 0 && _initialized)
@@ -94,12 +111,18 @@ const BatcherTask* Entity::getBatcherTask()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief Creates the \sa BatcherTask for the Entity.
-/// \details The BatcherTask needs to be recreated everytime the entity changes
-///          something that would affect its drawing (position, shape, or 
-///          appearance).  If these do not change, then Entity does not need to
-///          recreate its BatcherTask and this function does not need to be
-///          called.
+/// \fn	void Entity::generateBatcherTask()
+///
+/// \brief	Generates a batcher task.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+/// \details	The BatcherTask needs to be recreated everytime the entity
+///				changes something that would affect its drawing (position,
+///				shape, or appearance).  If these do not change, then Entity does
+///				not need to recreate its BatcherTask and this function does not
+///				need to be called.
+////////////////////////////////////////////////////////////////////////////////
 void Entity::generateBatcherTask()
 {
 	if(!_initialized)
@@ -154,6 +177,15 @@ void Entity::generateBatcherTask()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+/// \fn	const Transform* Entity::getTransform()
+///
+/// \brief	Gets the transform.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \return	null if it fails, else the transform.
+////////////////////////////////////////////////////////////////////////////////
 const Transform* Entity::getTransform()
 {
 	if(_initialized)
@@ -162,13 +194,31 @@ const Transform* Entity::getTransform()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+/// \fn	void Entity::setTransform(Transform transform)
+///
+/// \brief	Sets a transform.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \param	transform	The transform.
+////////////////////////////////////////////////////////////////////////////////
 void Entity::setTransform(Transform transform)
 {
 	if(!_initialized)
 		init();
 	_transform = transform;
 }
-	
+
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	Mesh* Entity::getMesh()
+///
+/// \brief	Gets the mesh.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \return	null if it fails, else the mesh.
 ////////////////////////////////////////////////////////////////////////////////
 Mesh* Entity::getMesh()
 {
@@ -178,13 +228,31 @@ Mesh* Entity::getMesh()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+/// \fn	void Entity::setMesh(Mesh* mesh)
+///
+/// \brief	Sets a mesh.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \param [in,out]	mesh	If non-null, the mesh.
+////////////////////////////////////////////////////////////////////////////////
 void Entity::setMesh(Mesh* mesh)
 {
 	if(!_initialized)
 		init();
 	_mesh = mesh;
 }
-	
+
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	const EntityMaterial* Entity::getMaterial()
+///
+/// \brief	Gets the material.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \return	null if it fails, else the material.
 ////////////////////////////////////////////////////////////////////////////////
 const EntityMaterial* Entity::getMaterial()
 {
@@ -193,6 +261,15 @@ const EntityMaterial* Entity::getMaterial()
 	return 0;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// \fn	void Entity::setMaterial(EntityMaterial* material)
+///
+/// \brief	Sets a material.
+///
+/// \author	Peter Bartosch
+/// \date	2013-08-05
+///
+/// \param [in,out]	material	If non-null, the material.
 ////////////////////////////////////////////////////////////////////////////////
 void Entity::setMaterial(EntityMaterial* material)
 {
