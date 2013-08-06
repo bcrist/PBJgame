@@ -7,6 +7,12 @@
 #ifndef ENTITY_H_
 #define ENTITY_H_
 
+#ifndef PBJ_SCENE_ENTITY_H_
+#define PBJ_SCENE_ENTITY_H_
+
+#include "pbj/gfx/mesh.h"
+#include "pbj/transform.h"
+>>>>>>> ben
 #include "pbj/_pbj.h"
 #include "pbj/transform.h"
 #include "pbj/gfx/mesh.h"

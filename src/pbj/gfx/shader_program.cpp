@@ -1,23 +1,3 @@
-// Copyright (c) 2013 PBJ^2 Productions
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to
-// deal in the Software without restriction, including without limitation the
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-// sell copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
-
 ///////////////////////////////////////////////////////////////////////////////
 /// \file   pbj/gfx/shader_program.h
 /// \author Benjamin Crist
@@ -32,6 +12,12 @@ namespace pbj {
 namespace gfx {
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Constructs a shader program using a single vertex shader and a
+///         single fragment shader.
+///
+/// \param  id Describes where this shader is stored in the databse.
+/// \param  vertex_shader The vertex shader for this program.
+/// \param  fragment_shader The fragment shader for this program.
 ShaderProgram::ShaderProgram(const sw::ResourceId& id, const Shader& vertex_shader, const Shader& fragment_shader)
     : resource_id_(id),
       gl_id_(0)
@@ -62,49 +48,54 @@ ShaderProgram::ShaderProgram(const sw::ResourceId& id, const Shader& vertex_shad
     checkLinkResult_();
 }
 
-///////////////////////////////////////////////////////////////////////////////
-/// \brief
-/// \details
+/// \brief  destroys this shader program, deleting it from the GPU's memory.
 ShaderProgram::~ShaderProgram()
 {
     invalidate_();
 }
 
-///////////////////////////////////////////////////////////////////////////////
-/// \brief
-/// \details
+/// \brief  Retrieves a handle to this shader program.
+///
+/// \return A Handle<ShaderProgram>
+>>>>>>> ben
 const be::Handle<ShaderProgram>& ShaderProgram::getHandle()
 {
     return handle_;
 }
 
-///////////////////////////////////////////////////////////////////////////////
-/// \brief
-/// \details
+/// \brief  Retrieves a handle to this shader program.
+///
+/// \return A ConstHandle<ShaderProgram>
+>>>>>>> ben
 const be::ConstHandle<ShaderProgram>& ShaderProgram::getHandle() const
 {
     return handle_;
 }
 
-///////////////////////////////////////////////////////////////////////////////
-/// \brief
-/// \details
+/// \brief  Retrieves the shader program's resourceId, specifying where it is
+///         stored in the database.
+///
+/// \return The ResourceId for this shader program.
+>>>>>>> ben
 const sw::ResourceId& ShaderProgram::getId() const
 {
     return resource_id_;
 }
 
-///////////////////////////////////////////////////////////////////////////////
-/// \brief
-/// \details
+/// \brief  Retrieves the OpenGL shader program ID.
+///
+/// \return The OpenGL shader program ID.
+>>>>>>> ben
 GLuint ShaderProgram::getGlId() const
 {
     return gl_id_;
 }
 
-///////////////////////////////////////////////////////////////////////////////
-/// \brief
-/// \details
+/// \brief  Checks to make sure that the shader program has been linked
+///         successfully.
+///
+/// \details If there was a problem, the info log is retrieved, a warning
+///         is output, and the program is invalidated.
 void ShaderProgram::checkLinkResult_()
 {
     GLint result = GL_FALSE;
@@ -130,9 +121,7 @@ void ShaderProgram::checkLinkResult_()
     }
 }
 
-///////////////////////////////////////////////////////////////////////////////
-/// \brief
-/// \details
+/// \brief  Invalidates this shader program, deleting it from the GPU's memory.
 void ShaderProgram::invalidate_()
 {
     if (gl_id_ != 0)
