@@ -1,23 +1,3 @@
-// Copyright (c) 2013 PBJ^2 Productions
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to
-// deal in the Software without restriction, including without limitation the
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-// sell copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
-
 #include "pbj/input_controller.h"
 
 namespace pbj {
@@ -34,33 +14,35 @@ I32 InputController::_leftMods = 0;
 I32 InputController::_rightMods = 0;
 I32 InputController::_middleMods = 0;
 
-InputController::keyAllListeners InputController::_keyAllListeners = keyAllListeners();
-InputController::keyListeners InputController::_keyDownListeners = keyListeners();
-InputController::keyListeners InputController::_keyHeldListeners = keyListeners();
-InputController::keyListeners InputController::_keyUpListeners = keyListeners();
+InputController::keyAllListeners InputController::_keyAllListeners;
+InputController::keyListeners InputController::_keyDownListeners;
+InputController::keyListeners InputController::_keyHeldListeners;
+InputController::keyListeners InputController::_keyUpListeners;
 
-InputController::scrollListeners InputController::_scrollListeners = scrollListeners();
+InputController::scrollListeners InputController::_scrollListeners;
 
-InputController::mouseMotionListeners InputController::_mouseMotionListeners = mouseMotionListeners();
-InputController::dragListeners InputController::_leftDragListeners = dragListeners();
-InputController::dragListeners InputController::_rightDragListeners = dragListeners();
-InputController::dragListeners InputController::_middleDragListeners = dragListeners();
+InputController::mouseMotionListeners InputController::_mouseMotionListeners;
+InputController::dragListeners InputController::_leftDragListeners;
+InputController::dragListeners InputController::_rightDragListeners;
+InputController::dragListeners InputController::_middleDragListeners;
 
-InputController::mouseButtonAnyListeners InputController::_mouseButtonAnyListeners = mouseButtonAnyListeners();
-InputController::mouseButtonListeners InputController::_leftButtonClickListeners = mouseButtonListeners();
-InputController::mouseButtonListeners InputController::_leftButtonDoubleClickListeners = mouseButtonListeners();
-InputController::mouseButtonListeners InputController::_leftButtonDownListeners = mouseButtonListeners();
-InputController::mouseButtonListeners InputController::_leftButtonUpListeners = mouseButtonListeners();
+InputController::mouseButtonAnyListeners InputController::_mouseButtonAnyListeners;
+InputController::mouseButtonListeners InputController::_leftButtonClickListeners;
+InputController::mouseButtonListeners InputController::_leftButtonDoubleClickListeners;
+InputController::mouseButtonListeners InputController::_leftButtonDownListeners;
+InputController::mouseButtonListeners InputController::_leftButtonUpListeners;
 
-InputController::mouseButtonListeners InputController::_rightButtonClickListeners = mouseButtonListeners();
-InputController::mouseButtonListeners InputController::_rightButtonDownListeners = mouseButtonListeners();
-InputController::mouseButtonListeners InputController::_rightButtonUpListeners = mouseButtonListeners();
+InputController::mouseButtonListeners InputController::_rightButtonClickListeners;
+InputController::mouseButtonListeners InputController::_rightButtonDownListeners;
+InputController::mouseButtonListeners InputController::_rightButtonUpListeners;
 
-InputController::mouseButtonListeners InputController::_middleButtonClickListeners = mouseButtonListeners();
-InputController::mouseButtonListeners InputController::_middleButtonDownListeners = mouseButtonListeners();
-InputController::mouseButtonListeners InputController::_middleButtonUpListeners = mouseButtonListeners();
+InputController::mouseButtonListeners InputController::_middleButtonClickListeners;
+InputController::mouseButtonListeners InputController::_middleButtonDownListeners;
+InputController::mouseButtonListeners InputController::_middleButtonUpListeners;
 
-InputController::charListeners InputController::_charListeners = charListeners();
+InputController::charListeners InputController::_charListeners;
+
+U32 InputController::_next_listener_id = 0;
 ///////////////////////////////////////////////////////////////////////////////
 void InputController::init(GLFWwindow* win)
 {
@@ -139,7 +121,7 @@ void InputController::raiseMouseButtonEvent(GLFWwindow* win, I32 button, I32 act
 	for(mouseButtonAnyListeners::iterator it=_mouseButtonAnyListeners.begin();
 		it!=_mouseButtonAnyListeners.end();
 		it++)
-		(*it)(button, action, mods);
+		it->second(button, action, mods);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -152,7 +134,7 @@ void InputController::raiseMouseMotionEvent(GLFWwindow* win, F64 x, F64 y)
 	for(mouseMotionListeners::iterator it=_mouseMotionListeners.begin();
 		it!=_mouseMotionListeners.end();
 		it++)
-		(*it)(x, y);
+		it->second(x, y);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -161,7 +143,7 @@ void InputController::raiseScrollEvent(GLFWwindow* win, F64 xOffset, F64 yOffset
 	for(scrollListeners::iterator it=_scrollListeners.begin();
 		it!=_scrollListeners.end();
 		it++)
-		(*it)(xOffset, yOffset);
+		it->second(xOffset, yOffset);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -184,7 +166,7 @@ void InputController::raiseKeyboardEvent(GLFWwindow*, I32 key, I32 scancode, I32
 	for(keyAllListeners::iterator it=_keyAllListeners.begin();
 		it!=_keyAllListeners.end();
 		it++)
-		(*it)(key, scancode, action, mods);
+		it->second(key, scancode, action, mods);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -198,7 +180,7 @@ void InputController::raiseKeyDownEvent(I32 key, I32 scancode, I32 mods)
 	for(keyListeners::iterator it=_keyDownListeners.begin();
 		it!=_keyDownListeners.end();
 		it++)
-		(*it)(key, scancode, mods);
+		it->second(key, scancode, mods);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -207,7 +189,7 @@ void InputController::raiseKeyHeldEvent(I32 key, I32 scancode, I32 mods)
 	for(keyListeners::iterator it=_keyHeldListeners.begin();
 		it!=_keyHeldListeners.end();
 		it++)
-		(*it)(key, scancode, mods);
+		it->second(key, scancode, mods);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -216,7 +198,7 @@ void InputController::raiseKeyUpEvent(I32 key, I32 scancode, I32 mods)
 	for(keyListeners::iterator it=_keyUpListeners.begin();
 		it!=_keyUpListeners.end();
 		it++)
-		(*it)(key, scancode, mods);
+		it->second(key, scancode, mods);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -225,7 +207,7 @@ void InputController::raiseMouseMotionLeftHeldEvent(F64 x, F64 y, I32 mods)
 	for(dragListeners::iterator it=_leftDragListeners.begin();
 		it!=_leftDragListeners.end();
 		it++)
-		(*it)(x, y, mods);
+		it->second(x, y, mods);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -234,7 +216,7 @@ void InputController::raiseMouseMotionRightHeldEvent(F64 x, F64 y, I32 mods)
 	for(dragListeners::iterator it=_rightDragListeners.begin();
 		it!=_rightDragListeners.end();
 		it++)
-		(*it)(x, y, mods);
+		it->second(x, y, mods);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -243,7 +225,7 @@ void InputController::raiseMouseMotionMiddleHeldEvent(F64 x, F64 y, I32 mods)
 	for(dragListeners::iterator it=_middleDragListeners.begin();
 		it!=_middleDragListeners.end();
 		it++)
-		(*it)(x, y, mods);
+		it->second(x, y, mods);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -252,7 +234,7 @@ void InputController::raiseMouseLeftClickEvent(I32 mods)
 	for(mouseButtonListeners::iterator it=_leftButtonClickListeners.begin();
 		it!=_leftButtonClickListeners.end();
 		it++)
-		(*it)(mods);
+		it->second(mods);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -261,7 +243,7 @@ void InputController::raiseMouseLeftDoubleClickEvent(I32 mods)
 	for(mouseButtonListeners::iterator it=_leftButtonDoubleClickListeners.begin();
 		it!=_leftButtonDoubleClickListeners.end();
 		it++)
-		(*it)(mods);
+		it->second(mods);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -270,7 +252,7 @@ void InputController::raiseMouseLeftDownEvent(I32 mods)
 	for(mouseButtonListeners::iterator it=_leftButtonDownListeners.begin();
 		it!=_leftButtonDownListeners.end();
 		it++)
-		(*it)(mods);
+		it->second(mods);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -279,7 +261,7 @@ void InputController::raiseMouseLeftUpEvent(I32 mods)
 	for(mouseButtonListeners::iterator it=_leftButtonUpListeners.begin();
 		it!=_leftButtonUpListeners.end();
 		it++)
-		(*it)(mods);
+		it->second(mods);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -288,7 +270,7 @@ void InputController::raiseMouseRightClickEvent(I32 mods)
 	for(mouseButtonListeners::iterator it=_rightButtonClickListeners.begin();
 		it!=_rightButtonClickListeners.end();
 		it++)
-		(*it)(mods);
+		it->second(mods);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -297,7 +279,7 @@ void InputController::raiseMouseRightDownEvent(I32 mods)
 	for(mouseButtonListeners::iterator it=_rightButtonDownListeners.begin();
 		it!=_rightButtonDownListeners.end();
 		it++)
-		(*it)(mods);
+		it->second(mods);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -306,7 +288,7 @@ void InputController::raiseMouseRightUpEvent(I32 mods)
 	for(mouseButtonListeners::iterator it=_rightButtonUpListeners.begin();
 		it!=_rightButtonUpListeners.end();
 		it++)
-		(*it)(mods);
+		it->second(mods);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -315,7 +297,7 @@ void InputController::raiseMouseMiddleClickEvent(I32 mods)
 	for(mouseButtonListeners::iterator it=_middleButtonClickListeners.begin();
 		it!=_middleButtonClickListeners.end();
 		it++)
-		(*it)(mods);
+		it->second(mods);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -324,7 +306,7 @@ void InputController::raiseMouseMiddleDownEvent(I32 mods)
 	for(mouseButtonListeners::iterator it=_middleButtonDownListeners.begin();
 		it!=_middleButtonDownListeners.end();
 		it++)
-		(*it)(mods);
+		it->second(mods);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -333,140 +315,515 @@ void InputController::raiseMouseMiddleUpEvent(I32 mods)
 	for(mouseButtonListeners::iterator it=_middleButtonUpListeners.begin();
 		it!=_middleButtonUpListeners.end();
 		it++)
-		(*it)(mods);
+		it->second(mods);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InputController::registerKeyAllListener(keyAllListener l)
+U32 InputController::registerKeyAllListener(keyAllListener l)
 {
-	_keyAllListeners.push_back(l);
+    U32 id = _next_listener_id++;
+	_keyAllListeners.push_back(std::make_pair(id, l));
+    return id;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InputController::registerKeyDownListener(keyListener l)
+U32 InputController::registerKeyDownListener(keyListener l)
 {
-	_keyDownListeners.push_back(l);
+    U32 id = _next_listener_id++;
+	_keyDownListeners.push_back(std::make_pair(id, l));
+    return id;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InputController::registerKeyHeldListener(keyListener l)
+U32 InputController::registerKeyHeldListener(keyListener l)
 {
-	_keyHeldListeners.push_back(l);
+    U32 id = _next_listener_id++;
+	_keyHeldListeners.push_back(std::make_pair(id, l));
+    return id;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InputController::registerKeyUpListener(keyListener l)
+U32 InputController::registerKeyUpListener(keyListener l)
 {
-	_keyUpListeners.push_back(l);
+    U32 id = _next_listener_id++;
+	_keyUpListeners.push_back(std::make_pair(id, l));
+    return id;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InputController::registerMouseButtonAnyListener(mouseButtonAnyListener l)
+U32 InputController::registerMouseButtonAnyListener(mouseButtonAnyListener l)
 {
-	_mouseButtonAnyListeners.push_back(l);
+    U32 id = _next_listener_id++;
+	_mouseButtonAnyListeners.push_back(std::make_pair(id, l));
+    return id;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InputController::registerMouseLeftClickListener(mouseButtonListener l)
+U32 InputController::registerMouseLeftClickListener(mouseButtonListener l)
 {
-	_leftButtonClickListeners.push_back(l);
+    U32 id = _next_listener_id++;
+	_leftButtonClickListeners.push_back(std::make_pair(id, l));
+    return id;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InputController::registerMouseLeftDoubleClickListener(mouseButtonListener l)
+U32 InputController::registerMouseLeftDoubleClickListener(mouseButtonListener l)
 {
-	_leftButtonDoubleClickListeners.push_back(l);
+    U32 id = _next_listener_id++;
+	_leftButtonDoubleClickListeners.push_back(std::make_pair(id, l));
+    return id;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InputController::registerMouseLeftDownListener(mouseButtonListener l)
+U32 InputController::registerMouseLeftDownListener(mouseButtonListener l)
 {
-	_leftButtonDownListeners.push_back(l);
+    U32 id = _next_listener_id++;
+	_leftButtonDownListeners.push_back(std::make_pair(id, l));
+    return id;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InputController::registerMouseLeftUpListener(mouseButtonListener l)
+U32 InputController::registerMouseLeftUpListener(mouseButtonListener l)
 {
-	_leftButtonUpListeners.push_back(l);
+    U32 id = _next_listener_id++;
+	_leftButtonUpListeners.push_back(std::make_pair(id, l));
+    return id;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InputController::registerMouseRightClickListener(mouseButtonListener l)
+U32 InputController::registerMouseRightClickListener(mouseButtonListener l)
 {
-	_rightButtonClickListeners.push_back(l);
+    U32 id = _next_listener_id++;
+	_rightButtonClickListeners.push_back(std::make_pair(id, l));
+    return id;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InputController::registerMouseRightDownListener(mouseButtonListener l)
+U32 InputController::registerMouseRightDownListener(mouseButtonListener l)
 {
-	_rightButtonDownListeners.push_back(l);
+    U32 id = _next_listener_id++;
+	_rightButtonDownListeners.push_back(std::make_pair(id, l));
+    return id;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InputController::registerMouseRightUpListener(mouseButtonListener l)
+U32 InputController::registerMouseRightUpListener(mouseButtonListener l)
 {
-	_rightButtonUpListeners.push_back(l);
+    U32 id = _next_listener_id++;
+	_rightButtonUpListeners.push_back(std::make_pair(id, l));
+    return id;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InputController::registerMouseMiddleClickListener(mouseButtonListener l)
+U32 InputController::registerMouseMiddleClickListener(mouseButtonListener l)
 {
-	_middleButtonClickListeners.push_back(l);
+    U32 id = _next_listener_id++;
+	_middleButtonClickListeners.push_back(std::make_pair(id, l));
+    return id;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InputController::registerMouseMiddleDownListener(mouseButtonListener l)
+U32 InputController::registerMouseMiddleDownListener(mouseButtonListener l)
 {
-	_middleButtonDownListeners.push_back(l);
+    U32 id = _next_listener_id++;
+	_middleButtonDownListeners.push_back(std::make_pair(id, l));
+    return id;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InputController::registerMouseMiddleUpListener(mouseButtonListener l)
+U32 InputController::registerMouseMiddleUpListener(mouseButtonListener l)
 {
-	_middleButtonUpListeners.push_back(l);
+    U32 id = _next_listener_id++;
+	_middleButtonUpListeners.push_back(std::make_pair(id, l));
+    return id;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InputController::registerMouseMotionListener(mouseMotionListener l)
+U32 InputController::registerMouseMotionListener(mouseMotionListener l)
 {
-	_mouseMotionListeners.push_back(l);
+    U32 id = _next_listener_id++;
+	_mouseMotionListeners.push_back(std::make_pair(id, l));
+    return id;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InputController::registerMouseMotionLeftHeldListener(dragListener l)
+U32 InputController::registerMouseMotionLeftHeldListener(dragListener l)
 {
-	_leftDragListeners.push_back(l);
+    U32 id = _next_listener_id++;
+	_leftDragListeners.push_back(std::make_pair(id, l));
+    return id;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InputController::registerMouseMotionRightHeldListener(dragListener l)
+U32 InputController::registerMouseMotionRightHeldListener(dragListener l)
 {
-	_rightDragListeners.push_back(l);
+    U32 id = _next_listener_id++;
+	_rightDragListeners.push_back(std::make_pair(id, l));
+    return id;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InputController::registerMouseMotionMiddleHeldListener(dragListener l)
+U32 InputController::registerMouseMotionMiddleHeldListener(dragListener l)
 {
-	_middleDragListeners.push_back(l);
+    U32 id = _next_listener_id++;
+	_middleDragListeners.push_back(std::make_pair(id, l));
+    return id;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InputController::registerScrollListener(scrollListener l)
+U32 InputController::registerScrollListener(scrollListener l)
 {
-	_scrollListeners.push_back(l);
+    U32 id = _next_listener_id++;
+	_scrollListeners.push_back(std::make_pair(id, l));
+    return id;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void InputController::registerCharInputListener(charListener l)
+U32 InputController::registerCharInputListener(charListener l)
 {
-	_charListeners.push_back(l);
+    U32 id = _next_listener_id++;
+	_charListeners.push_back(std::make_pair(id, l));
+    return id;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::cancelKeyAllListener(U32 id)
+{
+    auto& c = _keyAllListeners;
+    for (auto i = c.begin(), end = c.end(); i != end; ++i)
+    {
+        if (i->first == id)
+        {
+            c.erase(i);
+            break;
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::cancelKeyDownListener(U32 id)
+{
+    auto& c = _keyDownListeners;
+    for (auto i = c.begin(), end = c.end(); i != end; ++i)
+    {
+        if (i->first == id)
+        {
+            c.erase(i);
+            break;
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::cancelKeyHeldListener(U32 id)
+{
+    auto& c = _keyHeldListeners;
+    for (auto i = c.begin(), end = c.end(); i != end; ++i)
+    {
+        if (i->first == id)
+        {
+            c.erase(i);
+            break;
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::cancelKeyUpListener(U32 id)
+{
+    auto& c = _keyUpListeners;
+    for (auto i = c.begin(), end = c.end(); i != end; ++i)
+    {
+        if (i->first == id)
+        {
+            c.erase(i);
+            break;
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::cancelMouseButtonAnyListener(U32 id)
+{
+    auto& c = _mouseButtonAnyListeners;
+    for (auto i = c.begin(), end = c.end(); i != end; ++i)
+    {
+        if (i->first == id)
+        {
+            c.erase(i);
+            break;
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::cancelMouseLeftClickListener(U32 id)
+{
+    auto& c = _leftButtonClickListeners;
+    for (auto i = c.begin(), end = c.end(); i != end; ++i)
+    {
+        if (i->first == id)
+        {
+            c.erase(i);
+            break;
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::cancelMouseLeftDoubleClickListener(U32 id)
+{
+    auto& c = _leftButtonDoubleClickListeners;
+    for (auto i = c.begin(), end = c.end(); i != end; ++i)
+    {
+        if (i->first == id)
+        {
+            c.erase(i);
+            break;
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::cancelMouseLeftDownListener(U32 id)
+{
+    auto& c = _leftButtonDownListeners;
+    for (auto i = c.begin(), end = c.end(); i != end; ++i)
+    {
+        if (i->first == id)
+        {
+            c.erase(i);
+            break;
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::cancelMouseLeftUpListener(U32 id)
+{
+    auto& c = _leftButtonUpListeners;
+    for (auto i = c.begin(), end = c.end(); i != end; ++i)
+    {
+        if (i->first == id)
+        {
+            c.erase(i);
+            break;
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::cancelMouseRightClickListener(U32 id)
+{
+    auto& c = _rightButtonClickListeners;
+    for (auto i = c.begin(), end = c.end(); i != end; ++i)
+    {
+        if (i->first == id)
+        {
+            c.erase(i);
+            break;
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::cancelMouseRightDownListener(U32 id)
+{
+    auto& c = _rightButtonDownListeners;
+    for (auto i = c.begin(), end = c.end(); i != end; ++i)
+    {
+        if (i->first == id)
+        {
+            c.erase(i);
+            break;
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::cancelMouseRightUpListener(U32 id)
+{
+    auto& c = _rightButtonUpListeners;
+    for (auto i = c.begin(), end = c.end(); i != end; ++i)
+    {
+        if (i->first == id)
+        {
+            c.erase(i);
+            break;
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::cancelMouseMiddleClickListener(U32 id)
+{
+    auto& c = _middleButtonClickListeners;
+    for (auto i = c.begin(), end = c.end(); i != end; ++i)
+    {
+        if (i->first == id)
+        {
+            c.erase(i);
+            break;
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::cancelMouseMiddleDownListener(U32 id)
+{
+    auto& c = _middleButtonDownListeners;
+    for (auto i = c.begin(), end = c.end(); i != end; ++i)
+    {
+        if (i->first == id)
+        {
+            c.erase(i);
+            break;
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::cancelMouseMiddleUpListener(U32 id)
+{
+    auto& c = _middleButtonUpListeners;
+    for (auto i = c.begin(), end = c.end(); i != end; ++i)
+    {
+        if (i->first == id)
+        {
+            c.erase(i);
+            break;
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::cancelMouseMotionListener(U32 id)
+{
+    auto& c = _mouseMotionListeners;
+    for (auto i = c.begin(), end = c.end(); i != end; ++i)
+    {
+        if (i->first == id)
+        {
+            c.erase(i);
+            break;
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::cancelMouseMotionLeftHeldListener(U32 id)
+{
+    auto& c = _leftDragListeners;
+    for (auto i = c.begin(), end = c.end(); i != end; ++i)
+    {
+        if (i->first == id)
+        {
+            c.erase(i);
+            break;
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::cancelMouseMotionRightHeldListener(U32 id)
+{
+    auto& c = _rightDragListeners;
+    for (auto i = c.begin(), end = c.end(); i != end; ++i)
+    {
+        if (i->first == id)
+        {
+            c.erase(i);
+            break;
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::cancelMouseMotionMiddleHeldListener(U32 id)
+{
+    auto& c = _middleDragListeners;
+    for (auto i = c.begin(), end = c.end(); i != end; ++i)
+    {
+        if (i->first == id)
+        {
+            c.erase(i);
+            break;
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::cancelScrollListener(U32 id)
+{
+    auto& c = _scrollListeners;
+    for (auto i = c.begin(), end = c.end(); i != end; ++i)
+    {
+        if (i->first == id)
+        {
+            c.erase(i);
+            break;
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void InputController::cancelCharInputListener(U32 id)
+{
+    auto& c = _charListeners;
+    for (auto i = c.begin(), end = c.end(); i != end; ++i)
+    {
+        if (i->first == id)
+        {
+            c.erase(i);
+            break;
+        }
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void InputController::destroy()
 {
-//	if(_window != 0)
-//		delete _window;
+    _initialized = false;
+    _window = 0;
+
+    _leftDown = false;
+    _rightDown = false;
+    _middleDown = false;
+    _leftClicked = false;
+
+    _leftMods = 0;
+    _rightMods = 0;
+    _middleMods = 0;
+
+    _keyAllListeners.clear();
+    _keyDownListeners.clear();
+    _keyHeldListeners.clear();
+    _keyUpListeners.clear();
+
+    _scrollListeners.clear();
+
+    _mouseMotionListeners.clear();
+    _leftDragListeners.clear();
+    _rightDragListeners.clear();
+    _middleDragListeners.clear();
+
+    _mouseButtonAnyListeners.clear();
+    _leftButtonClickListeners.clear();
+    _leftButtonDoubleClickListeners.clear();
+    _leftButtonDownListeners.clear();
+    _leftButtonUpListeners.clear();
+
+    _rightButtonClickListeners.clear();
+    _rightButtonDownListeners.clear();
+    _rightButtonUpListeners.clear();
+
+    _middleButtonClickListeners.clear();
+    _middleButtonDownListeners.clear();
+    _middleButtonUpListeners.clear();
+
+    _charListeners.clear();
+
+    _next_listener_id = 0;
 }
 
 } // namespace pbj

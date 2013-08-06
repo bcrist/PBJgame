@@ -1,23 +1,3 @@
-// Copyright (c) 2013 PBJ^2 Productions
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to
-// deal in the Software without restriction, including without limitation the
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-// sell copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
-
 ///////////////////////////////////////////////////////////////////////////////
 /// \file   pbj/gfx/texture_font.h
 /// \author Benjamin Crist
@@ -41,7 +21,7 @@ class TextureFont
 
 public:
     template <typename Iterator>
-    TextureFont(const sw::ResourceId& id, const be::ConstHandle<Texture>& texture, const ivec2& texture_size, U16 line_height, U16 baseline, const Iterator& chars_begin, const Iterator& chars_end);
+    TextureFont(const sw::ResourceId& id, const be::ConstHandle<Texture>& texture, F32 cap_height, const Iterator& chars_begin, const Iterator& chars_end);
     ~TextureFont();
 
     const be::Handle<TextureFont>& getHandle();
@@ -49,7 +29,7 @@ public:
 
     const sw::ResourceId& getId() const;
 
-    const ivec2& getTextureSize() const;
+    F32 getCapHeight() const;
 
     const TextureFontCharacter& operator[](U32 codepoint) const;
 
@@ -63,10 +43,7 @@ private:
     sw::ResourceId texture_id_;
     be::ConstHandle<Texture> texture_;
 
-    ivec2 texture_size_;
-    
-    U16 line_height_;
-	unsigned short baseline_;
+    F32 cap_height_;
 
     static const size_t base_chars_size_ = 128;
     TextureFontCharacter default_char_;

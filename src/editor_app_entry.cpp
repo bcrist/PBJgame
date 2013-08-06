@@ -1,23 +1,3 @@
-// Copyright (c) 2013 PBJ^2 Productions
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to
-// deal in the Software without restriction, including without limitation the
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-// sell copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
-
 ///////////////////////////////////////////////////////////////////////////////
 /// \file   editor_app_entry.cpp
 /// \author Benjamin Crist
@@ -31,6 +11,7 @@
 #pragma comment (lib, "opengl32.lib")
 #pragma comment (lib, "openal32.lib")
 #pragma comment (lib, "alut.lib")
+#pragma comment (lib, "box2d.lib")
 #ifdef DEBUG
 #pragma comment (lib, "glew32sd.lib")
 #pragma comment (lib, "glfw3sd.lib")
@@ -49,11 +30,7 @@
 #else
 
 #include "pbj/engine.h"
-
-#include "pbj/gfx/built_ins.h"
-#include "pbj/gfx/texture_font_text.h"
-#include "pbj/gfx/shader_program.h"
-#include "pbj/gfx/built_ins.h"
+#include "pbj/editor.h"
 
 #include <iostream>
 #include <fstream>
@@ -75,7 +52,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, INT)
 
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief  Application entry point
+///
 /// \details Parses any command line arguments, then initializes game engine.
+///
+/// \param  argc The number of command line arguments.
+/// \param  argv The command line arguments.
+/// \return A status code indicating to the OS that the program was successful.
 int main(int argc, char* argv[])
 {
 #ifdef BE_CRT_BUILD
@@ -114,39 +96,10 @@ int main(int argc, char* argv[])
    }
 #endif
 
-   // Initialize game engine
-   pbj::Engine engine;
-
-   pbj::gfx::TextureFontText text(engine.getBuiltIns().getTextureFont(pbj::Id("TextureFont.default")), "ABCDEFG");
-   pbj::mat4 transform = glm::ortho(0.0f, 320.0f, -120.0f, 120.0f);
-
-   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-   glEnable(GL_BLEND);
-
-   while (true)
-    {
-        glfwPollEvents();
-
-        pbj::Window* wnd = engine.getWindow();
-
-        if (!wnd || wnd->isClosePending())
-            break;
-
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
-        text.draw(transform);
-
-        glfwSwapBuffers(wnd->getGlfwHandle());
-
-        GLenum gl_error;
-        while ((gl_error = glGetError()) != GL_NO_ERROR)
-        {
-            PBJ_LOG(pbj::VWarning) << "OpenGL error while rendering frame!" << PBJ_LOG_NL
-                                   << "Error Code: " << gl_error << PBJ_LOG_NL
-                                   << "     Error: " << pbj::getGlErrorString(gl_error) << PBJ_LOG_END;
-        }
-    }
-};
+    // Initialize game engine
+    pbj::Engine engine;
+    pbj::Editor editor;
+    editor.run();
+}
 
 #endif

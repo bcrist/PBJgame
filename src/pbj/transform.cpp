@@ -1,23 +1,3 @@
-// Copyright (c) 2013 PBJ^2 Productions
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to
-// deal in the Software without restriction, including without limitation the
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-// sell copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
-
 ///////////////////////////////////////////////////////////////////////////////
 /// \file   pbj/transform.cpp
 /// \author Peter Bartosch
@@ -52,6 +32,10 @@ Transform::~Transform()
 void Transform::rotate(F32 angle, const vec3& axis)
 {
 	_rotation = glm::rotate(_rotation, angle, axis);
+	/*
+	if(_owner->rigidbody!=0)
+		//convert y rotation to euler angles and set the rigidbody accordingly
+	*/
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -64,6 +48,10 @@ void Transform::move(F32 dx, F32 dy, F32 dz)
 	vec3 v = _position.xyz;
 	mat4 m = glm::translate(mat4(), v);
 	_position = m * vec4(dx, dy, dz, 1.0f);
+	/*
+	if(_owner->rigidbody!=0)
+		_owner->rigidbody->moveBody(_position.x, _position.y);
+	*/
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -77,7 +65,7 @@ void Transform::move(const vec3& deltas)
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief The position of the Transform.
 /// \return The position of the Transform as a glm::vec3 (x,y,z).
-glm::vec3 Transform::getPosition() const
+const vec3& Transform::getPosition() const
 {
 	return _position.xyz;
 }
@@ -90,6 +78,10 @@ glm::vec3 Transform::getPosition() const
 void Transform::setPosition(F32 x, F32 y, F32 z)
 {
 	_position = vec4(x, y, z, 1.0f);
+	/*
+	if(_owner->rigidbody!=0)
+		_owner->rigidbody->moveBody(_position.x, _position.y);
+	*/
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -108,7 +100,7 @@ void Transform::setPosition(const vec3& pos)
 /// \details Keep in mind that the returned angles are not necessarily
 ///          equivilent to Euler angles and that further conversion is
 ///          necessary to get those angle values.
-glm::vec4 Transform::getAngleAxis() const
+const vec4& Transform::getAngleAxis() const
 {
 	F32 angle = glm::angle(_rotation);
 	vec3 axis = glm::axis(_rotation);
@@ -124,6 +116,10 @@ glm::vec4 Transform::getAngleAxis() const
 void Transform::setAngleAxis(F32 angle, F32 x, F32 y, F32 z)
 {
 	_rotation = glm::angleAxis(angle, x, y, z);
+	/*
+	if(_owner->rigidbody!=0)
+		//convert y rotation to euler angles and set the rigidbody accordingly
+	*/
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -140,7 +136,7 @@ void Transform::setAngleAxis(F32 angle, const glm::vec3& axis)
 /// \return A quaternion representing the rotation of the Transform.
 /// \details I have no idea why we might want to get the rotation is this manner
 ///          but it seems like a good idea.  So here it is.
-glm::quat Transform::getRotation() const
+const quat& Transform::getRotation() const
 {
 	return _rotation;
 }
@@ -148,7 +144,7 @@ glm::quat Transform::getRotation() const
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief Get the scale of the Transform.
 /// \return A glm::vec3 representing the scale along the x-, y-, and z- axis.
-glm::vec3 Transform::getScale() const
+const vec3& Transform::getScale() const
 {
 	return _scale;
 }
@@ -176,7 +172,7 @@ void Transform::setScale(const vec3& scale)
 /// \returns The Transform as a 4x4 matrix.
 /// \details Since our call require a transformation matrix, this will provide
 ///          one.
-glm::mat4 Transform::getMatrix() const
+mat4 Transform::getMatrix() const
 {
 	mat4 ret = mat4();
 	vec3 v = _position.xyz;
@@ -186,4 +182,10 @@ glm::mat4 Transform::getMatrix() const
 	return ret;
 }
 
+/*
+Entity* Transform::getOwner()
+{
+	return _owner;
+}
+*/
 } // namespace pbj

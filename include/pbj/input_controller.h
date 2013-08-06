@@ -1,23 +1,3 @@
-// Copyright (c) 2013 PBJ^2 Productions
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to
-// deal in the Software without restriction, including without limitation the
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-// sell copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
-
 ///////////////////////////////////////////////////////////////////////////////
 /// \file   pbj/input_controller.h
 /// \author Peter Bartosch
@@ -37,7 +17,7 @@
 #define PBJ_INPUT_CONTROLLER_H_
 
 #include <functional>
-#include <deque>
+#include <vector>
 
 //I think I'm doing the include wrong here.  At this point using it to get off
 //intellisense's radar.
@@ -95,51 +75,71 @@ public:
 	static void raiseKeyUpEvent(I32, I32, I32); ///< Event for key being released
 	
 	//Registration methods
-	static void registerKeyAllListener(keyAllListener);
-	static void registerKeyDownListener(keyListener);
-	static void registerKeyHeldListener(keyListener);
-	static void registerKeyUpListener(keyListener);
+	static U32 registerKeyAllListener(keyAllListener);
+	static U32 registerKeyDownListener(keyListener);
+	static U32 registerKeyHeldListener(keyListener);
+	static U32 registerKeyUpListener(keyListener);
 
-	static void registerMouseButtonAnyListener(mouseButtonAnyListener);
-	static void registerMouseLeftClickListener(mouseButtonListener);
-	static void registerMouseLeftDoubleClickListener(mouseButtonListener);
-	static void registerMouseLeftDownListener(mouseButtonListener);
-	static void registerMouseLeftUpListener(mouseButtonListener);
+	static U32 registerMouseButtonAnyListener(mouseButtonAnyListener);
+	static U32 registerMouseLeftClickListener(mouseButtonListener);
+	static U32 registerMouseLeftDoubleClickListener(mouseButtonListener);
+	static U32 registerMouseLeftDownListener(mouseButtonListener);
+	static U32 registerMouseLeftUpListener(mouseButtonListener);
 
-	static void registerMouseRightClickListener(mouseButtonListener);
-	static void registerMouseRightDownListener(mouseButtonListener);
-	static void registerMouseRightUpListener(mouseButtonListener);
+	static U32 registerMouseRightClickListener(mouseButtonListener);
+	static U32 registerMouseRightDownListener(mouseButtonListener);
+	static U32 registerMouseRightUpListener(mouseButtonListener);
 
-	static void registerMouseMiddleClickListener(mouseButtonListener);
-	static void registerMouseMiddleDownListener(mouseButtonListener);
-	static void registerMouseMiddleUpListener(mouseButtonListener);
+	static U32 registerMouseMiddleClickListener(mouseButtonListener);
+	static U32 registerMouseMiddleDownListener(mouseButtonListener);
+	static U32 registerMouseMiddleUpListener(mouseButtonListener);
 
-	static void registerMouseMotionListener(mouseMotionListener);
-	static void registerMouseMotionLeftHeldListener(dragListener);
-	static void registerMouseMotionRightHeldListener(dragListener);
-	static void registerMouseMotionMiddleHeldListener(dragListener);
+	static U32 registerMouseMotionListener(mouseMotionListener);
+	static U32 registerMouseMotionLeftHeldListener(dragListener);
+	static U32 registerMouseMotionRightHeldListener(dragListener);
+	static U32 registerMouseMotionMiddleHeldListener(dragListener);
 
 	//Scroll listener
-	static void registerScrollListener(scrollListener);
+	static U32 registerScrollListener(scrollListener);
 
 	//Char Input Listener
-	static void registerCharInputListener(charListener);
+	static U32 registerCharInputListener(charListener);
+
+    // Registration cancellation methods
+    static void cancelKeyAllListener(U32 id);
+	static void cancelKeyDownListener(U32 id);
+	static void cancelKeyHeldListener(U32 id);
+	static void cancelKeyUpListener(U32 id);
+	static void cancelMouseButtonAnyListener(U32 id);
+	static void cancelMouseLeftClickListener(U32 id);
+	static void cancelMouseLeftDoubleClickListener(U32 id);
+	static void cancelMouseLeftDownListener(U32 id);
+	static void cancelMouseLeftUpListener(U32 id);
+	static void cancelMouseRightClickListener(U32 id);
+	static void cancelMouseRightDownListener(U32 id);
+	static void cancelMouseRightUpListener(U32 id);
+	static void cancelMouseMiddleClickListener(U32 id);
+	static void cancelMouseMiddleDownListener(U32 id);
+	static void cancelMouseMiddleUpListener(U32 id);
+	static void cancelMouseMotionListener(U32 id);
+	static void cancelMouseMotionLeftHeldListener(U32 id);
+	static void cancelMouseMotionRightHeldListener(U32 id);
+	static void cancelMouseMotionMiddleHeldListener(U32 id);
+	static void cancelScrollListener(U32 id);
+	static void cancelCharInputListener(U32 id);
+
 
 	static void destroy();
 private:
 	//placing the typedefs here to keep them out of the way
-	typedef std::deque<mouseButtonAnyListener> mouseButtonAnyListeners;
-	typedef std::deque<mouseButtonListener> mouseButtonListeners;
-	
-	typedef std::deque<mouseMotionListener> mouseMotionListeners;
-	typedef std::deque<dragListener> dragListeners;
-	
-	typedef std::deque<scrollListener> scrollListeners;
-
-	typedef std::deque<keyListener> keyListeners;
-	typedef std::deque<keyAllListener> keyAllListeners;
-
-	typedef std::deque<charListener> charListeners;
+	typedef std::vector<std::pair<U32, mouseButtonAnyListener> > mouseButtonAnyListeners;
+	typedef std::vector<std::pair<U32, mouseButtonListener> > mouseButtonListeners;
+	typedef std::vector<std::pair<U32, mouseMotionListener> > mouseMotionListeners;
+	typedef std::vector<std::pair<U32, dragListener> > dragListeners;
+	typedef std::vector<std::pair<U32, scrollListener> > scrollListeners;
+	typedef std::vector<std::pair<U32, keyListener> > keyListeners;
+	typedef std::vector<std::pair<U32, keyAllListener> > keyAllListeners;
+	typedef std::vector<std::pair<U32, charListener> > charListeners;
 
 	static bool _initialized;
 	static GLFWwindow* _window;
@@ -179,6 +179,8 @@ private:
 	static mouseButtonListeners _middleButtonUpListeners;
 
 	static charListeners _charListeners;
+
+    static U32 _next_listener_id;
 };
 
 } //namespace pbj

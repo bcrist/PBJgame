@@ -80,10 +80,10 @@
       <SubSystem>Console</SubSystem>
     </Link>
     <PostBuildEvent>
-      <Command>$(SolutionDir)script\postbuild.cmd "$(TargetPath)" "$(SolutionDir)..\stage\$(TargetFileName)"</Command>
+      <Command>"$(SolutionDir)script\postbuild.cmd" "$(TargetPath)" "$(SolutionDir)..\stage\$(TargetFileName)"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>$(SolutionDir)script\prebuild.cmd "$(SolutionDir)script\md5sum.exe" "$(SolutionDir)script\md5.txt" "$(SolutionDir)script\wget.exe" "$(SolutionDir)lib"</Command>
+      <Command>"$(SolutionDir)script\prebuild.cmd" "$(SolutionDir)script\md5sum.exe" "$(SolutionDir)script\md5.txt" "$(SolutionDir)script\wget.exe" "$(SolutionDir)lib"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Test|Win32'">
@@ -145,10 +145,14 @@
     <ClCompile Include="..\..\src\be\util\nconvert.cpp" />
     <ClCompile Include="..\..\src\be\verbosity.cpp" />
     <ClCompile Include="..\..\src\editor_app_entry.cpp" />
+    <ClCompile Include="..\..\src\gfx\entity_material.cpp" />
     <ClCompile Include="..\..\src\pbj\audio\audio_buffer.cpp" />
     <ClCompile Include="..\..\src\pbj\audio\audio_source.cpp" />
+    <ClCompile Include="..\..\src\pbj\editor.cpp" />
     <ClCompile Include="..\..\src\pbj\engine.cpp" />
+    <ClCompile Include="..\..\src\pbj\gfx\batcher.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\built_ins.cpp" />
+    <ClCompile Include="..\..\src\pbj\gfx\mesh.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\shader.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\shader_program.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\texture.cpp" />
@@ -156,8 +160,16 @@
     <ClCompile Include="..\..\src\pbj\gfx\texture_font_character.cpp" />
     <ClCompile Include="..\..\src\pbj\gfx\texture_font_text.cpp" />
     <ClCompile Include="..\..\src\pbj\input_controller.cpp" />
+    <ClCompile Include="..\..\src\pbj\scene\camera.cpp" />
+    <ClCompile Include="..\..\src\pbj\scene\scene.cpp" />
+    <ClCompile Include="..\..\src\pbj\scene\ui_button.cpp" />
     <ClCompile Include="..\..\src\pbj\scene\ui_element.cpp" />
     <ClCompile Include="..\..\src\pbj\scene\ui_image.cpp" />
+    <ClCompile Include="..\..\src\pbj\scene\ui_label.cpp" />
+    <ClCompile Include="..\..\src\pbj\scene\ui_listbox.cpp" />
+    <ClCompile Include="..\..\src\pbj\scene\ui_panel.cpp" />
+    <ClCompile Include="..\..\src\pbj\scene\ui_root.cpp" />
+    <ClCompile Include="..\..\src\pbj\sw\import.cpp" />
     <ClCompile Include="..\..\src\pbj\sw\resource_id.cpp" />
     <ClCompile Include="..\..\src\pbj\sw\sandwich.cpp" />
     <ClCompile Include="..\..\src\pbj\sw\sandwich_open.cpp" />
@@ -184,14 +196,14 @@
     <ClInclude Include="..\..\include\be\_be.h" />
     <ClInclude Include="..\..\include\pbj\audio\audio_buffer.h" />
     <ClInclude Include="..\..\include\pbj\audio\audio_source.h" />
+    <ClInclude Include="..\..\include\pbj\editor.h" />
     <ClInclude Include="..\..\include\pbj\engine.h" />
+    <ClInclude Include="..\..\include\pbj\gfx\batcher.h" />
     <ClInclude Include="..\..\include\pbj\gfx\built_ins.h" />
     <ClInclude Include="..\..\include\pbj\gfx\mesh.h" />
-    <ClInclude Include="..\..\include\pbj\gfx\mesh_instance.h" />
     <ClInclude Include="..\..\include\pbj\gfx\shader.h" />
     <ClInclude Include="..\..\include\pbj\gfx\shader_program.h" />
     <ClInclude Include="..\..\include\pbj\gfx\skeletal_mesh.h" />
-    <ClInclude Include="..\..\include\pbj\gfx\skeletal_mesh_instance.h" />
     <ClInclude Include="..\..\include\pbj\gfx\skeleton.h" />
     <ClInclude Include="..\..\include\pbj\gfx\skeleton_pose.h" />
     <ClInclude Include="..\..\include\pbj\gfx\texture.h" />
@@ -199,10 +211,17 @@
     <ClInclude Include="..\..\include\pbj\gfx\texture_font_character.h" />
     <ClInclude Include="..\..\include\pbj\gfx\texture_font_text.h" />
     <ClInclude Include="..\..\include\pbj\input_controller.h" />
+    <ClInclude Include="..\..\include\pbj\scene\camera.h" />
+    <ClInclude Include="..\..\include\pbj\scene\entity.h" />
+    <ClInclude Include="..\..\include\pbj\scene\scene.h" />
     <ClInclude Include="..\..\include\pbj\scene\ui_button.h" />
     <ClInclude Include="..\..\include\pbj\scene\ui_element.h" />
     <ClInclude Include="..\..\include\pbj\scene\ui_image.h" />
     <ClInclude Include="..\..\include\pbj\scene\ui_label.h" />
+    <ClInclude Include="..\..\include\pbj\scene\ui_listbox.h" />
+    <ClInclude Include="..\..\include\pbj\scene\ui_panel.h" />
+    <ClInclude Include="..\..\include\pbj\scene\ui_root.h" />
+    <ClInclude Include="..\..\include\pbj\sw\import.h" />
     <ClInclude Include="..\..\include\pbj\sw\resource_id.h" />
     <ClInclude Include="..\..\include\pbj\sw\sandwich.h" />
     <ClInclude Include="..\..\include\pbj\sw\sandwich_open.h" />

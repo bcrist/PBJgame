@@ -1,23 +1,3 @@
-// Copyright (c) 2013 PBJ^2 Productions
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to
-// deal in the Software without restriction, including without limitation the
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-// sell copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
-
 ///////////////////////////////////////////////////////////////////////////////
 /// \file   pbj/gfx/texture_font.inl
 /// \author Benjamin Crist
@@ -38,15 +18,12 @@ namespace gfx {
 template <typename Iterator>
 TextureFont::TextureFont(const sw::ResourceId& id,
                          const be::ConstHandle<Texture>& texture,
-                         const ivec2& texture_size,
-                         U16 line_height, U16 baseline,
+                         F32 cap_height,
                          const Iterator& chars_begin,
                          const Iterator& chars_end)
     : resource_id_(id),
-      texture_(texture),
-      texture_size_(texture_size),
-      line_height_(line_height),
-      baseline_(baseline)
+      cap_height_(cap_height),
+      texture_(texture)
 {
     static_assert(std::is_same<std::iterator_traits<Iterator>::value_type, TextureFontCharacter>::value,
         "chars_begin and chars_end must be iterators over TextureFontCharacter objects.");

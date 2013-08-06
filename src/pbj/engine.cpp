@@ -1,23 +1,3 @@
-// Copyright (c) 2013 PBJ^2 Productions
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to
-// deal in the Software without restriction, including without limitation the
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-// sell copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
-
 ///////////////////////////////////////////////////////////////////////////////
 /// \file   pbj/engine.cpp
 /// \author Benjamin Crist
@@ -27,8 +7,8 @@
 #include "pbj/engine.h"
 #include "pbj/_gl.h"
 #include "pbj/sw/sandwich_open.h"
+#include "pbj/input_controller.h"
 
-#include <thread>
 #include <cassert>
 #include <iostream>
 
@@ -84,6 +64,7 @@ Engine::Engine()
 #endif    
 
     WindowSettings window_settings;
+
     if (config_sandwich)
         window_settings = loadWindowSettings(*config_sandwich, window_settings_id);
 
@@ -94,7 +75,16 @@ Engine::Engine()
 
     wnd->setTitle(window_title);
     
+    wnd->registerContextResizeListener(
+        [](I32 width, I32 height)
+        {
+            glViewport(0, 0, width, height);
+        }
+    );
+
     PBJ_LOG(VInfo) << glGetString(GL_VERSION) << PBJ_LOG_END;
+
+    InputController::init(wnd->getGlfwHandle());
 
     wnd->show();
 }
@@ -103,16 +93,35 @@ Engine::Engine()
 /// \brief  Destructor.
 Engine::~Engine()
 {
+    pbj::InputController::destroy();
+
     window_.reset();
     built_ins_.reset();
     glfwTerminate();
 }
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Retrieves the engine's window object.
+///
+/// \return The Window object.
 Window* Engine::getWindow() const
 {
     return window_.get();
 }
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Retrieves the engine's graphics Batcher object.
+///
+/// \return The gfx::Batcher object.
+gfx::Batcher& Engine::getBatcher()
+{
+    return batcher_;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Retrieves the engine's graphics BuiltIns object.
+///
+/// \return The gfx::BuiltIns object.
 const gfx::BuiltIns& Engine::getBuiltIns() const
 {
     return *built_ins_;
