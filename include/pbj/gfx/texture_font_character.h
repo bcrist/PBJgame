@@ -13,6 +13,10 @@
 namespace pbj {
 namespace gfx {
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Describes the location of a character in a TextureFont texture and
+///         the positioning data required to draw it in the correct place
+///         on-screen.
 struct TextureFontCharacter
 {
     U32 codepoint;

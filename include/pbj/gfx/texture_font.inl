@@ -15,6 +15,19 @@ namespace pbj {
 namespace gfx {
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Constructs a texture font from a texture and a series of
+///         TextureFontCharacters describing the location of characters in the
+///         texture.
+///
+/// \param  id Describes the location of the texture font in the database it
+///         was loaded from.
+/// \param  texture A ConstHandle to the texture for drawing the font.
+/// \param  cap_height Not required to actually render text, but describes
+///         the height of a typical latin uppercase character.
+/// \param  chars_begin An iterator to the first TextureFontCharacter in
+///         this font.
+/// \param  chars_end An iterator to the point just after the last
+///         TextureFontCharacter in this font.
 template <typename Iterator>
 TextureFont::TextureFont(const sw::ResourceId& id,
                          const be::ConstHandle<Texture>& texture,

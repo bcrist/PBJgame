@@ -15,6 +15,9 @@ namespace gfx {
 
 class TextureFontText;
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Allows the drawing of text in OpenGL through the use of a font
+///         sprite sheet.
 class TextureFont
 {
     friend class TextureFontText;
@@ -32,9 +35,6 @@ public:
     F32 getCapHeight() const;
 
     const TextureFontCharacter& operator[](U32 codepoint) const;
-
-    F32 getTextWidth(const std::string& text);
-    F32 print(const mat4& transform, const std::string& text, const vec4& color);
 
 private:
     be::SourceHandle<TextureFont> handle_;
