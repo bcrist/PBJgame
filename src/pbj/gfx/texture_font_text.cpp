@@ -15,6 +15,8 @@ namespace pbj {
 namespace gfx {
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Constructs a TextureFontText object, creating a VAO, VBO, and IBO
+///         to facilitate drawing the text.
 TextureFontText::TextureFontText()
     : color_(1.0f, 1.0f, 1.0f, 1.0f),
       buffer_mode_(GL_STATIC_DRAW),
@@ -52,6 +54,7 @@ TextureFontText::TextureFontText()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Destroys this TextureFontText, releasing all GPU resources.
 TextureFontText::~TextureFontText()
 {
     glDeleteVertexArrays(1, &btask_.vao_id);
@@ -60,6 +63,12 @@ TextureFontText::~TextureFontText()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Sets the buffering mode for this text object's VBO and IBO.
+///
+/// \details Changing the buffering mode will cause the buffers to be rebuilt
+///         the next time it is drawn to the screen.
+///
+/// \param  buffer_mode The new buffer mode, eg. GL_STATIC_DRAW.
 void TextureFontText::setBufferMode(GLenum buffer_mode)
 {
     if (buffer_mode_ != buffer_mode)
@@ -70,24 +79,39 @@ void TextureFontText::setBufferMode(GLenum buffer_mode)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Retrieves the current buffering mode for this object's buffers.
+///
+/// \return The current buffering mode.
 GLenum TextureFontText::getBufferMode() const
 {
     return buffer_mode_;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Sets the text color for this object.
+///
+/// \param  color The new text color.
 void TextureFontText::setColor(const vec4& color)
 {
     color_ = color;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Retrieves the current text color.
+///
+/// \return This object's text color.
 const vec4& TextureFontText::getColor() const
 {
     return color_;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Sets the font used to display this text.
+///
+/// \details Changing the font will cause the buffers to be rebuilt the next
+///         time the text is drawn.
+///
+/// \param font The new font to draw this text.
 void TextureFontText::setFont(const be::ConstHandle<TextureFont>& font)
 {
     if (font != font_)
@@ -101,12 +125,21 @@ void TextureFontText::setFont(const be::ConstHandle<TextureFont>& font)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Retrieves the current font used to draw this text.
+///
+/// \return A handle to the current font.
 const be::ConstHandle<TextureFont>& TextureFontText::getFont() const
 {
     return font_;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Sets the current text string to be displayed.
+///
+/// \details Changing the text will cause the buffers to be rebuilt the next
+///         time the text is drawn.
+///
+/// \param  text The new text to display.
 void TextureFontText::setText(const std::string& text)
 {
     text_ = text;
@@ -114,12 +147,21 @@ void TextureFontText::setText(const std::string& text)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Retrieves the current value of this object's text.
+///
+/// \return The text drawn by this TextureFontText.
 const std::string& TextureFontText::getText() const
 {
     return text_;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Retrieves the width of the text.
+///
+/// \details If the buffers need to be rebuilt, they will be in order to
+///         calculate the text width.
+///
+/// \return The width of the text.
 F32 TextureFontText::getTextWidth()
 {
     if (!isPrepared())
@@ -129,18 +171,26 @@ F32 TextureFontText::getTextWidth()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Sets the order index of the BatcherTask used to draw the text.
+///
+/// \param  order_index The new order index.
 void TextureFontText::setOrderIndex(U32 order_index)
 {
     btask_.order_index = order_index;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Retrieves the current order index for this text object.
+///
+/// \return The object's current order index.
 U32 TextureFontText::getOrderIndex() const
 {
     return btask_.order_index;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Rebuilds the VBO and IBO buffers so that they represent the current
+///         text, font, and buffer mode.
 void TextureFontText::prepare()
 {
     bool font_data_valid = true;
@@ -237,12 +287,17 @@ void TextureFontText::prepare()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Determines if the buffers need to be rebuilt or not.
+///
+/// \return false if the buffers need to be rebuilt.
 bool TextureFontText::isPrepared() const
 {
     return buffers_valid_;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Rebuilds the TextureFontText buffers if necessary, then submits
+///         a BatcherTask to draw the text.
 void TextureFontText::draw(const mat4* transform, const ScissorConfig* scissor)
 {
     if (!isPrepared())

@@ -23,12 +23,7 @@ class ShaderProgram
 {
 public:
     ShaderProgram(const sw::ResourceId& id, const Shader& vertex_shader, const Shader& fragment_shader);
-    template <typename Iterator>
-    ShaderProgram(const sw::ResourceId& id, const Iterator& begin, const Iterator& end);
     ~ShaderProgram();
-
-    const be::Handle<ShaderProgram>& getHandle();
-    const be::ConstHandle<ShaderProgram>& getHandle() const;
 
     const sw::ResourceId& getId() const;
 
@@ -38,7 +33,6 @@ private:
     void checkLinkResult_();
     void invalidate_();
 
-    be::SourceHandle<ShaderProgram> handle_;
     sw::ResourceId resource_id_;
 
     GLuint gl_id_;
@@ -49,7 +43,5 @@ private:
 
 } // namespace pbj::gfx
 } // namespace pbj
-
-#include "pbj/gfx/shader_program.inl"
 
 #endif

@@ -16,6 +16,9 @@ namespace pbj {
 namespace sw {
 namespace {
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Structure containing a weak_ptr to a sandwich and a path to the
+///         sandwich file.
 struct SandwichInfo
 {
    std::string path;
@@ -26,6 +29,9 @@ typedef std::unordered_map<Id, SandwichInfo> sw_map_t;
 
 sw_map_t sandwiches;
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Retrieve a SandwichInfo object for the Sandwich ID requested, or
+///         nullptr if no such sandwich is known.
 SandwichInfo* getSWI(const Id& sandwich_id)
 {
    auto i(sandwiches.find(sandwich_id));
@@ -37,6 +43,13 @@ SandwichInfo* getSWI(const Id& sandwich_id)
 
 } // namespace pbj::sw::(anon)
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Scans all the files in the provided directory to look for
+///         sandwiches.
+///
+/// \details The search is NOT recursive.  Subfolders will not be visited.
+///
+/// \param  path The directory to search through.
 void readDirectory(const std::string& path)
 {
     dirent *ent;
@@ -102,6 +115,11 @@ void readDirectory(const std::string& path)
     }
 }
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Retrieves a collection of all the sandwich Ids that have an
+///         associated sandwich id.
+///
+/// \return A vector of sandwich ids.
 std::vector<Id> getSandwichIds()
 {
     std::vector<Id> ids;
@@ -112,6 +130,13 @@ std::vector<Id> getSandwichIds()
     return std::move(ids);
 }
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Opens the sandwich database file associated with the provided Id.
+///
+/// \details The sandwich returned will be read-only.
+///
+/// \param  id The Id of the sandwich to open.
+/// \return A shared_ptr to the Sandwich.
 std::shared_ptr<Sandwich> open(const Id& id)
 {
     SandwichInfo* swi = getSWI(id);
@@ -134,6 +159,13 @@ std::shared_ptr<Sandwich> open(const Id& id)
     return std::move(ptr);
 }
 
+///////////////////////////////////////////////////////////////////////////////
+/// \brief  Opens the sandwich database file associated with the provided Id.
+///
+/// \details The sandwich returned can be modified.
+///
+/// \param  id The Id of the sandwich to open.
+/// \return A shared_ptr to the Sandwich.
 std::shared_ptr<Sandwich> openWritable(const Id& id)
 {
     SandwichInfo* swi = getSWI(id);

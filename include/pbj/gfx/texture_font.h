@@ -20,28 +20,19 @@ class TextureFontText;
 ///         sprite sheet.
 class TextureFont
 {
-    friend class TextureFontText;
-
 public:
-    template <typename Iterator>
-    TextureFont(const sw::ResourceId& id, const be::ConstHandle<Texture>& texture, F32 cap_height, const Iterator& chars_begin, const Iterator& chars_end);
+    TextureFont(const be::ConstHandle<Texture>& texture, F32 cap_height, const std::vector<TextureFontCharacter>& characters);
     ~TextureFont();
-
-    const be::Handle<TextureFont>& getHandle();
-    const be::ConstHandle<TextureFont>& getHandle() const;
-
-    const sw::ResourceId& getId() const;
 
     F32 getCapHeight() const;
 
     const TextureFontCharacter& operator[](U32 codepoint) const;
 
-private:
-    be::SourceHandle<TextureFont> handle_;
-    sw::ResourceId resource_id_;
+    void print(const std::string& text) const;
+    F32 getTextWidth(const std::string& text) const;
 
-    sw::ResourceId texture_id_;
-    be::ConstHandle<Texture> texture_;
+private:
+    Texture* texture_;
 
     F32 cap_height_;
 

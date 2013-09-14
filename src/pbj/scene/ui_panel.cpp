@@ -7,6 +7,7 @@
 namespace pbj {
 namespace scene {
 
+///////////////////////////////////////////////////////////////////////////////
 UIPanelAppearance::UIPanelAppearance()
     : solid(false),
       background_color(0.5f, 0.5f, 0.5f, 0.5f),

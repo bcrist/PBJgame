@@ -20,6 +20,7 @@
 namespace pbj {
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Intitializes the editor & UI.
 Editor::Editor()
     : engine_(getEngine()),
       batcher_(getEngine().getBatcher()),
@@ -48,6 +49,7 @@ Editor::Editor()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Cleans up editor & UI.
 Editor::~Editor()
 {
 }
@@ -82,6 +84,7 @@ private:
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Initializes UI Element objects & hierarchy
 void Editor::initUI()
 {
     generateButtonStateConfigs_(color3(0.5f, 0.6f, 0.65f), bsc_a_, "a");
@@ -140,6 +143,8 @@ void Editor::initUI()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Main loop for editor.  Continuously redraws frame (capped @ 200fps)
+///         until a window close request is issued.
 void Editor::run()
 {
     double last_frame_time = 0;
@@ -187,6 +192,8 @@ void Editor::run()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Sets the current editor mode.
+/// \param  mode The new mode for the editor.
 void Editor::setMode(Mode mode)
 {
     if (mode_ != mode)
@@ -272,6 +279,8 @@ void Editor::setMode(Mode mode)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Retrieves the current editor mode.
+/// \return The current editor mode.
 Editor::Mode Editor::getMode() const
 {
     return mode_;
@@ -280,6 +289,8 @@ Editor::Mode Editor::getMode() const
 
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Callback for resizing/positioning editor elements when the window
+///         size changes.
 void Editor::onContextResized_(I32 width, I32 height)
 {
     scene_.ui.panel.setDimensions(vec2(width, height));
@@ -305,6 +316,14 @@ void Editor::onContextResized_(I32 width, I32 height)
 
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Constructs a new UIListBox with appropriate visuals.
+///
+/// \param  id Identifies this UIElement in the ui_elements_ map.
+/// \param  color The base color for the UIListbox.
+/// \param  position The top left corner of the box.
+/// \param  dimensions The width/hegiht of the box.
+/// \param  parent The parent UIPanel to place the listbox in.
+/// \return a pointer to the new listbox.  Note: must be destroyed when done!
 scene::UIListbox* Editor::newListbox_(const Id& id, const color3& color,
         const vec2& position, const vec2& dimensions, scene::UIPanel* parent)
 {
@@ -354,6 +373,12 @@ scene::UIListbox* Editor::newListbox_(const Id& id, const color3& color,
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Creates a new panel whose parent is the UIRoot panel.
+///
+/// \param  index The index into the panels_ array where this panel should be
+///         stored.
+/// \param  id The Id of this panel for placing it in ui_elements_.
+/// \param  color The color of the panel background.
 scene::UIPanel* Editor::newRootPanel_(U32 index, const Id& id, const color3& color)
 {
     scene::UIPanelAppearance pa;
@@ -379,6 +404,11 @@ scene::UIPanel* Editor::newRootPanel_(U32 index, const Id& id, const color3& col
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Sets the normal/hovered/active/disabled/focused/etc states of
+///         a button to __normal_*__, etc. where * is the provided string.
+///
+/// \param  btn The button to change states for.
+/// \affix  The string to append to the default state name.
 void Editor::useButtonConfigs_(scene::UIButton* btn, const std::string& affix)
 {
     assert(btn);
@@ -393,6 +423,12 @@ void Editor::useButtonConfigs_(scene::UIButton* btn, const std::string& affix)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Generates UIButtonStateConfig objects for normal/hovered/active/etc
+///         states.
+///
+/// \param  color The base color for the button.
+/// \param  configs A pointer to the array of UIButtonStateConfigs to modify.
+/// \param  affix The string to append to the default state name.
 void Editor::generateButtonStateConfigs_(const color3& color, scene::UIButtonStateConfig* configs, const std::string& affix)
 {
     const gfx::TextureFont& font = builtins_.getTextureFont(Id("TextureFont.default"));
@@ -459,6 +495,14 @@ void Editor::generateButtonStateConfigs_(const color3& color, scene::UIButtonSta
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/// \brief  Constructs a new button
+///
+/// \param  id The ID of this button in ui_elements_.
+/// \param  text The text to display on the button.
+/// \param  position The coordinates of the top left corner
+/// \param  dimensions The width/height of the button.
+/// \param  callback A function to call when the button is pressed.
+/// \param  parent The UIPanel where the button should be placed.
 scene::UIButton* Editor::newButton_(const Id& id,
                                     const std::string& text,
                                     const vec2& position,

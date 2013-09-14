@@ -153,9 +153,6 @@
     <ClCompile Include="..\..\src\pbj\gfx\shader.cpp">
       <Filter>Source Files\pbj\pbj::gfx</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\pbj\scene\ui_image.cpp">
-      <Filter>Source Files\pbj\pbj::scene\%28ui%29</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\pbj\scene\ui_element.cpp">
       <Filter>Source Files\pbj\pbj::scene\%28ui%29</Filter>
     </ClCompile>
@@ -215,6 +212,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\gfx\entity_material.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pbj\sw\resource_manager.cpp">
+      <Filter>Source Files\pbj\pbj::sw</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -293,15 +293,6 @@
     <ClInclude Include="..\..\include\pbj\gfx\shader_program.h">
       <Filter>Header Files\pbj\pbj::gfx</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\pbj\gfx\skeletal_mesh.h">
-      <Filter>Header Files\pbj\pbj::gfx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\pbj\gfx\skeleton.h">
-      <Filter>Header Files\pbj\pbj::gfx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\pbj\gfx\skeleton_pose.h">
-      <Filter>Header Files\pbj\pbj::gfx</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\pbj\gfx\texture.h">
       <Filter>Header Files\pbj\pbj::gfx</Filter>
     </ClInclude>
@@ -374,6 +365,9 @@
     <ClInclude Include="..\..\include\pbj\scene\entity.h">
       <Filter>Header Files\pbj\pbj::scene</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\pbj\sw\resource_manager.h">
+      <Filter>Header Files\pbj\pbj::sw</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\include\be\const_handle.inl">
@@ -395,9 +389,6 @@
       <Filter>Header Files\pbj\pbj::sw</Filter>
     </None>
     <None Include="..\..\include\pbj\gfx\texture_font.inl">
-      <Filter>Header Files\pbj\pbj::gfx</Filter>
-    </None>
-    <None Include="..\..\include\pbj\gfx\shader_program.inl">
       <Filter>Header Files\pbj\pbj::gfx</Filter>
     </None>
   </ItemGroup>

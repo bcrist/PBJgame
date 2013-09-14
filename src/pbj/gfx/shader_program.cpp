@@ -38,8 +38,6 @@ ShaderProgram::ShaderProgram(const sw::ResourceId& id, const Shader& vertex_shad
                          << "         Shader ID: " << fragment_shader.getId().resource << PBJ_LOG_END;
 #endif
 
-    handle_.associate(this);
-
     gl_id_ = glCreateProgram();
     glAttachShader(gl_id_, vertex_shader.getGlId());
     glAttachShader(gl_id_, fragment_shader.getGlId());
@@ -48,54 +46,38 @@ ShaderProgram::ShaderProgram(const sw::ResourceId& id, const Shader& vertex_shad
     checkLinkResult_();
 }
 
+///////////////////////////////////////////////////////////////////////////////
 /// \brief  destroys this shader program, deleting it from the GPU's memory.
 ShaderProgram::~ShaderProgram()
 {
     invalidate_();
 }
 
-/// \brief  Retrieves a handle to this shader program.
-///
-/// \return A Handle<ShaderProgram>
->>>>>>> ben
-const be::Handle<ShaderProgram>& ShaderProgram::getHandle()
-{
-    return handle_;
-}
-
-/// \brief  Retrieves a handle to this shader program.
-///
-/// \return A ConstHandle<ShaderProgram>
->>>>>>> ben
-const be::ConstHandle<ShaderProgram>& ShaderProgram::getHandle() const
-{
-    return handle_;
-}
-
+///////////////////////////////////////////////////////////////////////////////
 /// \brief  Retrieves the shader program's resourceId, specifying where it is
 ///         stored in the database.
 ///
 /// \return The ResourceId for this shader program.
->>>>>>> ben
 const sw::ResourceId& ShaderProgram::getId() const
 {
     return resource_id_;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 /// \brief  Retrieves the OpenGL shader program ID.
 ///
 /// \return The OpenGL shader program ID.
->>>>>>> ben
 GLuint ShaderProgram::getGlId() const
 {
     return gl_id_;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 /// \brief  Checks to make sure that the shader program has been linked
 ///         successfully.
 ///
-/// \details If there was a problem, the info log is retrieved, a warning
-///         is output, and the program is invalidated.
+/// \throws std::runtime_error If there was a problem linking the shader
+///         program
 void ShaderProgram::checkLinkResult_()
 {
     GLint result = GL_FALSE;
@@ -121,6 +103,7 @@ void ShaderProgram::checkLinkResult_()
     }
 }
 
+///////////////////////////////////////////////////////////////////////////////
 /// \brief  Invalidates this shader program, deleting it from the GPU's memory.
 void ShaderProgram::invalidate_()
 {
